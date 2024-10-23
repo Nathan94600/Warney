@@ -3,7 +3,13 @@ import { inspect } from "util";
 import { readdir } from "fs";
 import { WsEvent } from "../utils/types";
 
-const opcodes: Record<string, any> = {};
+const opcodeNames: Record<number, string> = {}, opcodes: Record<string, any> = {}, opcodeKeys = Object.keys(GatewayOpcodes);
+
+opcodeKeys.slice(0, opcodeKeys.length / 2).forEach((key, i) => {
+	const value = opcodeKeys[opcodeKeys.length / 2 + i];	
+
+	if (value) opcodeNames[parseInt(key)] = value
+})
 
 readdir("./dist/opcodes", (err, files) => {
 	if (err) throw err;
@@ -32,8 +38,12 @@ export default ((client, msg) => {
 		 * Event name
 		 */
 		t: string | null;
-	} = JSON.parse(msg.toString()), opcode = opcodes[parsedMsg.op];
+	} = JSON.parse(msg.toString()), opcodeName = opcodeNames[parsedMsg.op];
+	
+	if (opcodeName) {
+		const opcode = opcodes[opcodeName];
 
-	if (opcode) opcode.bind(null, client)(parsedMsg.d, parsedMsg.s, parsedMsg.t);
-	else console.log(`NEW OP: ${parsedMsg.op}`, inspect(parsedMsg, { colors: true, depth: Infinity }));
+		if (opcode) opcode.bind(null, client)(parsedMsg.d, parsedMsg.s, parsedMsg.t);
+		else console.log(`NEW OP: ${opcodeName} (${parsedMsg.op})`, inspect(parsedMsg, { colors: true, depth: Infinity }));
+	} else console.log(`OPCODE NAME NOT FOUND: ${parsedMsg.op}`);
 }) satisfies WsEvent<"message">
