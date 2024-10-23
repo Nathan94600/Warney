@@ -4,8 +4,6 @@ import { Opcode } from "../utils/types";
 import { readdir } from "fs";
 
 export default (client => {
-	console.log("OP 7 (RECONNECT)");
-
 	client.ws = new WebSocket(`${client.cache.resumeGatewayUrl}?v=10&encoding=json`);
 
 	client.ws.on("open", () => {
