@@ -9,14 +9,29 @@ export default (client => {
 	client.ws.on("open", () => {
 		console.log("WebSocket connection reopened");
 
-		client.ws.send(JSON.stringify({
-			op: GatewayOpcodes.Resume,
-			d: {
-				token: client.token,
-				session_id: client.cache.sessionId,
-				seq: client.lastSeq
-			}
-		}));
+		if (!client.rateLimits["gateway"] || client.rateLimits["gateway"].remaining >= 1 || client.rateLimits["gateway"].reset < Date.now()) {
+			client.ws.send(JSON.stringify({
+				op: GatewayOpcodes.Resume,
+				d: {
+					token: client.token,
+					session_id: client.cache.sessionId,
+					seq: client.lastSeq
+				}
+			}));
+
+			if (!client.rateLimits["gateway"]) client.rateLimits["gateway"] = {
+				bucket: "gateway",
+				global: null,
+				limit: 120,
+				remaining: 119,
+				reset: Date.now() + 60000,
+				scope: null
+			};
+			else if (client.rateLimits["gateway"].reset < Date.now()) {
+				client.rateLimits["gateway"].reset = Date.now() + 60000;
+				client.rateLimits["gateway"].remaining = 119;
+			} else client.rateLimits["gateway"].remaining--;
+		}
 
 		readdir("./dist/wsEvents", (err, files) => {
 			if (err) throw err;
