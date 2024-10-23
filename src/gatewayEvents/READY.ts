@@ -16,6 +16,9 @@ export default ((client, data) => {
 		publicFlags: []
 	};
 
+	client.cache.resumeGatewayUrl = data.resume_gateway_url;
+	client.cache.sessionId = data.session_id;
+
 	const user = client.cache.users[apiUser.id];
 
 	if (user) {
@@ -28,8 +31,14 @@ export default ((client, data) => {
 		if (apiUser.flags !== undefined) user.flags = flagsToArray(apiUser.flags, UserFlags);
 		if (apiUser.public_flags !== undefined) user.publicFlags = flagsToArray(apiUser.public_flags, UserFlags);
 		if (apiUser.avatar_decoration_data === null) user.avatarDecorationData = null;
-		else if (apiUser.avatar_decoration_data !== undefined) user.avatarDecorationData = { asset: apiUser.avatar_decoration_data.asset, skuId: apiUser.avatar_decoration_data.sku_id };
+		else if (apiUser.avatar_decoration_data !== undefined) user.avatarDecorationData = {
+			asset: apiUser.avatar_decoration_data.asset,
+			skuId: apiUser.avatar_decoration_data.sku_id
+		};
 	};
 
-	client.cache.application = { id: data.application.id, flags: flagsToArray(data.application.flags, ApplicationFlags) }
-}) satisfies GatewayEvent<GatewayEventNames.Ready>
+	client.cache.application = {
+		id: data.application.id,
+		flags: flagsToArray(data.application.flags, ApplicationFlags)
+	};
+}) satisfies GatewayEvent<GatewayEventNames.Ready>;

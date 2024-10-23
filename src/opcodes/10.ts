@@ -4,9 +4,19 @@ import { Opcode } from "../utils/types";
 export default ((client, data) => {
 	setInterval(() => {
 		if (!client.rateLimits["gateway"] || client.rateLimits["gateway"].remaining >= 1 || client.rateLimits["gateway"].reset < Date.now()) {		
-			client.ws.send(JSON.stringify({ op: 1, d: client.lastSeq }));
+			client.ws.send(JSON.stringify({
+				op: GatewayOpcodes.Heartbeat,
+				d: client.lastSeq
+			}));
 
-			if (!client.rateLimits["gateway"]) client.rateLimits["gateway"] = { bucket: "gateway", global: null, limit: 120, remaining: 119, reset: Date.now() + 60000, scope: null };
+			if (!client.rateLimits["gateway"]) client.rateLimits["gateway"] = {
+				bucket: "gateway",
+				global: null,
+				limit: 120,
+				remaining: 119,
+				reset: Date.now() + 60000,
+				scope: null
+			};
 			else if (client.rateLimits["gateway"].reset < Date.now()) {
 				client.rateLimits["gateway"].reset = Date.now() + 60000;
 				client.rateLimits["gateway"].remaining = 119;
@@ -15,7 +25,20 @@ export default ((client, data) => {
 	}, data?.heartbeat_interval);	
 	
 	if (!client.rateLimits["gateway"] || client.rateLimits["gateway"].remaining >= 1 || client.rateLimits["gateway"].reset < Date.now()) {		
-		client.ws.send(JSON.stringify({ op: 2, d: { token: client.token, properties: { os: process.platform, browser: "mylib", device: "mylib" }, compress: false, large_threshold: 250, intents: 0 } }));
+		client.ws.send(JSON.stringify({
+			op: GatewayOpcodes.Identify,
+			d: {
+				token: client.token,
+				properties: {
+					os: process.platform,
+					browser: "mylib",
+					device: "mylib"
+				},
+				compress: false,
+				large_threshold: 250,
+				intents: 0
+			}
+		}));
 
 		if (!client.rateLimits["gateway"]) client.rateLimits["gateway"] = { bucket: "gateway", global: null, limit: 120, remaining: 119, reset: Date.now() + 60000, scope: null };
 		else if (client.rateLimits["gateway"].reset < Date.now()) {
@@ -23,4 +46,4 @@ export default ((client, data) => {
 			client.rateLimits["gateway"].remaining = 119;
 		} else client.rateLimits["gateway"].remaining--;
 	}
-}) satisfies Opcode<GatewayOpcodes.Hello>
+}) satisfies Opcode<GatewayOpcodes.Hello>;
