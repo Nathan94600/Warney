@@ -215,6 +215,10 @@ export enum GatewayEventNames {
 	 */
 	Ready = "READY",
 	/**
+	 * Response to [Resume](https://discord.com/developers/docs/events/gateway-events#resume)
+	 */
+	Resumed = "RESUMED",
+	/**
 	 * Application command permission was updated
 	 */
 	ApplicationCommandPermissionsUpdate = "APPLICATION_COMMAND_PERMISSIONS_UPDATE",

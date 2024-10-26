@@ -179,6 +179,7 @@ export interface Opcodes {
 
 export interface GatewayEvents {
 	[GatewayEventNames.Ready]: [d: APIReadyEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.Resumed]: [];
 	[GatewayEventNames.ApplicationCommandPermissionsUpdate]: [d: APIGuildApplicationCommandPermissions, s: number | null, t: string | null];
 	[GatewayEventNames.AutoModerationRuleCreate]: [d: APIAutoModerationRule, s: number | null, t: string | null];
 	[GatewayEventNames.AutoModerationRuleUpdate]: [d: APIAutoModerationRule, s: number | null, t: string | null];
