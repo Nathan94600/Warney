@@ -1,4 +1,4 @@
-A simple discord bot, to add it to Discord [click here]((https://discord.com/oauth2/authorize?client_id=1299341375510155394)).
+A simple discord bot, to add it to Discord [click here](https://discord.com/oauth2/authorize?client_id=1299341375510155394).
 
 # To start the bot :
 
