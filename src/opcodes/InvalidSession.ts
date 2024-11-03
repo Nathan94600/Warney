@@ -2,10 +2,13 @@ import { WebSocket } from "ws";
 import { GatewayOpcodes } from "../utils/enums/other";
 import { Opcode } from "../utils/types";
 import { readdir } from "fs";
-import { sendWebsocketMessage } from "../utils/functions";
+import { openDiscordWebSocketConnection, sendWebsocketMessage } from "../utils/functions";
+import { token } from "../config.json";
 
-export default ((client, d) => {
-	if (d) {
+export default ((client, resumable) => {
+	client.ws.removeAllListeners();
+
+	if (resumable) {
 		client.ws = new WebSocket(`${client.cache.resumeGatewayUrl}?v=10&encoding=json`);
 
 		client.ws.on("open", () => {
@@ -29,5 +32,5 @@ export default ((client, d) => {
 				});
 			});
 		});
-	};
+	} else openDiscordWebSocketConnection(token, client)
 }) satisfies Opcode<GatewayOpcodes.InvalidSession>;

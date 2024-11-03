@@ -5,6 +5,7 @@ import { readdir } from "fs";
 import { sendWebsocketMessage } from "../utils/functions";
 
 export default (client => {
+	client.ws.removeAllListeners();
 	client.ws = new WebSocket(`${client.cache.resumeGatewayUrl}?v=10&encoding=json`);
 
 	client.ws.on("open", () => {
