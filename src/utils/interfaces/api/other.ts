@@ -1,5 +1,5 @@
-import { ActionTypes, AnimationTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EventTypes, IntegrationExpireBehaviors, IntegrationTypes, InteractionContextTypes, InteractionTypes, InviteTargetTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
-import { APIChannel, APIInteractionData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
+import { ActionTypes, AnimationTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EntryPointCommandHandlerTypes, EventTypes, IntegrationExpireBehaviors, IntegrationTypes, InteractionContextTypes, InteractionTypes, InviteTargetTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
+import { APIApplicationCommandOption, APIChannel, APIInteractionData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
 import { APIActivity } from "./activities";
 import { APIThreadChannel } from "./channels";
 import { APIGuildMember, APIGuild } from "./guilds";
@@ -2223,4 +2223,351 @@ export interface APIOptionalAuditEntryInfo {
 	 * The type of integration which performed the action
 	 */
 	integration_type: string;
+};
+
+export interface APIBaseApplicationCommand {
+	/**
+	 * Unique ID of command
+	 */
+	id: Snowflake;
+	/**
+	 * [Type of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types), defaults to `1`
+	 */
+	type?: ApplicationCommandTypes;
+	/**
+	 * ID of the parent application
+	 */
+	application_id: Snowflake;
+	/**
+	 * Guild ID of the command, if not global
+	 */
+	guild_id?: Snowflake;
+	/**
+	 * [Name of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming), 1-32 characters
+	 */
+	name: string;
+	/**
+	 * Localization dictionary for `name` field. Values follow the same restrictions as `name`
+	 */
+	name_localizations?: Record<Locales, string> | null;
+	/**
+	 * Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands
+	 */
+	description: string;
+	/**
+	 * Localization dictionary for `description` field. Values follow the same restrictions as `description`
+	 */
+	description_localizations?: Record<Locales, string> | null;
+	/**
+	 * Set of [permissions](https://discord.com/developers/docs/topics/permissions) represented as a bit set
+	 */
+	default_member_permissions: string | null;
+	/**
+	 * Indicates whether the command is [age-restricted](https://discord.com/developers/docs/interactions/application-commands#agerestricted-commands), defaults to `false`
+	 */
+	nsfw?: boolean;
+	/**
+	 * [Installation contexts](https://discord.com/developers/docs/resources/application#installation-context) where the command is available, only for globally-scoped commands.
+	 * Defaults to your app's [configured contexts](https://discord.com/developers/docs/resources/application#installation-context)
+	 */
+	integration_types?: IntegrationTypes[];
+	/**
+	 * [Interaction context(s)](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types) where the command can be used, only for globally-scoped commands.
+	 * By default, all interaction context types included for new commands.
+	 */
+	contexts?: InteractionContextTypes[] | null;
+	/**
+	 * Autoincrementing version identifier updated during substantial record changes
+	 */
+	version: Snowflake;
+};
+
+export interface APIMessageApplicationCommand extends APIBaseApplicationCommand {
+	/**
+	 * [Type of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types), defaults to `1`
+	 */
+	type: ApplicationCommandTypes.Message;
+};
+
+export interface APIUserApplicationCommand extends APIBaseApplicationCommand {
+	/**
+	 * [Type of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types), defaults to `1`
+	 */
+	type: ApplicationCommandTypes.User;
+};
+
+export interface APIPrimaryEntryPointApplicationCommand {
+	/**
+	 * [Type of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types), defaults to `1`
+	 */
+	type: ApplicationCommandTypes.PrimaryEntryPoint;
+	/**
+	 * Determines whether the interaction is handled by the app's interactions handler or by Discord
+	 */
+	handler?: EntryPointCommandHandlerTypes;
+};
+
+export interface APIChatInputApplicationCommand {
+	/**
+	 * [Type of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types), defaults to `1`
+	 */
+	type?: ApplicationCommandTypes.ChatInput;
+	/**
+	 * Parameters for the command, max of 25
+	 */
+	options?: APIApplicationCommandOption[];
+};
+
+export interface APIApplicationCommandOptionChoice<Value extends string | number> {
+	/**
+	 * 1-100 character choice name
+	 */
+	name: string;
+	/**
+	 * Localization dictionary for the `name` field. Values follow the same restrictions as `name`
+	 */
+	name_localizations?: Record<Locales, string> | null;
+	/**
+	 * Value for the choice, up to 100 characters if string
+	 */
+	value: Value;
+};
+
+export interface APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes;
+	/**
+	 * [1-32 character name](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming)
+	 */
+	name: string;
+	/**
+	 * Localization dictionary for the `name` field. Values follow the same restrictions as `name`
+	 */
+	name_localizations?: Record<Locales, string> | null;
+	/**
+	 * 1-100 character description
+	 */
+	description: string;
+	/**
+	 * Localization dictionary for the `description` field. Values follow the same restrictions as `description`
+	 */
+	description_localizations?: Record<Locales, string> | null;
+};
+
+export interface APIApplicationCommandSubCommandOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.SubCommand;
+	/**
+	 * If the option is a subcommand or subcommand group type, these nested options will be the parameters or subcommands respectively; up to 25
+	 */
+	options?: Exclude<APIApplicationCommandOption, APIApplicationCommandSubCommandOption | APIApplicationCommandSubCommandGroupOption>[];
+};
+
+export interface APIApplicationCommandSubCommandGroupOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.SubCommandGroup;
+	/**
+	 * If the option is a subcommand or subcommand group type, these nested options will be the parameters or subcommands respectively; up to 25
+	 */
+	options?: APIApplicationCommandSubCommandOption[];
+};
+
+export interface APIApplicationCommandIntegerOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Integer;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+	/**
+	 * Choices for the user to pick from, max 25
+	 */
+	choices?: APIApplicationCommandOptionChoice<number>[];
+	/**
+	 * The minimum value permitted
+	 */
+	min_value?: number;
+	/**
+	 * The maximum value permitted
+	 */
+	max_value?: number;
+	/**
+	 * If autocomplete interactions are enabled for this option
+	 */
+	autocomplete?: boolean;
+};
+
+export interface APIApplicationCommandNumberOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Number;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+	/**
+	 * Choices for the user to pick from, max 25
+	 */
+	choices?: APIApplicationCommandOptionChoice<number>[];
+	/**
+	 * The minimum value permitted
+	 */
+	min_value?: number;
+	/**
+	 * The maximum value permitted
+	 */
+	max_value?: number;
+	/**
+	 * If autocomplete interactions are enabled for this option
+	 */
+	autocomplete?: boolean;
+};
+
+export interface APIApplicationCommandStringOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.String;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+	/**
+	 * Choices for the user to pick from, max 25
+	 */
+	choices?: APIApplicationCommandOptionChoice<string>[];
+	/**
+	 * The minimum allowed length (minimum of `0`, maximum of `6000`)
+	 */
+	min_length?: number;
+	/**
+	 * The maximum allowed length (minimum of `1`, maximum of `6000`)
+	 */
+	max_length?: number;
+	/**
+	 * If autocomplete interactions are enabled for this option
+	 */
+	autocomplete?: boolean;
+};
+
+export interface APIApplicationCommandChannelOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Channel;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+	/**
+	 * The channels shown will be restricted to these types
+	 */
+	channel_types?: ChannelTypes[];
+};
+
+export interface APIApplicationCommandAttachmentOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Attachment;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+};
+
+export interface APIApplicationCommandBooleanOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Boolean;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+};
+
+export interface APIApplicationCommandMentionableOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Mentionable;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+};
+
+export interface APIApplicationCommandRoleOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.Role;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+};
+
+export interface APIApplicationCommandUserOption extends APIApplicationCommandBaseOption {
+	/**
+	 * Type of option
+	 */
+	type: ApplicationCommandOptionTypes.User;
+	/**
+	 * Whether the parameter is required or optional, default `false`
+	 */
+	required?: boolean;
+};
+
+export interface APIApplcationCommandParams {
+	/**
+	 * [Name of command](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming), 1-32 characters
+	 */
+	name: string;
+	/**
+	 * Localization dictionary for the `name` field. Values follow the same restrictions as `name`
+	 */
+	name_localizations?: Record<Locales, string> | null;
+	/**
+	 * 1-100 character description for `CHAT_INPUT` commands
+	 */
+	description?: string;
+	/**
+	 * Localization dictionary for the `description` field. Values follow the same restrictions as `description`
+	 */
+	description_localizations?: Record<Locales, string> | null;
+	/**
+	 * the parameters for the command, max of 25
+	 */
+	options?: APIApplicationCommandOption[];
+	/**
+	 * Set of [permissions](https://discord.com/developers/docs/topics/permissions) represented as a bit set
+	 */
+	default_member_permissions?: string | null;
+	/**
+	 * [Installation context(s)](https://discord.com/developers/docs/resources/application#installation-context) where the command is available
+	 */
+	integration_types?: ApplicationIntegrationTypes[];
+	/**
+	 * [Interaction context(s)](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types) where the command can be used
+	 */
+	contexts?: InteractionContextTypes[];
+	/**
+	 * Type of command, defaults `1` if not set
+	 */
+	type?: ApplicationCommandTypes;
+	/**
+	 * Indicates whether the command is [age-restricted](https://discord.com/developers/docs/interactions/application-commands#agerestricted-commands)
+	 */
+	nsfw?: boolean;
 };

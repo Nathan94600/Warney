@@ -1,5 +1,5 @@
-import { ApplicationFlags, GatewayEventNames, UserFlags } from "../utils/enums/other";
-import { flagsToArray } from "../utils/functions";
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, GatewayEventNames, UserFlags } from "../utils/enums/other";
+import { flagsToArray, setGlobalApplicationCommands } from "../utils/functions";
 import { GatewayEvent } from "../utils/types";
 
 export default ((client, data) => {
@@ -41,4 +41,16 @@ export default ((client, data) => {
 		id: data.application.id,
 		flags: flagsToArray(data.application.flags, ApplicationFlags)
 	};
+
+	setGlobalApplicationCommands(client, [{
+		name: "dice",
+		description: "Roll a dice with a specified number of sides (6 by default)",
+		type: ApplicationCommandTypes.ChatInput,
+		options: [{
+			name: "sides",
+			description: "The number of sides on the dice",
+			type: ApplicationCommandOptionTypes.Integer,
+			minValue: 2
+		}]
+	}]);
 }) satisfies GatewayEvent<GatewayEventNames.Ready>;
