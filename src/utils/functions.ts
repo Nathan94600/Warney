@@ -282,9 +282,9 @@ export function setGlobalApplicationCommands(client: Client, commands: Applicati
  * @param withResponse Whether to include an [interaction callback object](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object) as the response
  */
 export function createInteractionResponse<WithResponse extends boolean>(interaction: APIInteraction, interactionResponse: InteractionResponse, withResponse?: WithResponse): Promise<APIInteractionCallbackResponse | void> {
-	if (interactionResponse.data && "embeds" in interactionResponse.data && interactionResponse.data.embeds.length > 10) throw new RangeError();
-	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.roles.length > 100) throw new RangeError();
-	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.users.length > 100) throw new RangeError();
+	if (interactionResponse.data && "embeds" in interactionResponse.data && interactionResponse.data.embeds.length > 10) throw new RangeError("The maximum number of embeds per message is 10");
+	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.roles.length > 100) throw new RangeError("The maximum number of role mentions per message is 100");
+	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.users.length > 100) throw new RangeError("The maximum number of user mentions per message is 100");
 
 	return new Promise((resolve, reject) => {
 		const body: APIInteractionResponse = { type: interactionResponse.type };
