@@ -1,93 +1,9 @@
-import { ActionTypes, AllowedMentionsTypes, AnimationTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EntryPointCommandHandlerTypes, EventTypes, IntegrationExpireBehaviors, IntegrationTypes, InteractionCallbackTypes, InteractionContextTypes, InteractionTypes, InviteTargetTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
-import { APIActionRowComponent, APIApplicationCommandOption, APIChannel, APIInteractionCallbackData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
-import { APIActivity } from "./activities";
+import { ActionTypes, AllowedMentionsTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EntryPointCommandHandlerTypes, EventTypes, GatewayEventNames, IntegrationExpireBehaviors, IntegrationTypes, InteractionCallbackTypes, InteractionContextTypes, InteractionTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
+import { APIActionRowComponent, APIApplicationCommandOption, APIChannel, APIInteraction, APIInteractionCallbackData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
 import { APIThreadChannel } from "./channels";
-import { APIGuildMember, APIGuild } from "./guilds";
-import { APIMessage, APIMessageComponentData } from "./messages";
-
-export interface APIWebhooksUpdateEventFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-	/**
-	 * ID of the channel
-	 */
-	channel_id: Snowflake;
-};
-
-export interface APIVoiceServerUpdateEventFields {
-	/**
-	 * Voice connection token
-	 */
-	token: string;
-	/**
-	 * Guild this voice server update is for
-	 */
-	guild_id: Snowflake;
-	/**
-	 * Voice server host
-	 */
-	endpoint: string | null;
-};
-
-export interface APIVoiceChannelEffectSendEventFields {
-	/**
-	 * ID of the channel the effect was sent in
-	 */
-	channel_id: Snowflake;
-	/**
-	 * ID of the guild the effect was sent in
-	 */
-	guild_id: Snowflake;
-	/**
-	 * ID of the user who sent the effect
-	 */
-	user_id: Snowflake;
-	/**
-	 * The emoji sent, for emoji reaction and soundboard effects
-	 */
-	emoji?: APIEmoji;
-	/**
-	 * The [type of emoji animation](https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send-animation-types), for emoji reaction and soundboard effects
-	 */
-	animation_type?: AnimationTypes | null;
-	/**
-	 * The ID of the emoji animation, for emoji reaction and soundboard effects
-	 */
-	animation_id?: number;
-	/**
-	 * The ID of the soundboard sound, for soundboard effects
-	 */
-	sound_id?: Snowflake | number;
-	/**
-	 * The volume of the soundboard sound, from 0 to 1, for soundboard effects
-	 */
-	sound_volume?: number;
-};
-
-export interface APITypingStartEventFields {
-	/**
-	 * ID of the channel
-	 */
-	channel_id: Snowflake;
-	/**
-	 * ID of the guild
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * ID of the user
-	 */
-	user_id: Snowflake;
-	/**
-	 * Unix time (in seconds) of when the user started typing
-	 */
-	timestamp: number;
-	/**
-	 * Member who started typing if this happened in a guild
-	 */
-	member?: APIGuildMember;
-};
+import { APIAutoModerationActionExecutionEventFields, APIChannelPinsUpdateEventFields, APIIntegrationCreateEventAdditionalFields, APIIntegrationDeleteEventFields, APIIntegrationUpdateEventAdditionalFields, APIInviteCreateEventFields, APIInviteDeleteEventFields, APIPresenceUpdateEventFields, APIReadyEventFields, APISoundboardSoundsEventFields, APIThreadListSyncEventFields, APIThreadMembersUpdateEventFields, APIThreadMemberUpdateEventExtaFields, APITypingStartEventFields, APIVoiceChannelEffectSendEventFields, APIVoiceServerUpdateEventFields, APIWebhooksUpdateEventFields } from "./eventFields";
+import { APIGuildMember, APIGuild, APIGuildAuditLogEntryCreateExtraFields, APIGuildBanAddEventFields, APIGuildBanRemoveEventFields, APIGuildCreateExtraFields, APIGuildEmojisUpdateEventFields, APIGuildIntegrationsUpdateEventFields, APIGuildMemberAddExtraFields, APIGuildMemberRemoveEventFields, APIGuildMembersChunkEventFields, APIGuildMemberUpdateEventFields, APIGuildRoleCreateEventFields, APIGuildRoleDeleteEventFields, APIGuildRoleUpdateEventFields, APIGuildScheduledEvent, APIGuildScheduledEventUserAddEventFields, APIGuildScheduledEventUserRemoveEventFields, APIGuildSoundboardSoundDeleteEventFields, APIGuildStickersUpdateEventFields } from "./guilds";
+import { APIMessage, APIMessageComponentData, APIMessageCreateExtraFields, APIMessageDeleteBulkEventFields, APIMessageDeleteEventFields, APIMessagePollVoteAddFields, APIMessagePollVoteRemoveFields, APIMessageReactionAddEventFields, APIMessageReactionRemoveAllEventFields, APIMessageReactionRemoveEmojiEventFields, APIMessageReactionRemoveEventFields } from "./messages";
 
 export interface APISubscription {
 	/**
@@ -126,72 +42,6 @@ export interface APISubscription {
 	 * ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope.
 	 */
 	country?: string;
-};
-
-export interface APIInviteDeleteEventFields {
-	/**
-	 * Channel of the invite
-	 */
-	channel_id: Snowflake;
-	/**
-	 * Guild of the invite
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * Unique invite [code](https://discord.com/developers/docs/resources/invite#invite-object)
-	 */
-	code: string;
-};
-
-export interface APIInviteCreateEventFields {
-	/**
-	 * Channel the invite is for
-	 */
-	channel_id: Snowflake;
-	/**
-	 * Unique invite [code](https://discord.com/developers/docs/resources/invite#invite-object)
-	 */
-	code: string;
-	/**
-	 * Time at which the invite was created
-	 */
-	created_at: string;
-	/**
-	 * Guild of the invite
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * User that created the invite
-	 */
-	inviter?: APIUser;
-	/**
-	 * How long the invite is valid for (in seconds)
-	 */
-	max_age: number;
-	/**
-	 * Maximum number of times the invite can be used
-	 */
-	max_uses: number;
-	/**
-	 * [Type of target](https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types) for this voice channel invite
-	 */
-	target_type?: InviteTargetTypes;
-	/**
-	 * User whose stream to display for this voice channel stream invite
-	 */
-	target_user?: APIUser;
-	/**
-	 * Embedded application to open for this voice channel embedded application invite
-	 */
-	target_application?: APIApplication;
-	/**
-	 * Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role)
-	 */
-	temporary: boolean;
-	/**
-	 * How many times the invite has been used (always will be 0)
-	 */
-	uses: number;
 };
 
 export interface APIBaseInteraction {
@@ -1201,36 +1051,6 @@ export interface APIPollAnswerCountObject {
 	me_voted: boolean;
 };
 
-export interface APIIntegrationDeleteEventFields {
-	/**
-	 * Integration ID
-	 */
-	id: Snowflake;
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-	/**
-	 * ID of the bot/OAuth2 application for this discord integration
-	 */
-	application_id?: Snowflake;
-};
-
-export interface APIIntegrationCreateEventAdditionalFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-};
-
-
-export interface APIIntegrationUpdateEventAdditionalFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-};
-
 export interface APIIntegration {
 	id: Snowflake;
 	name: string;
@@ -1282,17 +1102,6 @@ export interface APIIntegrationApplication {
 	 * the bot associated with this application
 	 */
 	bot?: APIUser;
-};
-
-export interface APISoundboardSoundsEventFields {
-	/**
-	 * The guild's soundboard sounds
-	 */
-	soundboard_sounds: APISoundboardSound[];
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
 };
 
 export interface APIUser {
@@ -1378,37 +1187,6 @@ export interface APIAvatarDecorationData {
 	 * id of the avatar decoration's SKU
 	 */
 	sku_id: Snowflake;
-};
-
-export interface APIReadyEventFields {
-	/**
-	 * [API version](https://discord.com/developers/docs/reference#api-versioning-api-versions)
-	 */
-	v: number;
-	/**
-	 * Information about the user including email
-	 */
-	user: APIUser;
-	/**
-	 * Guilds the user is in
-	 */
-	guilds: APIUnavailableGuild[];
-	/**
-	 * Used for resuming connections
-	 */
-	session_id: string;
-	/**
-	 * Gateway URL for resuming connections
-	 */
-	resume_gateway_url: string;
-	/**
-	 * [Shard information](https://discord.com/developers/docs/topics/gateway#sharding) associated with this session, if sent when identifying
-	 */
-	shard?: [number, number];
-	/**
-	 * Contains `id` and `flags`
-	 */
-	application: Required<Pick<APIApplication, "id" | "flags">>;
 };
 
 /**
@@ -1551,53 +1329,6 @@ export interface APIActionMetadata {
 	custom_message? :string;
 };
 
-export interface APIAutoModerationActionExecutionEventFields {
-	/**
-	 * ID of the guild in which action was executed
-	 */
-	guild_id: Snowflake;
-	/**
-	 * Action which was executed
-	 */
-	action: APIAutoModerationAction;
-	/**
-	 * ID of the rule which action belongs to
-	 */
-	rule_id: Snowflake;
-	/**
-	 * Trigger type of rule which was triggered
-	 */
-	rule_trigger_type: TriggerTypes;
-	/**
-	 * ID of the user which generated the content which triggered the rule
-	 */
-	user_id: Snowflake;
-	/**
-	 * ID of the channel in which user content was posted
-	 */
-	channel_id: Snowflake;
-	/**
-	 * ID of any user message which content belongs to
-	 */
-	message_id: Snowflake;
-	/**
-	 * ID of any system auto moderation messages posted as a result of this action
-	 */
-	alert_system_message_id?: Snowflake;
-	/**
-	 * User-generated text content
-	 */
-	content: string;
-	/**
-	 * Word or phrase configured in the rule that triggered the rule
-	 */
-	matched_keyword: string | null;
-	/**
-	 * Substring in content that triggered the rule
-	 */
-	matched_content: string | null;
-};
-
 export interface APIOverwrite {
 	/**
 	 * role or user id
@@ -1724,21 +1455,6 @@ export interface APIDefaultReaction {
 	name: string | null;
 };
 
-export interface APIChannelPinsUpdateEventFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * ID of the channel
-	 */
-	channel_id: Snowflake;
-	/**
-	 * Time at which the most recent pinned message was pinned
-	 */
-	last_pin_timestamp?: string | null;
-};
-
 export interface APIEntitlement {
 	/**
 	 * ID of the entitlement
@@ -1780,55 +1496,6 @@ export interface APIEntitlement {
 	 * For consumable items, whether or not the entitlement has been consumed
 	 */
 	consumed?: boolean;
-};
-
-export interface APIThreadListSyncEventFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-	/**
-	 * Parent channel IDs whose threads are being synced. If omitted, then threads were synced for the entire guild. This array may contain channel_ids that have no active threads as well, so you know to clear that data.
-	 */
-	channel_ids?: Snowflake[];
-	/**
-	 * All active threads in the given channels that the current user can access
-	 */
-	threads: APIThreadChannel[];
-	/**
-	 * All thread member objects from the synced threads for the current user, indicating which threads the current user has been added to
-	 */
-	members: APIThreadMember[];
-};
-
-export interface APIThreadMemberUpdateEventExtaFields {
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake
-};
-
-export interface APIThreadMembersUpdateEventFields {
-	/**
-	 * ID of the thread
-	 */
-	id: Snowflake;
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-	/**
-	 * Approximate number of members in the thread, capped at 50
-	 */
-	member_count: number;
-	/**
-	 * Users who were added to the thread
-	 */
-	added_members?: APIThreadMember[];
-	/**
-	 * ID of the users who were removed from the thread
-	 */
-	removed_member_ids?: Snowflake[];
 };
 
 export interface APIVoiceState {
@@ -1884,29 +1551,6 @@ export interface APIVoiceState {
 	 * the time at which the user requested to speak
 	 */
 	request_to_speak_timestamp: string | null;
-};
-
-export interface APIPresenceUpdateEventFields {
-	/**
-	 * User whose presence is being updated
-	 */
-	user: Partial<APIUser> & { id: string; };
-	/**
-	 * ID of the guild
-	 */
-	guild_id: Snowflake;
-	/**
-	 * Either "idle", "dnd", "online", or "offline"
-	 */
-	status: PresenceStatus;
-	/**
-	 * User's current activities
-	 */
-	activities: APIActivity[];
-	/**
-	 * User's platform-dependent status
-	 */
-	client_status: APIClientStatus;
 };
 
 /**
@@ -2802,4 +2446,82 @@ export interface APIPollCreateRequestObject {
 	 * The [layout type](https://discord.com/developers/docs/resources/poll#layout-type) of the poll. Defaults to... DEFAULT!
 	 */
 	layout_type?: LayoutTypes;
+};
+
+export interface ApiGatewayEvents {
+	[GatewayEventNames.Ready]: [d: APIReadyEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.Resumed]: [];
+	[GatewayEventNames.ApplicationCommandPermissionsUpdate]: [d: ApplicationCommandPermissionTypes, s: number | null, t: string | null];
+	[GatewayEventNames.AutoModerationRuleCreate]: [d: APIAutoModerationRule, s: number | null, t: string | null];
+	[GatewayEventNames.AutoModerationRuleUpdate]: [d: APIAutoModerationRule, s: number | null, t: string | null];
+	[GatewayEventNames.AutoModerationRuleDelete]: [d: APIAutoModerationRule, s: number | null, t: string | null];
+	[GatewayEventNames.AutoModerationActionExecution]: [d: APIAutoModerationActionExecutionEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.ChannelCreate]: [d: APIChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ChannelUpdate]: [d: APIChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ChannelDelete]: [d: APIChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ChannelPinsUpdate]: [d: APIChannelPinsUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadCreate]: [d: APIThreadChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadUpdate]: [d: APIThreadChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadDelete]: [d: APIThreadChannel, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadListSync]: [d: APIThreadListSyncEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadMemberUpdate]: [d: APIThreadChannel & APIThreadMemberUpdateEventExtaFields, s: number | null, t: string | null];
+	[GatewayEventNames.ThreadMembersUpdate]: [d: APIThreadMembersUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.EntitlementCreate]: [d: APIEntitlement, s: number | null, t: string | null];
+	[GatewayEventNames.EntitlementUpdate]: [d: APIEntitlement, s: number | null, t: string | null];
+	[GatewayEventNames.EntitlementDelete]: [d: APIEntitlement, s: number | null, t: string | null];
+	[GatewayEventNames.GuildCreate]: [d: (APIGuild & APIGuildCreateExtraFields) | APIUnavailableGuild, s: number | null, t: string | null];
+	[GatewayEventNames.GuildUpdate]: [d: APIGuild, s: number | null, t: string | null];
+	[GatewayEventNames.GuildDelete]: [d: APIUnavailableGuild, s: number | null, t: string | null];
+	[GatewayEventNames.GuildAuditLogEntryCreate]: [d: APIAuditLogEntry & APIGuildAuditLogEntryCreateExtraFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildBanAdd]: [d: APIGuildBanAddEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildBanRemove]: [d: APIGuildBanRemoveEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildEmojisUpdate]: [d: APIGuildEmojisUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildStickersUpdate]: [d: APIGuildStickersUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildIntegrationsUpdate]: [d: APIGuildIntegrationsUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildMemberAdd]: [d: APIGuildMember & APIGuildMemberAddExtraFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildMemberRemove]: [d: APIGuildMemberRemoveEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildMemberUpdate]: [d: APIGuildMemberUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildMembersChunk]: [d: APIGuildMembersChunkEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildRoleCreate]: [d: APIGuildRoleCreateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildRoleUpdate]: [d: APIGuildRoleUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildRoleDelete]: [d: APIGuildRoleDeleteEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildScheduledEventCreate]: [d: APIGuildScheduledEvent, s: number | null, t: string | null];
+	[GatewayEventNames.GuildScheduledEventUpdate]: [d: APIGuildScheduledEvent, s: number | null, t: string | null];
+	[GatewayEventNames.GuildScheduledEventDelete]: [d: APIGuildScheduledEvent, s: number | null, t: string | null];
+	[GatewayEventNames.GuildScheduledEventUserAdd]: [d: APIGuildScheduledEventUserAddEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildScheduledEventUserRemove]: [d: APIGuildScheduledEventUserRemoveEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildSoundboardSoundCreate]: [d: APISoundboardSound, s: number | null, t: string | null];
+	[GatewayEventNames.GuildSoundboardSoundUpdate]: [d: APISoundboardSound, s: number | null, t: string | null];
+	[GatewayEventNames.GuildSoundboardSoundDelete]: [d: APIGuildSoundboardSoundDeleteEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.GuildSoundboardSoundsUpdate]: [d: APISoundboardSound[], s: number | null, t: string | null];
+	[GatewayEventNames.SoundboardSounds]: [d: APISoundboardSoundsEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.IntegrationCreate]: [d: APIIntegration & APIIntegrationCreateEventAdditionalFields, s: number | null, t: string | null];
+	[GatewayEventNames.IntegrationUpdate]: [d: APIIntegration & APIIntegrationUpdateEventAdditionalFields, s: number | null, t: string | null];
+	[GatewayEventNames.IntegrationDelete]: [d: APIIntegrationDeleteEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.InteractionCreate]: [d: APIInteraction, s: number | null, t: string | null];
+	[GatewayEventNames.InviteCreate]: [d: APIInviteCreateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.InviteDelete]: [d: APIInviteDeleteEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageCreate]: [d: APIMessage & APIMessageCreateExtraFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageUpdate]: [d: APIMessage & APIMessageCreateExtraFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageDelete]: [d: APIMessageDeleteEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageDeleteBulk]: [d: APIMessageDeleteBulkEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageReactionAdd]: [d: APIMessageReactionAddEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageReactionRemove]: [d: APIMessageReactionRemoveEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageReactionRemoveAll]: [d: APIMessageReactionRemoveAllEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessageReactionRemoveEmoji]: [d: APIMessageReactionRemoveEmojiEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.PresenceUpdate]: [d: APIPresenceUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.StageInstanceCreate]: [d: APIStageInstance, s: number | null, t: string | null];
+	[GatewayEventNames.StageInstanceUpdate]: [d: APIStageInstance, s: number | null, t: string | null];
+	[GatewayEventNames.StageInstanceDelete]: [d: APIStageInstance, s: number | null, t: string | null];
+	[GatewayEventNames.SubscriptionCreate]: [d: APISubscription, s: number | null, t: string | null];
+	[GatewayEventNames.SubscriptionUpdate]: [d: APISubscription, s: number | null, t: string | null];
+	[GatewayEventNames.SubscriptionDelete]: [d: APISubscription, s: number | null, t: string | null];
+	[GatewayEventNames.TypingStart]: [d: APITypingStartEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.UserUpdate]: [d: APIUser, s: number | null, t: string | null];
+	[GatewayEventNames.VoiceChannelEffectSend]: [d: APIVoiceChannelEffectSendEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.VoiceStateUpdate]: [d: APIVoiceState, s: number | null, t: string | null];
+	[GatewayEventNames.VoiceServerUpdate]: [d: APIVoiceServerUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.WebhooksUpdate]: [d: APIWebhooksUpdateEventFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessagePollVoteAdd]: [d: APIMessagePollVoteAddFields, s: number | null, t: string | null];
+	[GatewayEventNames.MessagePollVoteRemove]: [d: APIMessagePollVoteRemoveFields, s: number | null, t: string | null];
 };

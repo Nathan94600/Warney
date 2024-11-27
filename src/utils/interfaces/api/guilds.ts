@@ -2,7 +2,8 @@ import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildSched
 import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, Locales } from "../../enums/other";
 import { Snowflake, APIChannel } from "../../types";
 import { APIDmChannel, APIGroupDmChannel, APIThreadChannel } from "./channels";
-import { APIRole, APIPresenceUpdateEventFields, APIUser, APIAvatarDecorationData, APIEmoji, APISticker, APIWelcomeScreen, APIVoiceState, APIStageInstance, APISoundboardSound, APIApplicationCommandPermission } from "./other";
+import { APIPresenceUpdateEventFields } from "./eventFields";
+import { APIRole, APIUser, APIAvatarDecorationData, APIEmoji, APISticker, APIWelcomeScreen, APIVoiceState, APIStageInstance, APISoundboardSound, APIApplicationCommandPermission } from "./other";
 
 export interface APIGuildSoundboardSoundDeleteEventFields {
 	/**
