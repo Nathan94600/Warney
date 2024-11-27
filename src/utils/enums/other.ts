@@ -1775,3 +1775,107 @@ export enum EntryPointCommandHandlerTypes {
 	 */
 	DiscordLaunchActivity = 2
 };
+
+export enum InteractionCallbackTypes {
+	/**
+	 * ACK a `Ping`
+	 */
+	Pong = 1,
+	/**
+	 * Respond to an interaction with a message
+	 */
+	ChannelMessageWithSource = 4,
+	/**
+	 * ACK an interaction and edit a response later, the user sees a loading state
+	 */
+	DeferedChannelMessageWithSource = 5,
+	/**
+	 * For components, ACK an interaction and edit the original message later; the user does not see a loading state
+	 */
+	DeferedUpdateMessage = 6,
+	/**
+	 * For components, edit the message the component was attached to
+	 */
+	UpdateMessage = 7,
+	/**
+	 * Respond to an autocomplete interaction with suggested choices
+	 */
+	ApplicationCommandAutocompleteResult = 8,
+	/**
+	 * Respond to an interaction with a popup modal
+	 */
+	Modal = 9,
+	/**
+	 * Launch the Activity associated with the app. Only available for apps with [Activities](https://discord.com/developers/docs/activities/overview) enabled
+	 */
+	LaunchActivity = 12,
+};
+
+export enum AllowedMentionsTypes {
+	/**
+	 * Controls role mentions
+	 */
+	RoleMentions = "roles",
+	/**
+	 * Controls user mentions
+	 */
+	UserMentions = "users",
+	/**
+	 * Controls @everyone and @here mentions
+	 */
+	EveryoneMentions = "everyone"
+};
+
+export enum MessageFlags {
+	/**
+	 * this message has been published to subscribed channels (via Channel Following)
+	 */
+	Crossposted = 1 << 0,
+	/**
+	 * this message originated from a message in another channel (via Channel Following)
+	 */
+	IsCrosspost = 1 << 1,
+	/**
+	 * do not include any embeds when serializing this message
+	 */
+	SuppressEmbeds = 1 << 2,
+	/**
+	 * the source message for this crosspost has been deleted (via Channel Following)
+	 */
+	SourceMessageDeleted = 1 << 3,
+	/**
+	 * this message came from the urgent message system
+	 */
+	Urgent = 1 << 4,
+	/**
+	 * this message has an associated thread, with the same id as the message
+	 */
+	HasThread = 1 << 5,
+	/**
+	 * this message is only visible to the user who invoked the Interaction
+	 */
+	Ephemeral = 1 << 6,
+	/**
+	 * this message is an Interaction Response and the bot is "thinking"
+	 */
+	Loading = 1 << 7,
+	/**
+	 * this message failed to mention some roles and add their members to the thread
+	 */
+	FailedToMentionSomeRolesInThread = 1 << 8,
+	/**
+	 * this message will not trigger push and desktop notifications
+	 */
+	SuppressNotifications = 1 << 12,
+	/**
+	 * this message is a voice message
+	 */
+	IsVoiceMessage = 1 << 13
+};
+
+export enum AttachmentFlag {
+	/**
+	 * this attachment has been edited using the remix feature on mobile
+	 */
+	IsRemix =  1 << 2
+};

@@ -1,9 +1,9 @@
-import { ActionTypes, AnimationTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EntryPointCommandHandlerTypes, EventTypes, IntegrationExpireBehaviors, IntegrationTypes, InteractionContextTypes, InteractionTypes, InviteTargetTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
-import { APIApplicationCommandOption, APIChannel, APIInteractionData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
+import { ActionTypes, AllowedMentionsTypes, AnimationTypes, ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, ApplicationIntegrationTypes, AuditLogEvents, ButtonStyles, ChannelTypes, EmbedTypes, EntitlementTypes, EntryPointCommandHandlerTypes, EventTypes, IntegrationExpireBehaviors, IntegrationTypes, InteractionCallbackTypes, InteractionContextTypes, InteractionTypes, InviteTargetTypes, KeywordPresetTypes, LayoutTypes, Locales, MembershipStates, MessageComponentTypes, OAuth2Scopes, OverwriteTypes, PremiumTypes, PresenceStatus, PrivacyLevels, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, SubscriptionStatus, TeamMemberRoleTypes, TextInputStyles, TriggerTypes } from "../../enums/other";
+import { APIActionRowComponent, APIApplicationCommandOption, APIChannel, APIInteractionCallbackData, APIMessageComponent, APISelectMenuComponent, SelectMenuComponentType, Snowflake } from "../../types";
 import { APIActivity } from "./activities";
 import { APIThreadChannel } from "./channels";
 import { APIGuildMember, APIGuild } from "./guilds";
-import { APIMessage } from "./messages";
+import { APIMessage, APIMessageComponentData } from "./messages";
 
 export interface APIWebhooksUpdateEventFields {
 	/**
@@ -194,7 +194,7 @@ export interface APIInviteCreateEventFields {
 	uses: number;
 };
 
-export interface APIInteraction {
+export interface APIBaseInteraction {
 	/**
 	 * ID of the interaction
 	 */
@@ -207,10 +207,6 @@ export interface APIInteraction {
 	 * Type of interaction
 	 */
 	type: InteractionTypes;
-	/**
-	 * Interaction data payload
-	 */
-	data?: APIInteractionData;
 	/**
 	 * Guild that the interaction was sent from
 	 */
@@ -252,10 +248,6 @@ export interface APIInteraction {
 	 */
 	app_permissions: string;
 	/**
-	 * Selected [language]() of the invoking user
-	 */
-	locale?: Locales;
-	/**
 	 * [Guild's preferred locale](https://discord.com/developers/docs/resources/guild#guild-object), if invoked in a guild
 	 */
 	guild_locale?: string;
@@ -272,6 +264,73 @@ export interface APIInteraction {
 	 * Context where the interaction was triggered from
 	 */
 	context?: InteractionContextTypes;
+};
+
+export interface APIApplicationCommandInteraction extends APIBaseInteraction {
+	/**
+	 * Type of interaction
+	 */
+	type: InteractionTypes.ApplicationCommand;
+	/**
+	 * Interaction data payload
+	 */
+	data: APIApplicationCommandData;
+	/**
+	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
+	 */
+	locale?: Locales;
+};
+
+export interface APIApplicationCommandAutocompleteInteraction extends APIBaseInteraction {
+	/**
+	 * Type of interaction
+	 */
+	type: InteractionTypes.ApplicationCommandAutocomplete;
+	/**
+	 * Interaction data payload
+	 */
+	data: APIApplicationCommandData;
+	/**
+	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
+	 */
+	locale?: Locales;
+};
+
+export interface APIMessageComponentInteraction extends APIBaseInteraction {
+	/**
+	 * Type of interaction
+	 */
+	type: InteractionTypes.MessageComponent;
+	/**
+	 * Interaction data payload
+	 */
+	data: APIMessageComponentData;
+	/**
+	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
+	 */
+	locale?: Locales;
+};
+
+export interface APIModalSubmitInteraction extends APIBaseInteraction {
+	/**
+	 * Type of interaction
+	 */
+	type: InteractionTypes.ModalSubmit;
+	/**
+	 * Interaction data payload
+	 */
+	data: APIModalSubmitData;
+	/**
+	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
+	 */
+	locale?: Locales;
+};
+
+export interface APIPingInteraction extends APIBaseInteraction {
+	/**
+	 * Type of interaction
+	 */
+	type: InteractionTypes.Ping;
 };
 
 export interface APIModalSubmitData {
@@ -781,12 +840,12 @@ export interface APITextInputComponent {
 
 export interface APISelectMenuActionRowComponent {
 	type: MessageComponentTypes.ActionRow;
-	components: [APISelectMenuComponent];
+	components: [] | [APISelectMenuComponent];
 };
 
 export interface APINonSelectMenuActionRowComponent {
 	type: MessageComponentTypes.ActionRow;
-	components: Exclude<APIMessageComponent, APISelectMenuComponent>[];
+	components: Exclude<APIMessageComponent, APISelectMenuComponent | APIActionRowComponent>[];
 };
 
 export interface APIBaseSelectMenuComponent {
@@ -2570,4 +2629,177 @@ export interface APIApplcationCommandParams {
 	 * Indicates whether the command is [age-restricted](https://discord.com/developers/docs/interactions/application-commands#agerestricted-commands)
 	 */
 	nsfw?: boolean;
+};
+
+export interface APIInteractionCallbackResponse {
+	/**
+	 * The interaction object associated with the interaction response.
+	 */
+	interaction: APIInteractionCallback;
+	/**
+	 * The resource that was created by the interaction response.
+	 */
+	resource?: APIInteractionResource;
+};
+
+export interface APIInteractionResource {
+	/**
+	 * [Interaction callback type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type)
+	 */
+	type: InteractionCallbackTypes;
+	/**
+	 * Represents the Activity launched by this interaction.
+	 */
+	activity_instance?: APIInteractionCallbackActivityInstanceResource;
+	/**
+	 * Message created by the interaction.
+	 */
+	message?: APIMessage;
+};
+
+export interface APIInteractionCallback {
+	/**
+	 * ID of the interaction
+	 */
+	id: Snowflake;
+	/**
+	 * [Interaction type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type)
+	 */
+	type: InteractionTypes;
+	/**
+	 * Instance ID of the Activity if one was launched or joined
+	 */
+	activity_instance_id?: string;
+	/**
+	 * ID of the message that was created by the interaction
+	 */
+	response_message_id?: Snowflake;
+	/**
+	 * Whether or not the message is in a loading state
+	 */
+	response_message_loading?: boolean;
+	/**
+	 * Whether or not the response message was ephemeral
+	 */
+	response_message_ephemeral?: boolean;
+};
+
+export interface APIInteractionCallbackActivityInstanceResource {
+	/**
+	 * Instance ID of the Activity if one was launched or joined.
+	 */
+	id: string;
+};
+
+export interface APIInteractionResponse {
+	/**
+	 * Type of response
+	 */
+	type: InteractionCallbackTypes;
+	/**
+	 * An optional response message
+	 */
+	data?: APIInteractionCallbackData;
+};
+
+export interface APIAllowedMentions {
+	/**
+	 * An array of [allowed mention types](https://discord.com/developers/docs/resources/message#allowed-mentions-object-allowed-mention-types) to parse from the content.
+	 */
+	parse: AllowedMentionsTypes[];
+	/**
+	 * Array of role_ids to mention (Max size of 100)
+	 */
+	roles: Snowflake[];
+	/**
+	 * Array of user_ids to mention (Max size of 100)
+	 */
+	users: Snowflake[];
+	/**
+	 * For replies, whether to mention the author of the message being replied to (default false)
+	 */
+	replied_user: boolean;
+};
+
+/**
+ * Not all message fields are currently supported.
+ */
+export interface APIMessageInteractionCallbackData {
+	/**
+	 * Whether the response is TTS
+	 */
+	tts?: boolean;
+	/**
+	 * Message content
+	 */
+	content?: string;
+	/**
+	 * Supports up to 10 embeds
+	 */
+	embeds?: APIEmbed[];
+	/**
+	 * [Allowed mentions](https://discord.com/developers/docs/resources/message#allowed-mentions-object) object
+	 */
+	allowed_mentions?: APIAllowedMentions;
+	/**
+	 * [Message flags](https://discord.com/developers/docs/resources/message#message-object-message-flags) combined as a [bitfield](https://en.wikipedia.org/wiki/Bit_field) (only `SUPPRESS_EMBEDS`, `EPHEMERAL`, and `SUPPRESS_NOTIFICATIONS` can be set)
+	 */
+	flags?: number;
+	/**
+	 * Message components
+	 */
+	components?: APIActionRowComponent[];
+	/**
+	 * Attachment objects with filename and description
+	 */
+	attachments?: APIAttachment[];
+	/**
+	 * Details about the poll
+	 */
+	poll?: APIPollCreateRequestObject;
+};
+
+export interface APIAutocompleteInteractionCallbackData {
+	/**
+	 * autocomplete choices (max of 25 choices)
+	 */
+	choices: APIApplicationCommandOptionChoice<string | number>[];
+};
+
+export interface APIModalInteractionCallbackData {
+	/**
+	 * Developer-defined identifier for the modal, max 100 characters
+	 */
+	custom_id: string;
+	/**
+	 * Title of the popup modal, max 45 characters
+	 */
+	title: string;
+	/**
+	 * Between 1 and 5 (inclusive) components that make up the modal
+	 */
+	components: APIActionRowComponent[];
+};
+
+export interface APIPollCreateRequestObject {
+	/**
+	 * The question of the poll. Only `text` is supported.
+	 */
+	question: APIPollMediaObject;
+	/**
+	 * Each of the answers available in the poll, up to 10
+	 */
+	answers: APIPollAnswerObject[];
+	/**
+	 * Number of hours the poll should be open for, up to 32 days. Defaults to 24
+	 */
+	duration?: number;
+	/**
+	 * Whether a user can select multiple answers. Defaults to false
+	 */
+	allow_multiselect?: boolean;
+	/**
+	 * The [layout type](https://discord.com/developers/docs/resources/poll#layout-type) of the poll. Defaults to... DEFAULT!
+	 */
+	layout_type?: LayoutTypes;
 };

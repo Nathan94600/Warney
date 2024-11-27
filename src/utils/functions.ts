@@ -1,12 +1,12 @@
 import { inspect } from "util";
 import { CHAT_INPUT_APPLICATION_COMMAND_NAMING_REGEX, BASE_URL, OTHER_APPLICATION_COMMAND_NAMING_REGEX } from "./constants";
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, RateLimitScopes, UserFlags } from "./enums/other";
-import { ApplicationCommandParams, Client, RateLimit, SessionStartLimit } from "./interfaces/other";
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, MessageComponentTypes, RateLimitScopes, UserFlags } from "./enums/other";
+import { ApplicationCommandParams, Client, InteractionResponse, RateLimit, SessionStartLimit } from "./interfaces/other";
 import { WebSocket } from "ws";
 import { readdir } from "fs";
 import { token } from "../config.json";
-import { APIApplicationCommand, APIApplicationCommandOption, ApplicationCommandOption } from "./types";
-import { APIApplcationCommandParams, APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandSubCommandOption } from "./interfaces/api/other";
+import { APIActionRowComponent, APIApplicationCommand, APIApplicationCommandOption, APIInteraction, ApplicationCommandOption } from "./types";
+import { APIApplcationCommandParams, APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandSubCommandOption, APIBasicButtonComponent, APIChannelSelectMenuComponent, APIInteractionCallbackResponse, APIInteractionResponse, APILinkButtonComponent, APIMessageInteractionCallbackData, APINonSelectMenuActionRowComponent, APIOtherSelectMenuComponent, APIPremiumButtonComponent, APISelectMenuActionRowComponent, APISelectOption, APIStringSelectMenuComponent, APITextInputComponent } from "./interfaces/api/other";
 
 export function isRateLimitScope(scope: string): scope is RateLimitScopes { return scope == RateLimitScopes.Global || scope == RateLimitScopes.Shared || scope == RateLimitScopes.User; };
 
@@ -274,6 +274,172 @@ export function setGlobalApplicationCommands(client: Client, commands: Applicati
 				if (res.status == 200) resolve(json);
 				else reject(json)
 			}));
-		}else reject("Application client required")
+		} else reject("Application client required")
+	});
+};
+
+/**
+ * @param withResponse Whether to include an [interaction callback object](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object) as the response
+ */
+export function createInteractionResponse<WithResponse extends boolean>(interaction: APIInteraction, interactionResponse: InteractionResponse, withResponse?: WithResponse): Promise<APIInteractionCallbackResponse | void> {
+	if (interactionResponse.data && "embeds" in interactionResponse.data && interactionResponse.data.embeds.length > 10) throw new RangeError();
+	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.roles.length > 100) throw new RangeError();
+	else if (interactionResponse.data && "allowedMentions" in interactionResponse.data && interactionResponse.data.allowedMentions.users.length > 100) throw new RangeError();
+
+	return new Promise((resolve, reject) => {
+		const body: APIInteractionResponse = { type: interactionResponse.type };
+
+		if (interactionResponse.data && "customId" in interactionResponse.data) {
+			const components: APIActionRowComponent[] = [];
+
+			interactionResponse.data.components.forEach(component => {
+				const apiNonSelectMenuActionRowComponent: APINonSelectMenuActionRowComponent = { type: component.type, components: [] }, apiSelectMenuActionRowComponent: APISelectMenuActionRowComponent = { type: component.type, components: [] };
+
+				component.components.forEach(subComponent => {
+					switch (subComponent.type) {
+						case MessageComponentTypes.Button:
+							if ("url" in subComponent) {
+								const button: APILinkButtonComponent = { type: subComponent.type, style: subComponent.style, url: subComponent.url };
+
+								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+								if (subComponent.label) button.label = subComponent.label;
+								if (subComponent.emoji) {
+									const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
+
+									if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
+
+									button.emoji = emoji;
+								}
+
+								apiNonSelectMenuActionRowComponent.components.push(button);
+							} else if ("skuId" in subComponent) {
+								const button: APIPremiumButtonComponent = { type: subComponent.type, style: subComponent.style, sku_id: subComponent.skuId };
+
+								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+
+								apiNonSelectMenuActionRowComponent.components.push(button);
+							} else {
+								const button: APIBasicButtonComponent = { type: subComponent.type, style: subComponent.style };
+
+								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+								if (subComponent.customId) button.custom_id = subComponent.customId;
+								if (subComponent.label) button.label = subComponent.label;
+								if (subComponent.emoji) {
+									const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
+
+									if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
+
+									button.emoji = emoji;
+								}
+
+								apiNonSelectMenuActionRowComponent.components.push(button);
+							}
+							break;
+						case MessageComponentTypes.TextInput:
+							const textInput: APITextInputComponent = { custom_id: subComponent.customId, label: subComponent.label, style: subComponent.style, type: subComponent.type };
+
+							if (subComponent.maxLength) textInput.max_length = subComponent.maxLength;
+							if (subComponent.minLength !== undefined) textInput.min_length = subComponent.minLength;
+							if (subComponent.placeholder) textInput.placeholder = subComponent.placeholder;
+							if (subComponent.value) textInput.value = subComponent.value;
+
+							apiNonSelectMenuActionRowComponent.components.push(textInput);
+							break;
+						case MessageComponentTypes.ChannelSelect:
+							const channelSelect: APIChannelSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
+	
+							if (subComponent.disabled !== undefined) channelSelect.disabled = subComponent.disabled;
+							if (subComponent.minValue !== undefined) channelSelect.min_value = subComponent.minValue;
+							if (subComponent.maxValue) channelSelect.max_value = subComponent.maxValue;
+							if (subComponent.placeholder) channelSelect.placeholder = subComponent.placeholder;
+							if (subComponent.defaultValues) channelSelect.default_values = subComponent.defaultValues;
+							if (subComponent.channelTypes) channelSelect.channel_types = subComponent.channelTypes;
+	
+							apiSelectMenuActionRowComponent.components = [channelSelect];
+							break;
+						case MessageComponentTypes.StringSelect:
+							const stringSelect: APIStringSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type, options: [] };
+		
+							if (subComponent.disabled !== undefined) stringSelect.disabled = subComponent.disabled;
+							if (subComponent.minValue !== undefined) stringSelect.min_value = subComponent.minValue;
+							if (subComponent.maxValue) stringSelect.max_value = subComponent.maxValue;
+							if (subComponent.placeholder) stringSelect.placeholder = subComponent.placeholder;
+							if (subComponent.options) subComponent.options.forEach(option => {
+								const apiOption: APISelectOption = { label: option.label, value: option.value };
+								
+								if (option.default !== undefined) apiOption.default = option.default;
+								if (option.description) apiOption.description = option.description;
+								if (option.emoji) {
+									const emoji: APILinkButtonComponent["emoji"] = { id: option.emoji.id, name: option.emoji.name };
+
+									if (option.emoji.animated !== undefined) emoji.animated = option.emoji.animated;
+
+									apiOption.emoji = emoji;
+								};
+
+								stringSelect.options.push(option);
+							});
+		
+							apiSelectMenuActionRowComponent.components = [stringSelect];
+							break;
+						default:
+							const selectMenu: APIOtherSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
+		
+							if (subComponent.disabled !== undefined) selectMenu.disabled = subComponent.disabled;
+							if (subComponent.minValue !== undefined) selectMenu.min_value = subComponent.minValue;
+							if (subComponent.maxValue) selectMenu.max_value = subComponent.maxValue;
+							if (subComponent.placeholder) selectMenu.placeholder = subComponent.placeholder;
+							if (subComponent.defaultValues) selectMenu.default_values = subComponent.defaultValues;
+
+							apiSelectMenuActionRowComponent.components = [selectMenu];
+							break;
+					}
+				});
+
+				components.push(apiNonSelectMenuActionRowComponent, apiSelectMenuActionRowComponent);
+			});
+
+			body.data = {
+				custom_id: interactionResponse.data.customId,
+				title: interactionResponse.data.title,
+				components: components
+			};
+		} else if (interactionResponse.data && "choices" in interactionResponse.data) {
+			const choices: APIApplicationCommandOptionChoice<string | number>[] = [];
+
+			interactionResponse.data.choices.forEach(choice => {
+				const apiChoice: APIApplicationCommandOptionChoice<string | number> = { name: choice.name, value: choice.value };
+
+				if (choice.nameLocalizations) apiChoice.name_localizations = choice.nameLocalizations;
+
+				choices.push(choice);
+			});
+
+			body.data = { choices };
+		} else if (interactionResponse.data) {
+			const message: APIMessageInteractionCallbackData = {};
+
+			if (interactionResponse.data.tts !== undefined) message.tts = interactionResponse.data.tts;
+			if (interactionResponse.data.content) message.content = interactionResponse.data.content;
+			if (interactionResponse.data.allowedMentions) message.allowed_mentions = {
+				parse: interactionResponse.data.allowedMentions.parse,
+				replied_user: interactionResponse.data.allowedMentions.repliedUser,
+				roles: interactionResponse.data.allowedMentions.roles,
+				users: interactionResponse.data.allowedMentions.users
+			};
+			if (interactionResponse.data.flags) message.flags = interactionResponse.data.flags.reduce((prevVal, nextVal) => prevVal + nextVal, 0);
+			
+			body.data = message;
+		};
+
+		fetch(`${BASE_URL}/interactions/${interaction.id}/${interaction.token}/callback${withResponse !== undefined ? `?with_response=${withResponse}` : ""}`, {
+			method: "POST",
+			headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
+			body: JSON.stringify(body)
+		}).then(res => {			
+			if (res.status == 200) res.json().then(json => resolve(json));
+			else if (res.status == 204) resolve();
+			else reject();
+		});
 	});
 };
