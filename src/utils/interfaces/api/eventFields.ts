@@ -1,5 +1,6 @@
-import { AnimationTypes, InviteTargetTypes, PresenceStatus, TriggerTypes } from "../../enums/other";
-import { Snowflake } from "../../types";
+import { AnimationTypes, InviteTargetTypes, TriggerTypes } from "../../enums/types";
+import { PresenceStatus } from "../../enums/other";
+import { Snowflake } from "../../types/other";
 import { APIActivity } from "./activities";
 import { APIThreadChannel } from "./channels";
 import { APIGuildMember } from "./guilds";

@@ -1,6 +1,8 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, GatewayEventNames, UserFlags } from "../utils/enums/other";
+import { UserFlags, ApplicationFlags } from "../utils/enums/flags";
+import { GatewayEventNames } from "../utils/enums/other";
+import { ApplicationCommandTypes, ApplicationCommandOptionTypes } from "../utils/enums/types";
 import { flagsToArray, setGlobalApplicationCommands } from "../utils/functions";
-import { GatewayEvent } from "../utils/types";
+import { GatewayEvent } from "../utils/types/other";
 
 export default ((client, data) => {
 	const apiUser = data.user;

@@ -1,12 +1,15 @@
 import { inspect } from "util";
 import { CHAT_INPUT_APPLICATION_COMMAND_NAMING_REGEX, BASE_URL, OTHER_APPLICATION_COMMAND_NAMING_REGEX } from "./constants";
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, MessageComponentTypes, RateLimitScopes, UserFlags } from "./enums/other";
 import { ApplicationCommandParams, Client, InteractionResponse, RateLimit, SessionStartLimit } from "./interfaces/other";
 import { WebSocket } from "ws";
 import { readdir } from "fs";
 import { token } from "../config.json";
-import { APIActionRowComponent, APIApplicationCommand, APIApplicationCommandOption, APIInteraction, ApplicationCommandOption } from "./types";
 import { APIApplcationCommandParams, APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandSubCommandOption, APIBasicButtonComponent, APIChannelSelectMenuComponent, APIInteractionCallbackResponse, APIInteractionResponse, APILinkButtonComponent, APIMessageInteractionCallbackData, APINonSelectMenuActionRowComponent, APIOtherSelectMenuComponent, APIPremiumButtonComponent, APISelectMenuActionRowComponent, APISelectOption, APIStringSelectMenuComponent, APITextInputComponent } from "./interfaces/api/other";
+import { ApplicationFlags, UserFlags } from "./enums/flags";
+import { RateLimitScopes } from "./enums/other";
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageComponentTypes } from "./enums/types";
+import { APIApplicationCommandOption, APIApplicationCommand, APIInteraction, APIActionRowComponent } from "./types/api";
+import { ApplicationCommandOption } from "./types/other";
 
 export function isRateLimitScope(scope: string): scope is RateLimitScopes { return scope == RateLimitScopes.Global || scope == RateLimitScopes.Shared || scope == RateLimitScopes.User; };
 

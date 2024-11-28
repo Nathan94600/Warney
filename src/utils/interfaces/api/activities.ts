@@ -1,5 +1,5 @@
-import { ActivityTypes } from "../../enums/other";
-import { Snowflake } from "../../types";
+import { ActivityTypes } from "../../enums/types";
+import { Snowflake } from "../../types/other";
 
 export interface APIActivity {
 	/**

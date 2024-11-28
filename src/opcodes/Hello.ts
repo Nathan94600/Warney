@@ -1,6 +1,6 @@
 import { GatewayOpcodes } from "../utils/enums/other";
 import { sendWebsocketMessage } from "../utils/functions";
-import { Opcode } from "../utils/types";
+import { Opcode } from "../utils/types/other";
 
 export default ((client, data) => {
 	setInterval(() => sendWebsocketMessage(client, {

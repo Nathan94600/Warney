@@ -1,7 +1,9 @@
 import WebSocket = require("ws");
-import { AllowedMentionsTypes, ApplicationCommandOptionTypes, ApplicationCommandTypes, ApplicationFlags, ApplicationIntegrationTypes, AttachmentFlag, BitwisePermissionFlags, ButtonStyles, ChannelTypes, EmbedTypes, GatewayOpcodes, InteractionCallbackTypes, InteractionContextTypes, LayoutTypes, Locales, MessageComponentTypes, MessageFlags, PremiumTypes, RateLimitScopes, SelectDefaultValueTypes, TextInputStyles, UserFlags } from "../enums/other";
-import { ActionRowComponent, ApplicationCommandOption, InteractionCallbackData, MessageComponent, SelectMenuComponent, SelectMenuComponentType, Snowflake } from "../types";
+import { ActionRowComponent, ApplicationCommandOption, InteractionCallbackData, MessageComponent, SelectMenuComponent, SelectMenuComponentType, Snowflake } from "../types/other";
 import { ClientRequest, IncomingMessage } from "http";
+import { UserFlags, ApplicationFlags, BitwisePermissionFlags, MessageFlags, AttachmentFlags } from "../enums/flags";
+import { RateLimitScopes, Locales, GatewayOpcodes, TextInputStyles, ButtonStyles } from "../enums/other";
+import { PremiumTypes, ApplicationIntegrationTypes, InteractionContextTypes, ApplicationCommandTypes, ApplicationCommandOptionTypes, ChannelTypes, EmbedTypes, InteractionCallbackTypes, LayoutTypes, AllowedMentionsTypes, MessageComponentTypes, SelectDefaultValueTypes } from "../enums/types";
 
 export interface Cache {
 	users: Record<string, User>;
@@ -729,7 +731,7 @@ export interface Attachment {
 	ephemeral?: boolean
 	durationSecs?: number;
 	waveform?: string;
-	flags?: AttachmentFlag[];
+	flags?: AttachmentFlags[];
 };
 
 export interface AllowedMentions {

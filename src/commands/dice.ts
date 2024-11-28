@@ -1,6 +1,7 @@
-import { InteractionCallbackTypes, MessageFlags } from "../utils/enums/other";
+import { MessageFlags } from "../utils/enums/flags";
+import { InteractionCallbackTypes } from "../utils/enums/types";
 import { createInteractionResponse } from "../utils/functions";
-import { Command } from "../utils/types";
+import { Command } from "../utils/types/other";
 
 export default ((_client, interaction) => {
 	const sides = interaction.data.options?.[0]?.value || 6;

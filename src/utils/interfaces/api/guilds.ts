@@ -1,6 +1,7 @@
 import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildScheduledEventEntityTypes, GuildScheduledEventRecurrenceRuleFrequencies, GuildScheduledEventRecurrenceRuleWeekdays, GuildScheduledEventRecurrenceRuleMonths, GuildFeatures, GuildNSFWLevels } from "../../enums/guilds";
 import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, Locales } from "../../enums/other";
-import { Snowflake, APIChannel } from "../../types";
+import { Snowflake } from "../../types/other";
+import { APIChannel } from "../../types/api";
 import { APIDmChannel, APIGroupDmChannel, APIThreadChannel } from "./channels";
 import { APIPresenceUpdateEventFields } from "./eventFields";
 import { APIRole, APIUser, APIAvatarDecorationData, APIEmoji, APISticker, APIWelcomeScreen, APIVoiceState, APIStageInstance, APISoundboardSound, APIApplicationCommandPermission } from "./other";

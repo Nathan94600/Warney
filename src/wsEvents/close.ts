@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 import { GATEWAY_CLOSE_EVENT_RECONNECTABLE_CODES } from "../utils/constants";
-import { WsEvent } from "../utils/types";
+import { WsEvent } from "../utils/types/other";
 import { openDiscordWebSocketConnection, sendWebsocketMessage } from "../utils/functions";
 import { GatewayOpcodes } from "../utils/enums/other";
 import { readdir } from "fs";

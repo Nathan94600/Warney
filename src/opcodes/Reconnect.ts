@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 import { GatewayOpcodes } from "../utils/enums/other";
-import { Opcode } from "../utils/types";
+import { Opcode } from "../utils/types/other";
 import { readdir } from "fs";
 import { sendWebsocketMessage } from "../utils/functions";
 
