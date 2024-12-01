@@ -4,6 +4,7 @@ import { ClientRequest, IncomingMessage } from "http";
 import { UserFlags, ApplicationFlags, BitwisePermissionFlags, MessageFlags, AttachmentFlags } from "../enums/flags";
 import { RateLimitScopes, Locales, GatewayOpcodes, TextInputStyles, ButtonStyles } from "../enums/other";
 import { PremiumTypes, ApplicationIntegrationTypes, InteractionContextTypes, ApplicationCommandTypes, ApplicationCommandOptionTypes, ChannelTypes, EmbedTypes, InteractionCallbackTypes, LayoutTypes, AllowedMentionsTypes, MessageComponentTypes, SelectDefaultValueTypes } from "../enums/types";
+import { APIApplicationCommandInteraction } from "./api/other";
 
 export interface Cache {
 	users: Record<string, User>;
@@ -433,7 +434,7 @@ export interface Embed {
 	/**
 	 * title of embed
 	 */
-	tiitle?: string;
+	title?: string;
 	/**
 	 * [type of embed](https://discord.com/developers/docs/resources/message#embed-object-embed-types) (always "rich" for webhook embeds)
 	 */
@@ -714,7 +715,7 @@ export interface PollMediaObject {
 	/**
 	 * The emoji of the field
 	 */
-	emoji?: Pick<Emoji, "id"> | Pick<Emoji, "name">;
+	emoji?: Pick<Emoji, "id" | "name">;
 };
 
 export interface Attachment {
@@ -993,4 +994,8 @@ export interface PremiumButtonComponent extends BaseButtonComponent {
 	 * Identifier for a purchasable [SKU](https://discord.com/developers/docs/resources/sku#sku-object), only available when using premium-style buttons
 	 */
 	skuId: Snowflake;
+};
+
+export interface Command extends ApplicationCommandParams {
+	run: (client: Client, interaction: APIApplicationCommandInteraction) => void
 };

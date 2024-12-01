@@ -4,12 +4,12 @@ import { ApplicationCommandParams, Client, InteractionResponse, RateLimit, Sessi
 import { WebSocket } from "ws";
 import { readdir } from "fs";
 import { token } from "../config.json";
-import { APIApplcationCommandParams, APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandSubCommandOption, APIBasicButtonComponent, APIChannelSelectMenuComponent, APIInteractionCallbackResponse, APIInteractionResponse, APILinkButtonComponent, APIMessageInteractionCallbackData, APINonSelectMenuActionRowComponent, APIOtherSelectMenuComponent, APIPremiumButtonComponent, APISelectMenuActionRowComponent, APISelectOption, APIStringSelectMenuComponent, APITextInputComponent } from "./interfaces/api/other";
+import { APIApplcationCommandParams, APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandSubCommandOption, APIBasicButtonComponent, APIChannelSelectMenuComponent, APIEmbed, APIEmbedAuthor, APIEmbedField, APIEmbedFooter, APIEmbedImage, APIEmbedProvider, APIEmbedThumbnail, APIEmbedVideo, APIInteractionCallbackResponse, APIInteractionResponse, APILinkButtonComponent, APIMessageInteractionCallbackData, APINonSelectMenuActionRowComponent, APIOtherSelectMenuComponent, APIPollAnswerObject, APIPremiumButtonComponent, APISelectMenuActionRowComponent, APISelectOption, APIStringSelectMenuComponent, APITextInputComponent } from "./interfaces/api/other";
 import { ApplicationFlags, UserFlags } from "./enums/flags";
 import { RateLimitScopes } from "./enums/other";
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageComponentTypes } from "./enums/types";
 import { APIApplicationCommandOption, APIApplicationCommand, APIInteraction, APIActionRowComponent } from "./types/api";
-import { ApplicationCommandOption } from "./types/other";
+import { ActionRowComponent, ApplicationCommandOption } from "./types/other";
 
 export function isRateLimitScope(scope: string): scope is RateLimitScopes { return scope == RateLimitScopes.Global || scope == RateLimitScopes.Shared || scope == RateLimitScopes.User; };
 
@@ -239,7 +239,8 @@ export function setGlobalApplicationCommands(client: Client, commands: Applicati
 		else if (cmd.nameLocalizations) Object.entries(cmd.nameLocalizations).forEach(([locale, name]) => {
 			if (!OTHER_APPLICATION_COMMAND_NAMING_REGEX.test(name)) throw new SyntaxError(`commands[${cmdIndex}]: The localized name (${locale}) of the command must match the following pattern: ${OTHER_APPLICATION_COMMAND_NAMING_REGEX.toString()}`);
 		});
-		else if (cmd.description && (cmd.description.length < 1 || cmd.description.length > 100)) throw new RangeError(`commands[${cmdIndex}]: The description of the command must have a length between 1 and 100 characters long.`);
+		
+		if (cmd.description && (cmd.description.length < 1 || cmd.description.length > 100)) throw new RangeError(`commands[${cmdIndex}]: The description of the command must have a length between 1 and 100 characters long.`);
 		else if (cmd.descriptionLocalizations) Object.entries(cmd.descriptionLocalizations).forEach(([locale, description]) => {
 			if (description.length < 1 || description.length > 100) throw new RangeError(`commands[${cmdIndex}]: The localized description (${locale}) of the command must have a length between 1 and 100 characters long.`);
 		});
@@ -281,6 +282,119 @@ export function setGlobalApplicationCommands(client: Client, commands: Applicati
 	});
 };
 
+export function componentsToAPiComponents(components: ActionRowComponent[]): APIActionRowComponent[] {
+	const apiComponents: APIActionRowComponent[] = [];
+
+	components.forEach(component => {
+		const apiNonSelectMenuActionRowComponent: APINonSelectMenuActionRowComponent = { type: component.type, components: [] }, apiSelectMenuActionRowComponent: APISelectMenuActionRowComponent = { type: component.type, components: [] };
+
+		component.components.forEach(subComponent => {
+			switch (subComponent.type) {
+				case MessageComponentTypes.Button:
+					if ("url" in subComponent) {
+						const button: APILinkButtonComponent = { type: subComponent.type, style: subComponent.style, url: subComponent.url };
+
+						if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+						if (subComponent.label) button.label = subComponent.label;
+						if (subComponent.emoji) {
+							const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
+
+							if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
+
+							button.emoji = emoji;
+						}
+
+						apiNonSelectMenuActionRowComponent.components.push(button);
+					} else if ("skuId" in subComponent) {
+						const button: APIPremiumButtonComponent = { type: subComponent.type, style: subComponent.style, sku_id: subComponent.skuId };
+
+						if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+
+						apiNonSelectMenuActionRowComponent.components.push(button);
+					} else {
+						const button: APIBasicButtonComponent = { type: subComponent.type, style: subComponent.style };
+
+						if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
+						if (subComponent.customId) button.custom_id = subComponent.customId;
+						if (subComponent.label) button.label = subComponent.label;
+						if (subComponent.emoji) {
+							const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
+
+							if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
+
+							button.emoji = emoji;
+						}
+
+						apiNonSelectMenuActionRowComponent.components.push(button);
+					}
+					break;
+				case MessageComponentTypes.TextInput:
+					const textInput: APITextInputComponent = { custom_id: subComponent.customId, label: subComponent.label, style: subComponent.style, type: subComponent.type };
+
+					if (subComponent.maxLength) textInput.max_length = subComponent.maxLength;
+					if (subComponent.minLength !== undefined) textInput.min_length = subComponent.minLength;
+					if (subComponent.placeholder) textInput.placeholder = subComponent.placeholder;
+					if (subComponent.value) textInput.value = subComponent.value;
+
+					apiNonSelectMenuActionRowComponent.components.push(textInput);
+					break;
+				case MessageComponentTypes.ChannelSelect:
+					const channelSelect: APIChannelSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
+
+					if (subComponent.disabled !== undefined) channelSelect.disabled = subComponent.disabled;
+					if (subComponent.minValue !== undefined) channelSelect.min_value = subComponent.minValue;
+					if (subComponent.maxValue) channelSelect.max_value = subComponent.maxValue;
+					if (subComponent.placeholder) channelSelect.placeholder = subComponent.placeholder;
+					if (subComponent.defaultValues) channelSelect.default_values = subComponent.defaultValues;
+					if (subComponent.channelTypes) channelSelect.channel_types = subComponent.channelTypes;
+
+					apiSelectMenuActionRowComponent.components = [channelSelect];
+					break;
+				case MessageComponentTypes.StringSelect:
+					const stringSelect: APIStringSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type, options: [] };
+
+					if (subComponent.disabled !== undefined) stringSelect.disabled = subComponent.disabled;
+					if (subComponent.minValue !== undefined) stringSelect.min_value = subComponent.minValue;
+					if (subComponent.maxValue) stringSelect.max_value = subComponent.maxValue;
+					if (subComponent.placeholder) stringSelect.placeholder = subComponent.placeholder;
+					if (subComponent.options) subComponent.options.forEach(option => {
+						const apiOption: APISelectOption = { label: option.label, value: option.value };
+						
+						if (option.default !== undefined) apiOption.default = option.default;
+						if (option.description) apiOption.description = option.description;
+						if (option.emoji) {
+							const emoji: APILinkButtonComponent["emoji"] = { id: option.emoji.id, name: option.emoji.name };
+
+							if (option.emoji.animated !== undefined) emoji.animated = option.emoji.animated;
+
+							apiOption.emoji = emoji;
+						};
+
+						stringSelect.options.push(option);
+					});
+
+					apiSelectMenuActionRowComponent.components = [stringSelect];
+					break;
+				default:
+					const selectMenu: APIOtherSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
+
+					if (subComponent.disabled !== undefined) selectMenu.disabled = subComponent.disabled;
+					if (subComponent.minValue !== undefined) selectMenu.min_value = subComponent.minValue;
+					if (subComponent.maxValue) selectMenu.max_value = subComponent.maxValue;
+					if (subComponent.placeholder) selectMenu.placeholder = subComponent.placeholder;
+					if (subComponent.defaultValues) selectMenu.default_values = subComponent.defaultValues;
+
+					apiSelectMenuActionRowComponent.components = [selectMenu];
+					break;
+			};
+		});
+
+		apiComponents.push(apiNonSelectMenuActionRowComponent, apiSelectMenuActionRowComponent);
+	});
+
+	return apiComponents;
+};
+
 /**
  * @param withResponse Whether to include an [interaction callback object](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback-interaction-callback-response-object) as the response
  */
@@ -292,122 +406,12 @@ export function createInteractionResponse<WithResponse extends boolean>(interact
 	return new Promise((resolve, reject) => {
 		const body: APIInteractionResponse = { type: interactionResponse.type };
 
-		if (interactionResponse.data && "customId" in interactionResponse.data) {
-			const components: APIActionRowComponent[] = [];
-
-			interactionResponse.data.components.forEach(component => {
-				const apiNonSelectMenuActionRowComponent: APINonSelectMenuActionRowComponent = { type: component.type, components: [] }, apiSelectMenuActionRowComponent: APISelectMenuActionRowComponent = { type: component.type, components: [] };
-
-				component.components.forEach(subComponent => {
-					switch (subComponent.type) {
-						case MessageComponentTypes.Button:
-							if ("url" in subComponent) {
-								const button: APILinkButtonComponent = { type: subComponent.type, style: subComponent.style, url: subComponent.url };
-
-								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
-								if (subComponent.label) button.label = subComponent.label;
-								if (subComponent.emoji) {
-									const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
-
-									if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
-
-									button.emoji = emoji;
-								}
-
-								apiNonSelectMenuActionRowComponent.components.push(button);
-							} else if ("skuId" in subComponent) {
-								const button: APIPremiumButtonComponent = { type: subComponent.type, style: subComponent.style, sku_id: subComponent.skuId };
-
-								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
-
-								apiNonSelectMenuActionRowComponent.components.push(button);
-							} else {
-								const button: APIBasicButtonComponent = { type: subComponent.type, style: subComponent.style };
-
-								if (subComponent.disabled !== undefined) button.disabled = subComponent.disabled;
-								if (subComponent.customId) button.custom_id = subComponent.customId;
-								if (subComponent.label) button.label = subComponent.label;
-								if (subComponent.emoji) {
-									const emoji: APILinkButtonComponent["emoji"] = { id: subComponent.emoji.id, name: subComponent.emoji.name };
-
-									if (subComponent.emoji.animated !== undefined) emoji.animated = subComponent.emoji.animated;
-
-									button.emoji = emoji;
-								}
-
-								apiNonSelectMenuActionRowComponent.components.push(button);
-							}
-							break;
-						case MessageComponentTypes.TextInput:
-							const textInput: APITextInputComponent = { custom_id: subComponent.customId, label: subComponent.label, style: subComponent.style, type: subComponent.type };
-
-							if (subComponent.maxLength) textInput.max_length = subComponent.maxLength;
-							if (subComponent.minLength !== undefined) textInput.min_length = subComponent.minLength;
-							if (subComponent.placeholder) textInput.placeholder = subComponent.placeholder;
-							if (subComponent.value) textInput.value = subComponent.value;
-
-							apiNonSelectMenuActionRowComponent.components.push(textInput);
-							break;
-						case MessageComponentTypes.ChannelSelect:
-							const channelSelect: APIChannelSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
-	
-							if (subComponent.disabled !== undefined) channelSelect.disabled = subComponent.disabled;
-							if (subComponent.minValue !== undefined) channelSelect.min_value = subComponent.minValue;
-							if (subComponent.maxValue) channelSelect.max_value = subComponent.maxValue;
-							if (subComponent.placeholder) channelSelect.placeholder = subComponent.placeholder;
-							if (subComponent.defaultValues) channelSelect.default_values = subComponent.defaultValues;
-							if (subComponent.channelTypes) channelSelect.channel_types = subComponent.channelTypes;
-	
-							apiSelectMenuActionRowComponent.components = [channelSelect];
-							break;
-						case MessageComponentTypes.StringSelect:
-							const stringSelect: APIStringSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type, options: [] };
-		
-							if (subComponent.disabled !== undefined) stringSelect.disabled = subComponent.disabled;
-							if (subComponent.minValue !== undefined) stringSelect.min_value = subComponent.minValue;
-							if (subComponent.maxValue) stringSelect.max_value = subComponent.maxValue;
-							if (subComponent.placeholder) stringSelect.placeholder = subComponent.placeholder;
-							if (subComponent.options) subComponent.options.forEach(option => {
-								const apiOption: APISelectOption = { label: option.label, value: option.value };
-								
-								if (option.default !== undefined) apiOption.default = option.default;
-								if (option.description) apiOption.description = option.description;
-								if (option.emoji) {
-									const emoji: APILinkButtonComponent["emoji"] = { id: option.emoji.id, name: option.emoji.name };
-
-									if (option.emoji.animated !== undefined) emoji.animated = option.emoji.animated;
-
-									apiOption.emoji = emoji;
-								};
-
-								stringSelect.options.push(option);
-							});
-		
-							apiSelectMenuActionRowComponent.components = [stringSelect];
-							break;
-						default:
-							const selectMenu: APIOtherSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
-		
-							if (subComponent.disabled !== undefined) selectMenu.disabled = subComponent.disabled;
-							if (subComponent.minValue !== undefined) selectMenu.min_value = subComponent.minValue;
-							if (subComponent.maxValue) selectMenu.max_value = subComponent.maxValue;
-							if (subComponent.placeholder) selectMenu.placeholder = subComponent.placeholder;
-							if (subComponent.defaultValues) selectMenu.default_values = subComponent.defaultValues;
-
-							apiSelectMenuActionRowComponent.components = [selectMenu];
-							break;
-					}
-				});
-
-				components.push(apiNonSelectMenuActionRowComponent, apiSelectMenuActionRowComponent);
-			});
-
-			body.data = {
-				custom_id: interactionResponse.data.customId,
-				title: interactionResponse.data.title,
-				components: components
-			};
-		} else if (interactionResponse.data && "choices" in interactionResponse.data) {
+		if (interactionResponse.data && "customId" in interactionResponse.data) body.data = {
+			custom_id: interactionResponse.data.customId,
+			title: interactionResponse.data.title,
+			components: componentsToAPiComponents(interactionResponse.data.components)
+		};
+		else if (interactionResponse.data && "choices" in interactionResponse.data) {
 			const choices: APIApplicationCommandOptionChoice<string | number>[] = [];
 
 			interactionResponse.data.choices.forEach(choice => {
@@ -431,6 +435,99 @@ export function createInteractionResponse<WithResponse extends boolean>(interact
 				users: interactionResponse.data.allowedMentions.users
 			};
 			if (interactionResponse.data.flags) message.flags = interactionResponse.data.flags.reduce((prevVal, nextVal) => prevVal + nextVal, 0);
+			if (interactionResponse.data.attachments) {} // Not supported
+			if (interactionResponse.data.embeds) message.embeds = interactionResponse.data.embeds.map(embed => {
+				const apiEmbed: APIEmbed = {};
+
+				if (embed.author) {
+					const author: APIEmbedAuthor = { name: embed.author.name };
+
+					if (embed.author.iconUrl) author.icon_url = embed.author.iconUrl;
+					if (embed.author.proxyIconUrl) author.proxy_icon_url = embed.author.proxyIconUrl;
+					if (embed.author.url) author.url = embed.author.url;
+
+					apiEmbed.author = author;
+				};
+				if (embed.color) apiEmbed.color = embed.color;
+				if (embed.description) apiEmbed.description = embed.description;
+				if (embed.fields) apiEmbed.fields = embed.fields.map(field => {
+					const apiField: APIEmbedField = { name: field.name, value: field.value };
+
+					if (field.inline !== undefined) apiField.inline = field.inline;
+
+					return apiField
+				});
+				if (embed.footer) {
+					const footer: APIEmbedFooter = { text: embed.footer.text };
+
+					if (embed.footer.iconUrl) footer.icon_url = embed.footer.iconUrl;
+					if (embed.footer.proxyIconUrl) footer.proxy_icon_url = embed.footer.proxyIconUrl;
+
+					apiEmbed.footer = footer;
+				};
+				if (embed.image) {
+					const image: APIEmbedImage = { url: embed.image.url };
+
+					if (embed.image.height) image.height = embed.image.height;
+					if (embed.image.proxyUrl) image.proxy_url = embed.image.proxyUrl;
+					if (embed.image.width) image.width = embed.image.width;
+
+					apiEmbed.image = image;
+				};
+				if (embed.provider) {
+					const provider: APIEmbedProvider = {};
+
+					if (embed.provider.name) provider.name = embed.provider.name;
+					if (embed.provider.url) provider.url = embed.provider.url;
+
+					apiEmbed.provider = provider;
+				};
+				if (embed.thumbnail) {
+					const thumbnail: APIEmbedThumbnail = { url: embed.thumbnail.url };
+
+					if (embed.thumbnail.height) thumbnail.height = embed.thumbnail.height;
+					if (embed.thumbnail.proxyUrl) thumbnail.proxy_url = embed.thumbnail.proxyUrl;
+					if (embed.thumbnail.width) thumbnail.width = embed.thumbnail.width;
+
+					apiEmbed.thumbnail = thumbnail;
+				};
+				if (embed.timestamp) apiEmbed.timestamp = embed.timestamp;
+				if (embed.title) apiEmbed.title = embed.title;
+				if (embed.type) apiEmbed.type = embed.type;
+				if (embed.url) apiEmbed.url = embed.url;
+				if (embed.video) {
+					const video: APIEmbedVideo = {};
+
+					if (embed.video.url) video.url = embed.video.url;
+					if (embed.video.height) video.height = embed.video.height;
+					if (embed.video.proxyUrl) video.proxy_url = embed.video.proxyUrl;
+					if (embed.video.width) video.width = embed.video.width;
+
+					apiEmbed.video = video;
+				};
+
+				return apiEmbed;
+			});
+			if (interactionResponse.data.components) message.components = componentsToAPiComponents(interactionResponse.data.components);
+			if (interactionResponse.data.poll) {
+				message.poll = {
+					answers: interactionResponse.data.poll.answers.map(answer => {
+						const apiAnswer: APIPollAnswerObject = { answer_id: answer.answerId, poll_media: {} };
+
+						if (answer.pollMedia.text) apiAnswer.poll_media.text = answer.pollMedia.text;
+						if (answer.pollMedia.emoji) apiAnswer.poll_media.emoji = answer.pollMedia.emoji;
+
+						return apiAnswer;
+					}),
+					question: {}
+				}
+
+				if (interactionResponse.data.poll.duration) message.poll.duration = interactionResponse.data.poll.duration;
+				if (interactionResponse.data.poll.layoutType) message.poll.layout_type = interactionResponse.data.poll.layoutType;
+				if (interactionResponse.data.poll.allowMultiselect) message.poll.allow_multiselect = interactionResponse.data.poll.allowMultiselect;
+				if (interactionResponse.data.poll.question.text) message.poll.question.text = interactionResponse.data.poll.question.text;
+				if (interactionResponse.data.poll.question.emoji) message.poll.question.emoji = interactionResponse.data.poll.question.emoji;
+			};
 			
 			body.data = message;
 		};

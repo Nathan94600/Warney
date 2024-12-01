@@ -1,8 +1,21 @@
+import { readdir } from "fs";
 import { UserFlags, ApplicationFlags } from "../utils/enums/flags";
 import { GatewayEventNames } from "../utils/enums/other";
-import { ApplicationCommandTypes, ApplicationCommandOptionTypes } from "../utils/enums/types";
 import { flagsToArray, setGlobalApplicationCommands } from "../utils/functions";
 import { GatewayEvent } from "../utils/types/other";
+import { Command } from "../utils/interfaces/other";
+
+const commands: Command[] = [];
+
+readdir("./dist/commands", (err, fileNames) => {
+	if (err) throw err;
+	else fileNames.forEach(fileName => {
+		const command: Command | undefined = require(`../commands/${fileName}`)?.default
+
+		if (command?.run) commands.push(command);
+		else console.log(`src/commands/${fileName}: bad file export`);
+	})
+})
 
 export default ((client, data) => {
 	const apiUser = data.user;
@@ -44,15 +57,5 @@ export default ((client, data) => {
 		flags: flagsToArray(data.application.flags, ApplicationFlags)
 	};
 
-	setGlobalApplicationCommands(client, [{
-		name: "dice",
-		description: "Roll a dice with a specified number of sides (6 by default)",
-		type: ApplicationCommandTypes.ChatInput,
-		options: [{
-			name: "sides",
-			description: "The number of sides on the dice",
-			type: ApplicationCommandOptionTypes.Integer,
-			minValue: 2
-		}]
-	}]);
+	setGlobalApplicationCommands(client, commands);
 }) satisfies GatewayEvent<GatewayEventNames.Ready>;

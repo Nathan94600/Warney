@@ -434,7 +434,7 @@ export interface APIEmbedFooter {
 	/**
 	 * url of footer icon (only supports http(s) and attachments)
 	 */
-	text_url?: string;
+	icon_url?: string;
 	/**
 	 * a proxied url of footer icon
 	 */
@@ -1024,7 +1024,7 @@ export interface APIPollMediaObject {
 	/**
 	 * The emoji of the field
 	 */
-	emoji?: APIEmoji;
+	emoji?: Pick<APIEmoji, "id" | "name">;
 };
 
 export interface APIPollResultsObject {
