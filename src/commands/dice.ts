@@ -35,7 +35,6 @@ export default {
 			const results = Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * sides) + 1)), maxLength = (results.sort((a, b) => b - a)[0]?.toString().length || 0) + Math.floor(Math.log10(numberOfDice));
 
 			if (!maxLength) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `sides` setting, try again", flags: [MessageFlags.Ephemeral] } });
-			// else createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: results.map((result, i) => `N°${i + 1}:\\_${result.toString().padStart(maxLength - Math.floor(Math.log10(i)), "\\_")}`).join("  |  ") } });
 			else createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { embeds: [{ fields: results.map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true })) }] } });
 		}
 	}
