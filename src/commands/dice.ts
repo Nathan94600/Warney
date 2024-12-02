@@ -31,11 +31,13 @@ export default {
 		else if (typeof numberOfDice == "boolean" || typeof numberOfDice == "string") createInteractionResponse(interaction, {
 			type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `number of dice` setting, try again", flags: [MessageFlags.Ephemeral] }
 		});
-		else {
-			const results = Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * sides) + 1)), maxLength = (results.sort((a, b) => b - a)[0]?.toString().length || 0) + Math.floor(Math.log10(numberOfDice));
-
-			if (!maxLength) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `sides` setting, try again", flags: [MessageFlags.Ephemeral] } });
-			else createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { embeds: [{ fields: results.map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true })) }] } });
-		}
+		else createInteractionResponse(interaction, {
+			type: InteractionCallbackTypes.ChannelMessageWithSource,
+			data: {
+				embeds: [{
+					fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * sides) + 1)).map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true }))
+				}]
+			}
+		});
 	}
 } satisfies Command;
