@@ -5,12 +5,12 @@ import { Command } from "../utils/interfaces/other";
 
 export default {
 	name: "dice",
-	description: "Roll dice with a specified number of sides (6 by default)",
+	description: "Roll dice with a specified number of faces (6 by default)",
 	type: ApplicationCommandTypes.ChatInput,
 	options: [
 		{
-			name: "sides",
-			description: "The number of sides on the dice (6 by default)",
+			name: "faces",
+			description: "The number of faces on the dice (6 by default)",
 			type: ApplicationCommandOptionTypes.Integer,
 			minValue: 2,
 			required: false
@@ -25,9 +25,9 @@ export default {
 		}
 	],
 	run(_client, interaction) {		
-		const sides = interaction.data.options?.find(option => option.name == "sides")?.value || 6, numberOfDice = interaction.data.options?.find(option => option.name == "number_of_dice")?.value || 1;
+		const faces = interaction.data.options?.find(option => option.name == "faces")?.value || 6, numberOfDice = interaction.data.options?.find(option => option.name == "number_of_dice")?.value || 1;
 	
-		if (typeof sides == "boolean" || typeof sides == "string") createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `sides` setting, try again", flags: [MessageFlags.Ephemeral] } });
+		if (typeof faces == "boolean" || typeof faces == "string") createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `faces` setting, try again", flags: [MessageFlags.Ephemeral] } });
 		else if (typeof numberOfDice == "boolean" || typeof numberOfDice == "string") createInteractionResponse(interaction, {
 			type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Problem with the `number of dice` setting, try again", flags: [MessageFlags.Ephemeral] }
 		});
@@ -35,7 +35,7 @@ export default {
 			type: InteractionCallbackTypes.ChannelMessageWithSource,
 			data: {
 				embeds: [{
-					fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * sides) + 1)).map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true }))
+					fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * faces) + 1)).map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true }))
 				}]
 			}
 		});
