@@ -538,9 +538,8 @@ export function createInteractionResponse<WithResponse extends boolean>(interact
 			headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
 			body: JSON.stringify(body)
 		}).then(res => {			
-			if (res.status == 200) res.json().then(json => resolve(json));
-			else if (res.status == 204) resolve();
-			else reject();
+			if (res.status == 204) resolve();
+			else res.json().then(json => (res.status == 200 ? resolve : reject)(json));
 		});
 	});
 };
