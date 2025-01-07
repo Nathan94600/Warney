@@ -389,7 +389,8 @@ export function componentsToAPiComponents(components: ActionRowComponent[]): API
 			};
 		});
 
-		apiComponents.push(apiNonSelectMenuActionRowComponent, apiSelectMenuActionRowComponent);
+		if (apiNonSelectMenuActionRowComponent.components.length != 0) apiComponents.push(apiNonSelectMenuActionRowComponent);
+		if (apiSelectMenuActionRowComponent.components.length != 0) apiComponents.push(apiSelectMenuActionRowComponent);
 	});
 
 	return apiComponents;
