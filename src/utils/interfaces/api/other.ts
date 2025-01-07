@@ -716,11 +716,11 @@ export interface APIBaseSelectMenuComponent {
 	/**
 	 * Minimum number of items that must be chosen (defaults to 1); min 0, max 25
 	 */
-	min_value?: number;
+	min_values?: number;
 	/**
 	 * Maximum number of items that can be chosen (defaults to 1); max 25
 	 */
-	max_value?: number;
+	max_values?: number;
 	/**
 	 * Whether select menu is disabled (defaults to `false`)
 	 */

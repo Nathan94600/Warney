@@ -342,8 +342,8 @@ export function componentsToAPiComponents(components: ActionRowComponent[]): API
 					const channelSelect: APIChannelSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
 
 					if (subComponent.disabled !== undefined) channelSelect.disabled = subComponent.disabled;
-					if (subComponent.minValue !== undefined) channelSelect.min_value = subComponent.minValue;
-					if (subComponent.maxValue) channelSelect.max_value = subComponent.maxValue;
+					if (subComponent.minValues !== undefined) channelSelect.min_values = subComponent.minValues;
+					if (subComponent.maxValues) channelSelect.max_values = subComponent.maxValues;
 					if (subComponent.placeholder) channelSelect.placeholder = subComponent.placeholder;
 					if (subComponent.defaultValues) channelSelect.default_values = subComponent.defaultValues;
 					if (subComponent.channelTypes) channelSelect.channel_types = subComponent.channelTypes;
@@ -354,8 +354,8 @@ export function componentsToAPiComponents(components: ActionRowComponent[]): API
 					const stringSelect: APIStringSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type, options: [] };
 
 					if (subComponent.disabled !== undefined) stringSelect.disabled = subComponent.disabled;
-					if (subComponent.minValue !== undefined) stringSelect.min_value = subComponent.minValue;
-					if (subComponent.maxValue) stringSelect.max_value = subComponent.maxValue;
+					if (subComponent.minValues !== undefined) stringSelect.min_values = subComponent.minValues;
+					if (subComponent.maxValues) stringSelect.max_values = subComponent.maxValues;
 					if (subComponent.placeholder) stringSelect.placeholder = subComponent.placeholder;
 					if (subComponent.options) subComponent.options.forEach(option => {
 						const apiOption: APISelectOption = { label: option.label, value: option.value };
@@ -379,8 +379,8 @@ export function componentsToAPiComponents(components: ActionRowComponent[]): API
 					const selectMenu: APIOtherSelectMenuComponent = { custom_id: subComponent.customId, type: subComponent.type };
 
 					if (subComponent.disabled !== undefined) selectMenu.disabled = subComponent.disabled;
-					if (subComponent.minValue !== undefined) selectMenu.min_value = subComponent.minValue;
-					if (subComponent.maxValue) selectMenu.max_value = subComponent.maxValue;
+					if (subComponent.minValues !== undefined) selectMenu.min_values = subComponent.minValues;
+					if (subComponent.maxValues) selectMenu.max_values = subComponent.maxValues;
 					if (subComponent.placeholder) selectMenu.placeholder = subComponent.placeholder;
 					if (subComponent.defaultValues) selectMenu.default_values = subComponent.defaultValues;
 

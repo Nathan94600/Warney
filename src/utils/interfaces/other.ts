@@ -819,11 +819,11 @@ export interface BaseSelectMenuComponent {
 	/**
 	 * Minimum number of items that must be chosen (defaults to 1); min 0, max 25
 	 */
-	minValue?: number;
+	minValues?: number;
 	/**
 	 * Maximum number of items that can be chosen (defaults to 1); max 25
 	 */
-	maxValue?: number;
+	maxValues?: number;
 	/**
 	 * Whether select menu is disabled (defaults to `false`)
 	 */
