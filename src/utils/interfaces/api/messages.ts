@@ -1,7 +1,7 @@
 import { ReactionTypes, MessageComponentTypes, MessageTypes, MessageActivityTypes, MessageReferenceTypes, InteractionTypes, ApplicationIntegrationTypes } from "../../enums/types";
 import { Snowflake } from "../../types/other";
 import { APIActionRowComponent } from "../../types/api";
-import { APIEmoji, APIUser, APISelectOption, APIResolvedData, APIChannelMention, APIAttachment, APIEmbed, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject } from "./other";
+import { APIEmoji, APIUser, APIResolvedData, APIChannelMention, APIAttachment, APIEmbed, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject } from "./other";
 import { APIThreadChannel } from "./channels";
 import { APIGuildMember } from "./guilds";
 
