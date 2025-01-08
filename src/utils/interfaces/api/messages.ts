@@ -216,7 +216,7 @@ export interface APIMessageComponentData {
 	/**
 	 * Values the user selected in a [select menu](https://discord.com/developers/docs/interactions/message-components#select-menu-object) component
 	 */
-	values?: APISelectOption[];
+	values?: string[];
 	/**
 	 * Resolved entities from selected options
 	 */
