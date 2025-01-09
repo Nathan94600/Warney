@@ -4,7 +4,7 @@ import { createInteractionResponse } from "../utils/functions";
 import { Command } from "../utils/interfaces/other";
 
 export default {
-	name: "dice",
+	name: "roll",
 	description: "Roll dice with a specified number of faces (6 by default)",
 	type: ApplicationCommandTypes.ChatInput,
 	options: [
@@ -35,7 +35,7 @@ export default {
 			type: InteractionCallbackTypes.ChannelMessageWithSource,
 			data: {
 				embeds: [{
-					fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * faces) + 1)).map((result, i) => ({ name: `N°${i} :`, value: result.toString(), inline: true }))
+					fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * faces) + 1)).map((result, i) => ({ name: `N°${i + 1} :`, value: result.toString(), inline: true }))
 				}]
 			}
 		});
