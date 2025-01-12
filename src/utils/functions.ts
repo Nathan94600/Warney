@@ -1,6 +1,6 @@
 import { inspect } from "util";
 import { CHAT_INPUT_APPLICATION_COMMAND_NAMING_REGEX, BASE_URL, OTHER_APPLICATION_COMMAND_NAMING_REGEX } from "./constants";
-import { ApplicationCommandParams, Client, InteractionResponse, RateLimit, SessionStartLimit } from "./interfaces/other";
+import { ApplicationCommandParams, Client, InteractionResponse, SessionStartLimit } from "./interfaces/other";
 import { WebSocket } from "ws";
 import { readdir } from "fs";
 import { token } from "../config.json";
@@ -46,7 +46,13 @@ export function sendWebsocketMessage(client: Client, data: any) {
 };
 
 export function openDiscordWebSocketConnection(token: string, client?: Client) {
-	fetch(`${BASE_URL}/gateway/bot`, { headers: { Authorization: `Bot ${token}` } }).then(res => res.json().then((json: {
+	if (client?.rateLimits["/gateway/bot"] && client.rateLimits["/gateway/bot"].remaining <= 0 && client.rateLimits["/gateway/bot"].reset > Date.now()) {
+		const delay = Math.max(client.rateLimits["/gateway/bot"].remaining <= 0 ? client.rateLimits["/gateway/bot"].reset : 0) - Date.now();
+
+		console.log(`Fetching data for WebSocket connection in ${delay}ms`);
+
+		setTimeout(() => openDiscordWebSocketConnection(token, client), delay);
+	} else fetch(`${BASE_URL}/gateway/bot`, { headers: { Authorization: `Bot ${token}` } }).then(res => res.json().then((json: {
 		/**
 		 * WSS URL that can be used for connecting to the Gateway
 		 */
@@ -65,22 +71,12 @@ export function openDiscordWebSocketConnection(token: string, client?: Client) {
 		remaining = res.headers.get("x-ratelimit-remaining"),
 		reset = res.headers.get("x-ratelimit-reset"),
 		global = res.headers.get("x-ratelimit-global"),
-		scope = res.headers.get("x-ratelimit-scope"),
-		rateLimits: Record<string, RateLimit> = {};
-	
-		if (bucket !== null && limit !== null && remaining !== null && reset !== null) rateLimits["/gateway/bot"] = {
-			limit: parseInt(limit),
-			remaining: parseInt(remaining),
-			reset: parseFloat(reset),
-			bucket,
-			global,
-			scope: scope && isRateLimitScope(scope) ? scope : null
-		}
+		scope = res.headers.get("x-ratelimit-scope");
 	
 		if (res.status >= 400) throw inspect(json, { colors: true, depth: Infinity });
 		else if ("url" in json) {
 			if (!client) client = {
-				rateLimits: rateLimits,
+				rateLimits: {},
 				cache: {
 					guilds: {},
 					users: {}
@@ -93,6 +89,15 @@ export function openDiscordWebSocketConnection(token: string, client?: Client) {
 				client.ws = new WebSocket(`${json.url}?v=10&encoding=json`);
 				client.lastSeq = null;
 			};
+
+			if (bucket !== null && limit !== null && remaining !== null && reset !== null) client.rateLimits["/gateway/bot"] = {
+				limit: parseInt(limit),
+				remaining: parseInt(remaining),
+				reset: parseFloat(reset) * 1000,
+				bucket,
+				global,
+				scope: scope && isRateLimitScope(scope) ? scope : null
+			}
 			
 			client.rateLimits["session"] = {
 				bucket: "session",
@@ -270,11 +275,35 @@ export function setGlobalApplicationCommands(client: Client, commands: Applicati
 				body.push(command);
 			});
 
-			fetch(`${BASE_URL}/applications/${client.cache.application.id}/commands`, {
+			const ratelimitPath = `/applications/${client.cache.application.id}/commands`, rateLimit = client.rateLimits[ratelimitPath];
+
+			if (rateLimit && rateLimit.remaining <= 0 && rateLimit.reset > Date.now()) {
+				const delay = Math.max(rateLimit.remaining <= 0 ? rateLimit.reset : 0) - Date.now();
+		
+				console.log(`Set global application commands in ${delay}ms`);
+		
+				setTimeout(() => openDiscordWebSocketConnection(token, client), delay);
+			} else fetch(`${BASE_URL}/applications/${client.cache.application.id}/commands`, {
 				method: "PUT",
 				headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
 				body: JSON.stringify(body)
 			}).then(res => res.json().then(json => {
+				const bucket = res.headers.get("x-ratelimit-bucket"),
+				limit = res.headers.get("x-ratelimit-limit"),
+				remaining = res.headers.get("x-ratelimit-remaining"),
+				reset = res.headers.get("x-ratelimit-reset"),
+				global = res.headers.get("x-ratelimit-global"),
+				scope = res.headers.get("x-ratelimit-scope");
+
+				if (bucket !== null && limit !== null && remaining !== null && reset !== null) client.rateLimits[ratelimitPath] = {
+					limit: parseInt(limit),
+					remaining: parseInt(remaining),
+					reset: parseFloat(reset) * 1000,
+					bucket,
+					global,
+					scope: scope && isRateLimitScope(scope) ? scope : null
+				}
+
 				if (res.status == 200) resolve(json);
 				else reject(json)
 			}));
@@ -537,7 +566,7 @@ export function createInteractionResponse<WithResponse extends boolean>(interact
 			method: "POST",
 			headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
 			body: JSON.stringify(body)
-		}).then(res => {			
+		}).then(res => {   
 			if (res.status == 204) resolve();
 			else res.json().then(json => (res.status == 200 ? resolve : reject)(json));
 		});
