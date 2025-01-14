@@ -1,11 +1,11 @@
 import { Locales, MembershipStates, OAuth2Scopes, TextInputStyles, ButtonStyles, IntegrationExpireBehaviors, PresenceStatus, PrivacyLevels, AuditLogEvents, GatewayEventNames } from "../../enums/other";
 import { SubscriptionStatus, InteractionTypes, ApplicationIntegrationTypes, InteractionContextTypes, ApplicationCommandTypes, ApplicationCommandOptionTypes, ChannelTypes, EmbedTypes, TeamMemberRoleTypes, MessageComponentTypes, SelectDefaultValueTypes, StickerFormatTypes, LayoutTypes, IntegrationTypes, PremiumTypes, ApplicationCommandPermissionTypes, EventTypes, TriggerTypes, KeywordPresetTypes, ActionTypes, OverwriteTypes, EntitlementTypes, StickerTypes, EntryPointCommandHandlerTypes, InteractionCallbackTypes, AllowedMentionsTypes } from "../../enums/types";
-import { APIChannel, APIMessageComponent, APISelectMenuComponent, APIActionRowComponent, APIApplicationCommandOption, APIInteractionCallbackData, APIInteraction } from "../../types/api";
+import { APIChannel, APIMessageComponent, APISelectMenuComponent, APIActionRowComponent, APIApplicationCommandOption, APIInteractionCallbackData, APIInteraction, APIGuildChannel } from "../../types/api";
 import { Snowflake, SelectMenuComponentType } from "../../types/other";
 import { APIThreadChannel } from "./channels";
 import { APIAutoModerationActionExecutionEventFields, APIChannelPinsUpdateEventFields, APIIntegrationCreateEventAdditionalFields, APIIntegrationDeleteEventFields, APIIntegrationUpdateEventAdditionalFields, APIInviteCreateEventFields, APIInviteDeleteEventFields, APIPresenceUpdateEventFields, APIReadyEventFields, APISoundboardSoundsEventFields, APIThreadListSyncEventFields, APIThreadMembersUpdateEventFields, APIThreadMemberUpdateEventExtaFields, APITypingStartEventFields, APIVoiceChannelEffectSendEventFields, APIVoiceServerUpdateEventFields, APIWebhooksUpdateEventFields } from "./eventFields";
 import { APIGuildMember, APIGuild, APIGuildAuditLogEntryCreateExtraFields, APIGuildBanAddEventFields, APIGuildBanRemoveEventFields, APIGuildCreateExtraFields, APIGuildEmojisUpdateEventFields, APIGuildIntegrationsUpdateEventFields, APIGuildMemberAddExtraFields, APIGuildMemberRemoveEventFields, APIGuildMembersChunkEventFields, APIGuildMemberUpdateEventFields, APIGuildRoleCreateEventFields, APIGuildRoleDeleteEventFields, APIGuildRoleUpdateEventFields, APIGuildScheduledEvent, APIGuildScheduledEventUserAddEventFields, APIGuildScheduledEventUserRemoveEventFields, APIGuildSoundboardSoundDeleteEventFields, APIGuildStickersUpdateEventFields } from "./guilds";
-import { APIMessage, APIMessageComponentData, APIMessageCreateExtraFields, APIMessageDeleteBulkEventFields, APIMessageDeleteEventFields, APIMessagePollVoteAddFields, APIMessagePollVoteRemoveFields, APIMessageReactionAddEventFields, APIMessageReactionRemoveAllEventFields, APIMessageReactionRemoveEmojiEventFields, APIMessageReactionRemoveEventFields } from "./messages";
+import { APIMessage, APIMessageCreateExtraFields, APIMessageDeleteBulkEventFields, APIMessageDeleteEventFields, APIMessagePollVoteAddFields, APIMessagePollVoteRemoveFields, APIMessageReactionAddEventFields, APIMessageReactionRemoveAllEventFields, APIMessageReactionRemoveEmojiEventFields, APIMessageReactionRemoveEventFields } from "./messages";
 
 export interface APISubscription {
 	/**
@@ -44,210 +44,6 @@ export interface APISubscription {
 	 * ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription. Missing unless queried with a private OAuth scope.
 	 */
 	country?: string;
-};
-
-export interface APIBaseInteraction {
-	/**
-	 * ID of the interaction
-	 */
-	id: Snowflake;
-	/**
-	 * ID of the application this interaction is for
-	 */
-	application_id: Snowflake;
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes;
-	/**
-	 * Guild that the interaction was sent from
-	 */
-	guild?: APIGuild;
-	/**
-	 * Guild that the interaction was sent from
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * Channel that the interaction was sent from
-	 */
-	channel?: APIChannel;
-	/**
-	 * Channel that the interaction was sent from
-	 */
-	channel_id?: Snowflake;
-	/**
-	 * Guild member data for the invoking user, including permissions
-	 */
-	member?: APIGuildMember;
-	/**
-	 * User object for the invoking user, if invoked in a DM
-	 */
-	user?: APIUser;
-	/**
-	 * Continuation token for responding to the interaction
-	 */
-	token: string;
-	/**
-	 * Read-only property, always `1`
-	 */
-	version: 1;
-	/**
-	 * For components, the message they were attached to
-	 */
-	message?: APIMessage;
-	/**
-	 * Bitwise set of permissions the app has in the source location of the interaction
-	 */
-	app_permissions: string;
-	/**
-	 * [Guild's preferred locale](https://discord.com/developers/docs/resources/guild#guild-object), if invoked in a guild
-	 */
-	guild_locale?: string;
-	/**
-	 * For [monetized apps](https://discord.com/developers/docs/monetization/overview), any entitlements for the invoking user, representing access to premium [SKUs](https://discord.com/developers/docs/resources/sku)
-	 */
-	entitlements: APIEntitlement[];
-	/**
-	 * Mapping of installation contexts that the interaction was authorized for to related user or guild IDs.
-	 * See [Authorizing Integration Owners Object](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for details
-	 */
-	authorizing_integration_owners: Record<ApplicationIntegrationTypes, string>;
-	/**
-	 * Context where the interaction was triggered from
-	 */
-	context?: InteractionContextTypes;
-};
-
-export interface APIApplicationCommandInteraction extends APIBaseInteraction {
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes.ApplicationCommand;
-	/**
-	 * Interaction data payload
-	 */
-	data: APIApplicationCommandData;
-	/**
-	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
-	 */
-	locale?: Locales;
-};
-
-export interface APIApplicationCommandAutocompleteInteraction extends APIBaseInteraction {
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes.ApplicationCommandAutocomplete;
-	/**
-	 * Interaction data payload
-	 */
-	data: APIApplicationCommandData;
-	/**
-	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
-	 */
-	locale?: Locales;
-};
-
-export interface APIMessageComponentInteraction extends APIBaseInteraction {
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes.MessageComponent;
-	/**
-	 * Interaction data payload
-	 */
-	data: APIMessageComponentData;
-	/**
-	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
-	 */
-	locale?: Locales;
-};
-
-export interface APIModalSubmitInteraction extends APIBaseInteraction {
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes.ModalSubmit;
-	/**
-	 * Interaction data payload
-	 */
-	data: APIModalSubmitData;
-	/**
-	 * Selected [language](https://discord.com/developers/docs/reference#locales) of the invoking user
-	 */
-	locale?: Locales;
-};
-
-export interface APIPingInteraction extends APIBaseInteraction {
-	/**
-	 * Type of interaction
-	 */
-	type: InteractionTypes.Ping;
-};
-
-export interface APIModalSubmitData {
-	/**
-	 * [`custom_id`](https://discord.com/developers/docs/interactions/message-components#custom-id) of the modal
-	 */
-	custom_id: string;
-	/**
-	 * Values submitted by the user
-	 */
-	components: APIMessageComponent[];
-};
-
-export interface APIApplicationCommandData {
-	/**
-	 * [`ID`](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure) of the invoked command
-	 */
-	id: Snowflake;
-	/**
-	 * [`name`](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure) of the invoked command
-	 */
-	name: string;
-	/**
-	 * [`type`](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure) of the invoked command
-	 */
-	type: ApplicationCommandTypes;
-	/**
-	 * Converted users + roles + channels + attachments
-	 */
-	resolved?: APIResolvedData;
-	/**
-	 * Params + values from the user
-	 */
-	options?: APIApplicationCommandInteractionDataOption[];
-	/**
-	 * ID of the guild the command is registered to
-	 */
-	guild_id?: Snowflake;
-	/**
-	 * ID of the user or message targeted by a [user](https://discord.com/developers/docs/interactions/application-commands#user-commands) or [message](https://discord.com/developers/docs/interactions/application-commands#message-commands) command
-	 */
-	target_id?: Snowflake;
-};
-
-export interface APIApplicationCommandInteractionDataOption {
-	/**
-	 * Name of the parameter
-	 */
-	name: string;
-	/**
-	 * Value of [application command option type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type)
-	 */
-	type: ApplicationCommandOptionTypes;
-	/**
-	 * Value of the option resulting from user input
-	 */
-	value?: string | number | boolean;
-	/**
-	 * Present if this option is a group or subcommand
-	 */
-	options?: APIApplicationCommandInteractionDataOption;
-	/**
-	 * `true` if this option is the currently focused option for autocomplete
-	 */
-	focused?: boolean;
 };
 
 export interface APIChannelMention {
@@ -890,33 +686,6 @@ export interface APIRoleSubscriptionDataObject {
 	 * whether this notification is for a renewal rather than a new purchase
 	 */
 	is_renewal: boolean;
-};
-
-export interface APIResolvedData {
-	/**
-	 * IDs and User objects
-	 */
-	users?: Record<Snowflake, APIUser>;
-	/**
-	 * IDs and partial Member objects
-	 */
-	members?: Record<Snowflake, APIGuildMember>;
-	/**
-	 * IDs and Role objects
-	 */
-	roles?: Record<Snowflake, APIRole>;
-	/**
-	 * IDs and partial Channel objects
-	 */
-	channels?: Record<Snowflake, APIChannel>;
-	/**
-	 * IDs and partial Message objects
-	 */
-	messages?: Record<Snowflake, APIMessage>;
-	/**
-	 * IDs and attachment objects
-	 */
-	attachments?: Record<Snowflake, APIAttachment>;
 };
 
 export interface APIAttachment {
@@ -2526,4 +2295,31 @@ export interface ApiGatewayEvents {
 	[GatewayEventNames.WebhooksUpdate]: [d: APIWebhooksUpdateEventFields, s: number | null, t: string | null];
 	[GatewayEventNames.MessagePollVoteAdd]: [d: APIMessagePollVoteAddFields, s: number | null, t: string | null];
 	[GatewayEventNames.MessagePollVoteRemove]: [d: APIMessagePollVoteRemoveFields, s: number | null, t: string | null];
+};
+
+export interface APIResolvedData {
+	/**
+	 * IDs and User objects
+	 */
+	users?: Record<Snowflake, APIUser>;
+	/**
+	 * IDs and partial Member objects
+	 */
+	members?: Record<Snowflake, Omit<APIGuildMember, "user" | "deaf" | "mute">>;
+	/**
+	 * IDs and Role objects
+	 */
+	roles?: Record<Snowflake, APIRole>;
+	/**
+	 * IDs and partial Channel objects
+	 */
+	channels?: Record<Snowflake, Pick<APIChannel, "id" | "name" | "type"> | Pick<APIGuildChannel, "id" | "name" | "type" | "permissions"> | Pick<APIThreadChannel, "id" | "name" | "type" | "permissions" | "thread_metadata" | "parent_id">>;
+	/**
+	 * IDs and partial Message objects
+	 */
+	messages?: Record<Snowflake, APIMessage>;
+	/**
+	 * IDs and attachment objects
+	 */
+	attachments?: Record<Snowflake, APIAttachment>;
 };

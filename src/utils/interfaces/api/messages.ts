@@ -1,7 +1,7 @@
-import { ReactionTypes, MessageComponentTypes, MessageTypes, MessageActivityTypes, MessageReferenceTypes, InteractionTypes, ApplicationIntegrationTypes } from "../../enums/types";
+import { ReactionTypes, MessageTypes, MessageActivityTypes, MessageReferenceTypes, InteractionTypes, ApplicationIntegrationTypes } from "../../enums/types";
 import { Snowflake } from "../../types/other";
 import { APIActionRowComponent } from "../../types/api";
-import { APIEmoji, APIUser, APIResolvedData, APIChannelMention, APIAttachment, APIEmbed, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject } from "./other";
+import { APIEmoji, APIUser, APIChannelMention, APIAttachment, APIEmbed, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject, APIResolvedData } from "./other";
 import { APIThreadChannel } from "./channels";
 import { APIGuildMember } from "./guilds";
 
@@ -202,25 +202,6 @@ export interface APIMessageCreateExtraFields {
 	 * Users specifically mentioned in the message
 	 */
 	mentions: (APIUser & { member: APIGuildMember; })[];
-};
-
-export interface APIMessageComponentData {
-	/**
-	 * [`custom_id`](https://discord.com/developers/docs/interactions/message-components#custom-id) of the component
-	 */
-	custom_id: string;
-	/**
-	 * [type](https://discord.com/developers/docs/interactions/message-components#component-object-component-types) of the component
-	 */
-	component_type: MessageComponentTypes;
-	/**
-	 * Values the user selected in a [select menu](https://discord.com/developers/docs/interactions/message-components#select-menu-object) component
-	 */
-	values?: string[];
-	/**
-	 * Resolved entities from selected options
-	 */
-	resolved?: APIResolvedData;
 };
 
 export interface APIMessage {

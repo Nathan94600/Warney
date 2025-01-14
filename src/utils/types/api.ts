@@ -1,8 +1,10 @@
 import { APIDmChannel, APIGroupDmChannel, APIGuildVoiceChannel, APIGuildStageVoiceChannel, APIGuildTextChannel, APIGuildCategoryChannel, APIGuildMediaChannel, APIGuildForumChannel, APIThreadChannel, APIGuildAnnouncementChannel, APIGuildDirectoryChannel } from "../interfaces/api/channels";
-import { APIMessageComponentData } from "../interfaces/api/messages";
-import { APIBasicButtonComponent, APILinkButtonComponent, APIPremiumButtonComponent, APITextInputComponent, APIStringSelectMenuComponent, APIChannelSelectMenuComponent, APIOtherSelectMenuComponent, APISelectMenuActionRowComponent, APINonSelectMenuActionRowComponent, APIApplicationCommandData, APIModalSubmitData, APIResolvedData, APIApplicationCommandSubCommandOption, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandIntegerOption, APIApplicationCommandNumberOption, APIApplicationCommandStringOption, APIApplicationCommandAttachmentOption, APIApplicationCommandBooleanOption, APIApplicationCommandMentionableOption, APIApplicationCommandRoleOption, APIApplicationCommandUserOption, APIApplicationCommandChannelOption, APIMessageApplicationCommand, APIUserApplicationCommand, APIPrimaryEntryPointApplicationCommand, APIChatInputApplicationCommand, APIApplicationCommandInteraction, APIApplicationCommandAutocompleteInteraction, APIMessageComponentInteraction, APIModalSubmitInteraction, APIModalInteractionCallbackData, APIMessageInteractionCallbackData, APIAutocompleteInteractionCallbackData } from "../interfaces/api/other";
+import { APIApplicationCommandAutocompleteData, APIApplicationCommandAutocompleteInteraction, APIApplicationCommandData, APIApplicationCommandInteraction, APIMessageComponentInteraction, APIModalSubmitData, APIModalSubmitInteraction, APIOtherMessageComponentData, APIPingInteraction, APISelectMenuComponentData } from "../interfaces/api/interactions";
+import { APIBasicButtonComponent, APILinkButtonComponent, APIPremiumButtonComponent, APITextInputComponent, APIStringSelectMenuComponent, APIChannelSelectMenuComponent, APIOtherSelectMenuComponent, APISelectMenuActionRowComponent, APINonSelectMenuActionRowComponent, APIApplicationCommandSubCommandOption, APIApplicationCommandSubCommandGroupOption, APIApplicationCommandIntegerOption, APIApplicationCommandNumberOption, APIApplicationCommandStringOption, APIApplicationCommandAttachmentOption, APIApplicationCommandBooleanOption, APIApplicationCommandMentionableOption, APIApplicationCommandRoleOption, APIApplicationCommandUserOption, APIApplicationCommandChannelOption, APIMessageApplicationCommand, APIUserApplicationCommand, APIPrimaryEntryPointApplicationCommand, APIChatInputApplicationCommand, APIModalInteractionCallbackData, APIMessageInteractionCallbackData, APIAutocompleteInteractionCallbackData } from "../interfaces/api/other";
 
-export type APIChannel = APIDmChannel | APIGroupDmChannel | APIGuildVoiceChannel | APIGuildStageVoiceChannel | APIGuildTextChannel | APIGuildCategoryChannel | APIGuildMediaChannel | APIGuildForumChannel | APIThreadChannel | APIGuildAnnouncementChannel | APIGuildDirectoryChannel;
+export type APIGuildChannel = APIGuildVoiceChannel | APIGuildStageVoiceChannel | APIGuildTextChannel | APIGuildCategoryChannel | APIGuildMediaChannel | APIGuildForumChannel | APIThreadChannel | APIGuildAnnouncementChannel | APIGuildDirectoryChannel;
+
+export type APIChannel = APIDmChannel | APIGroupDmChannel | APIGuildChannel;
 
 export type APIButtonComponent = APIBasicButtonComponent | APILinkButtonComponent | APIPremiumButtonComponent;
 
@@ -12,7 +14,11 @@ export type APISelectMenuComponent = APIStringSelectMenuComponent | APIChannelSe
 
 export type APIActionRowComponent = APISelectMenuActionRowComponent | APINonSelectMenuActionRowComponent;
 
-export type APIInteractionData = APIApplicationCommandData | APIMessageComponentData | APIModalSubmitData | APIResolvedData;
+export type APIMessageComponentData = APIOtherMessageComponentData | APISelectMenuComponentData;
+
+export type APIInteractionData = APIApplicationCommandData | APIApplicationCommandAutocompleteData | APIMessageComponentData | APIModalSubmitData;
+
+export type APIApplicationCommandInteractionDataOption = APIApplicationCommandData | APIMessageComponentData | APIModalSubmitData;
 
 export type APIApplicationCommandOption = APIApplicationCommandSubCommandOption |
 APIApplicationCommandSubCommandGroupOption |
@@ -28,6 +34,6 @@ APIApplicationCommandChannelOption;
 
 export type APIApplicationCommand = APIMessageApplicationCommand | APIUserApplicationCommand | APIPrimaryEntryPointApplicationCommand | APIChatInputApplicationCommand;
 
-export type APIInteraction = APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction | APIMessageComponentInteraction | APIModalSubmitInteraction;
+export type APIInteraction = APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction | APIMessageComponentInteraction | APIModalSubmitInteraction | APIPingInteraction;
 
 export type APIInteractionCallbackData = APIModalInteractionCallbackData | APIMessageInteractionCallbackData | APIAutocompleteInteractionCallbackData;

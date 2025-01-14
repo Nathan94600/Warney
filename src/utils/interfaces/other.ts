@@ -4,7 +4,7 @@ import { ClientRequest, IncomingMessage } from "http";
 import { UserFlags, ApplicationFlags, BitwisePermissionFlags, MessageFlags, AttachmentFlags } from "../enums/flags";
 import { RateLimitScopes, Locales, GatewayOpcodes, TextInputStyles, ButtonStyles } from "../enums/other";
 import { PremiumTypes, ApplicationIntegrationTypes, InteractionContextTypes, ApplicationCommandTypes, ApplicationCommandOptionTypes, ChannelTypes, EmbedTypes, InteractionCallbackTypes, LayoutTypes, AllowedMentionsTypes, MessageComponentTypes, SelectDefaultValueTypes } from "../enums/types";
-import { APIApplicationCommandInteraction } from "./api/other";
+import { APIApplicationCommandAutocompleteInteraction, APIApplicationCommandInteraction } from "./api/interactions";
 
 export interface Cache {
 	users: Record<string, User>;
@@ -997,5 +997,5 @@ export interface PremiumButtonComponent extends BaseButtonComponent {
 };
 
 export interface Command extends ApplicationCommandParams {
-	run: (client: Client, interaction: APIApplicationCommandInteraction) => void
+	run: (client: Client, interaction: APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction) => void
 };
