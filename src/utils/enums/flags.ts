@@ -360,3 +360,49 @@ export enum AttachmentFlags {
 	 */
 	IsRemix =  1 << 2
 };
+
+export enum RoleFlags {
+	/**
+	 * role can be selected by members in an [onboarding](https://discord.com/developers/docs/resources/guild#guild-onboarding-object) prompt
+	 */
+	InPrompt = 1 << 0
+};
+
+export enum GuildMemberFlags {
+	/**
+	 * Member has left and rejoined the guild	(editable: false)
+	 */
+	DidRejoin = 1 << 0,
+	/**
+	 * Member has completed onboarding (editable: false)
+	 */
+	CompletedOnboarding = 1 << 1,
+	/**
+	 * Member is exempt from guild verification requirements (editable: true)
+	 */
+	BypassVerification = 1 << 2,
+	/**
+	 * Member has started onboarding (editable: false)
+	 */
+	StartedOnboarding = 1 << 3,
+	/**
+	 * Member is a guest and can only access the voice channel they were invited to (editable: false)
+	 */
+	IsGuest = 1 << 4,
+	/**
+	 * Member has started Server Guide new member actions (editable: false)
+	 */
+	StartedHomeActions = 1 << 5,
+	/**
+	 * Member has completed Server Guide new member actions (editable: false)
+	 */
+	CompletedHomeActions = 1 << 6,
+	/**
+	 * Member's username, display name, or nickname is blocked by AutoMod (editable: false)
+	 */
+	AutomodQuarantinedUsername = 1 << 7,
+	/**
+	 * Member has dismissed the DM settings upsell (editable: false)
+	 */
+	DmSettingsUpsellAcknowledged = 1 << 9
+};

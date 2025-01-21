@@ -1223,7 +1223,7 @@ export interface APIDefaultReaction {
 	/**
 	 * the unicode character of the emoji
 	 */
-	name: string | null;
+	emoji_name: string | null;
 };
 
 export interface APIEntitlement {

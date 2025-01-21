@@ -1,4 +1,4 @@
-import { GatewayOpcodes } from "../utils/enums/other";
+import { GatewayIntents, GatewayOpcodes } from "../utils/enums/other";
 import { sendWebsocketMessage } from "../utils/functions";
 import { Opcode } from "../utils/types/other";
 
@@ -19,7 +19,7 @@ export default ((client, data) => {
 			},
 			compress: false,
 			large_threshold: 250,
-			intents: 0
+			intents: GatewayIntents.Guilds
 		}
 	});
 }) satisfies Opcode<GatewayOpcodes.Hello>;

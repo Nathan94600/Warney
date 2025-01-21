@@ -49,7 +49,7 @@ export interface APIActivity {
 	/**
 	 * Secrets for Rich Presence joining and spectating
 	 */
-	seccrets?: APIActivitySecrets;
+	secrets?: APIActivitySecrets;
 	/**
 	 * Whether or not the activity is an instanced game session
 	 */

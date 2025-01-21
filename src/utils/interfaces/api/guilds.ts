@@ -1,5 +1,5 @@
 import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildScheduledEventEntityTypes, GuildScheduledEventRecurrenceRuleFrequencies, GuildScheduledEventRecurrenceRuleWeekdays, GuildScheduledEventRecurrenceRuleMonths, GuildFeatures, GuildNSFWLevels } from "../../enums/guilds";
-import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, Locales } from "../../enums/other";
+import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, Locales, PremiumTiers } from "../../enums/other";
 import { Snowflake } from "../../types/other";
 import { APIChannel } from "../../types/api";
 import { APIDmChannel, APIGroupDmChannel, APIThreadChannel } from "./channels";
@@ -494,7 +494,7 @@ export interface APIGuild {
 	/**
 	 * [premium tier](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) (Server Boost level)
 	 */
-	premium_tier: number;
+	premium_tier: PremiumTiers;
 	/**
 	 * the number of boosts this guild currently has
 	 */
@@ -648,7 +648,7 @@ export interface APIGuildMember {
 	/**
 	 * data for the member's guild avatar decoration
 	 */
-	avatar_decoration_date?: APIAvatarDecorationData | null;
+	avatar_decoration_data?: APIAvatarDecorationData | null;
 };
 
 /**

@@ -1,6 +1,6 @@
 import { MessageComponentTypes } from "../enums/types";
 import { ApiGatewayEvents } from "../interfaces/api/other";
-import { ApplicationCommandAttachmentOption, ApplicationCommandBooleanOption, ApplicationCommandChannelOption, ApplicationCommandIntegerOption, ApplicationCommandMentionableOption, ApplicationCommandNumberOption, ApplicationCommandRoleOption, ApplicationCommandStringOption, ApplicationCommandSubCommandGroupOption, ApplicationCommandSubCommandOption, ApplicationCommandUserOption, AutocompleteInteractionCallbackData, BasicButtonComponent, ChannelSelectMenuComponent, Client, LinkButtonComponent, MessageInteractionCallbackData, ModalInteractionCallbackData, NonSelectMenuActionRowComponent, Opcodes, OtherSelectMenuComponent, PremiumButtonComponent, SelectMenuActionRowComponent, StringSelectMenuComponent, TextInputComponent, WsEvents } from "../interfaces/other";
+import { ApplicationCommandAttachmentOption, ApplicationCommandBooleanOption, ApplicationCommandChannelOption, ApplicationCommandIntegerOption, ApplicationCommandMentionableOption, ApplicationCommandNumberOption, ApplicationCommandRoleOption, ApplicationCommandStringOption, ApplicationCommandSubCommandGroupOption, ApplicationCommandSubCommandOption, ApplicationCommandUserOption, AutocompleteInteractionCallbackData, BasicButtonComponent, ChannelSelectMenuComponent, Client, DmChannel, GroupDmChannel, GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, LinkButtonComponent, MessageInteractionCallbackData, ModalInteractionCallbackData, NonSelectMenuActionRowComponent, Opcodes, OtherSelectMenuComponent, PremiumButtonComponent, SelectMenuActionRowComponent, StringSelectMenuComponent, TextInputComponent, ThreadChannel, WsEvents } from "../interfaces/other";
 
 export type Snowflake = string;
 
@@ -33,3 +33,7 @@ export type SelectMenuComponent = StringSelectMenuComponent | ChannelSelectMenuC
 export type ActionRowComponent = SelectMenuActionRowComponent | NonSelectMenuActionRowComponent;
 
 export type InteractionCallbackData = ModalInteractionCallbackData | MessageInteractionCallbackData | AutocompleteInteractionCallbackData;
+
+export type GuildChannel = GuildVoiceChannel | GuildStageVoiceChannel | GuildTextChannel | GuildCategoryChannel | GuildMediaChannel | GuildForumChannel | ThreadChannel | GuildAnnouncementChannel | GuildDirectoryChannel;
+
+export type Channel = DmChannel | GroupDmChannel | GuildChannel;
