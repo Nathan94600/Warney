@@ -1145,7 +1145,7 @@ export interface GuildMember {
 	/**
 	 * the user this guild member represents
 	 */
-	user?: User;
+	user: User;
 	/**
 	 * this user's guild nickname
 	 */

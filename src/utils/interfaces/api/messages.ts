@@ -197,11 +197,11 @@ export interface APIMessageCreateExtraFields {
 	/**
 	 * Member properties for this message's author. Missing for ephemeral messages and messages from webhooks
 	 */
-	memerb?: APIGuildMember;
+	memerb?: Omit<APIGuildMember, "user">;
 	/**
 	 * Users specifically mentioned in the message
 	 */
-	mentions: (APIUser & { member: APIGuildMember; })[];
+	mentions: (APIUser & { member: Omit<APIGuildMember, "user">; })[];
 };
 
 export interface APIMessage {

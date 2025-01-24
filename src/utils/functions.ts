@@ -609,7 +609,8 @@ export function apiGuildMemberToGuildMember(apiMember: APIGuildMember): GuildMem
 		flags: flagsToArray(apiMember.flags, GuildMemberFlags),
 		joinedAt: apiMember.joined_at,
 		mute: apiMember.mute,
-		roles: apiMember.roles
+		roles: apiMember.roles,
+		user: apiUserToUser(apiMember.user)
 	};
 
 	if (apiMember.avatar) member.avatar = apiMember.avatar;
@@ -622,7 +623,6 @@ export function apiGuildMemberToGuildMember(apiMember: APIGuildMember): GuildMem
 	if (apiMember.pending) member.pending = apiMember.pending;
 	if (apiMember.permissions) member.permissions = apiMember.permissions;
 	if (apiMember.premium_since) member.premiumSince = apiMember.premium_since;
-	if (apiMember.user) member.user = apiUserToUser(apiMember.user);
 
 	return member;
 };

@@ -600,7 +600,7 @@ export interface APIGuildMember {
 	/**
 	 * the user this guild member represents
 	 */
-	user?: APIUser;
+	user: APIUser;
 	/**
 	 * this user's guild nickname
 	 */
