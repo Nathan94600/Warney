@@ -128,7 +128,7 @@ export function openDiscordWebSocketConnection(token: string, client?: Client) {
 				else files.forEach(file => {
 					const fileName = file.split(".")[0];				
 	
-					if (fileName && client) client.ws.on(fileName, require(`../wsEvents/${file}`).default.bind(null, client));
+					if (fileName && client) client.ws.on(fileName, require(`../../wsEvents/${file}`).default.bind(null, client));
 				});
 			});
 		};

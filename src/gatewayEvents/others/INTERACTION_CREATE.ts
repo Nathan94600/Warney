@@ -1,15 +1,15 @@
 import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/others";
-import { GatewayEvent } from "../utils/types/others";
-import { InteractionTypes } from "../utils/enums/types";
-import { Command } from "../utils/interfaces/others";
+import { GatewayEventNames } from "../../utils/enums/others";
+import { GatewayEvent } from "../../utils/types/others";
+import { InteractionTypes } from "../../utils/enums/types";
+import { Command } from "../../utils/interfaces/others";
 
 const commands: Record<string, Command> = {};
 
 readdir("./dist/commands", (err, fileNames) => {
 	if (err) throw err;
 	else fileNames.forEach(fileName => {
-		const command: Command | undefined = require(`../commands/${fileName}`)?.default
+		const command: Command | undefined = require(`../../commands/${fileName}`)?.default
 
 		if (command?.run) commands[command.name] = command;
 		else console.log(`src/commands/${fileName}: bad file export`);

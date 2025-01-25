@@ -1,24 +1,9 @@
-import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/others";
-import { GatewayEvent } from "../utils/types/others";
-import { Command, Emoji, Role, RoleTags } from "../utils/interfaces/others";
-import { RoleFlags, BitwisePermissionFlags } from "../utils/enums/flags";
-import { apiUserToUser } from "../utils/functions/apiTransformers";
-import { flagsToArray } from "../utils/functions/others";
-
-const commands: Command[] = [];
-
-readdir("./dist/commands", (err, fileNames) => {
-  if (err) throw err;
-  else
-    fileNames.forEach((fileName) => {
-      const command: Command | undefined =
-        require(`../commands/${fileName}`)?.default;
-
-      if (command?.run) commands.push(command);
-      else console.log(`src/commands/${fileName}: bad file export`);
-    });
-});
+import { GatewayEventNames } from "../../utils/enums/others";
+import { GatewayEvent } from "../../utils/types/others";
+import { Emoji, Role, RoleTags } from "../../utils/interfaces/others";
+import { RoleFlags, BitwisePermissionFlags } from "../../utils/enums/flags";
+import { apiUserToUser } from "../../utils/functions/apiTransformers";
+import { flagsToArray } from "../../utils/functions/others";
 
 export default ((client, guild) => {
   client.cache.guilds[guild.id] = {

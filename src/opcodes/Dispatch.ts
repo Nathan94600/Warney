@@ -5,12 +5,17 @@ import { readdir } from "fs";
 
 const gatewayEvents: Record<string, any> = {};
 
-readdir("./dist/gatewayEvents", (err, files) => {
+readdir("./dist/gatewayEvents", (err, dirs) => {
 	if (err) throw err;
-	else files.forEach(file => {
-		const fileName = file.split(".")[0];
-
-		if (fileName) gatewayEvents[fileName] = require(`../gatewayEvents/${file}`).default;
+	else dirs.forEach(dir => {
+		readdir(`./dist/gatewayEvents/${dir}`, (err, files) => {
+			if (err) throw err;
+			else files.forEach(file => {
+				const fileName = file.split(".")[0];
+		
+				if (fileName) gatewayEvents[fileName] = require(`../gatewayEvents/${dir}/${file}`).default;
+			});
+		});
 	});
 });
 
