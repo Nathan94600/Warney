@@ -1,10 +1,10 @@
-import { Locales } from "../../enums/other";
+import { Locales } from "../../enums/others";
 import { InteractionTypes, ApplicationIntegrationTypes, InteractionContextTypes, ApplicationCommandTypes, ApplicationCommandOptionTypes, MessageComponentTypes } from "../../enums/types";
 import { APIInteractionData, APIChannel, APIMessageComponentData, APIMessageComponent } from "../../types/api";
-import { SelectMenuComponentType, Snowflake } from "../../types/other";
-import { APIGuild, APIGuildMember } from "./guilds";
+import { SelectMenuComponentType, Snowflake } from "../../types/others";
+import { APIGuild, APIGuildMember } from "./guilds/others";
 import { APIMessage } from "./messages";
-import { APIEntitlement, APIResolvedData, APIUser } from "./other";
+import { APIEntitlement, APIResolvedData, APIUser } from "./others";
 
 export interface APIBaseInteraction {
 	/**

@@ -1,10 +1,10 @@
 import { AnimationTypes, InviteTargetTypes, TriggerTypes } from "../../enums/types";
-import { PresenceStatus } from "../../enums/other";
-import { Snowflake } from "../../types/other";
+import { PresenceStatus } from "../../enums/others";
+import { Snowflake } from "../../types/others";
 import { APIActivity } from "./activities";
 import { APIThreadChannel } from "./channels";
-import { APIGuildMember } from "./guilds";
-import { APIApplication, APIAutoModerationAction, APIClientStatus, APIEmoji, APISoundboardSound, APIThreadMember, APIUnavailableGuild, APIUser } from "./other";
+import { APIGuildMember } from "./guilds/others";
+import { APIApplication, APIAutoModerationAction, APIClientStatus, APIEmoji, APISoundboardSound, APIThreadMember, APIUnavailableGuild, APIUser } from "./others";
 
 export interface APIWebhooksUpdateEventFields {
 	/**

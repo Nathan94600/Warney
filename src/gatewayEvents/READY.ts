@@ -1,9 +1,10 @@
 import { readdir } from "fs";
 import { ApplicationFlags } from "../utils/enums/flags";
-import { GatewayEventNames } from "../utils/enums/other";
-import { apiUserToUser, flagsToArray, setGlobalApplicationCommands } from "../utils/functions";
-import { GatewayEvent } from "../utils/types/other";
-import { Command } from "../utils/interfaces/other";
+import { GatewayEventNames } from "../utils/enums/others";
+import { GatewayEvent } from "../utils/types/others";
+import { Command } from "../utils/interfaces/others";
+import { apiUserToUser } from "../utils/functions/apiTransformers";
+import { flagsToArray, setGlobalApplicationCommands } from "../utils/functions/others";
 
 const commands: Command[] = [];
 

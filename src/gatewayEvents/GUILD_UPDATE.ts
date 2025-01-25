@@ -1,9 +1,10 @@
 import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/other";
-import { apiUserToUser, flagsToArray } from "../utils/functions";
-import { GatewayEvent } from "../utils/types/other";
-import { Command, Emoji, Role, RoleTags } from "../utils/interfaces/other";
+import { GatewayEventNames } from "../utils/enums/others";
+import { GatewayEvent } from "../utils/types/others";
+import { Command, Emoji, Role, RoleTags } from "../utils/interfaces/others";
 import { RoleFlags, BitwisePermissionFlags } from "../utils/enums/flags";
+import { apiUserToUser } from "../utils/functions/apiTransformers";
+import { flagsToArray } from "../utils/functions/others";
 
 const commands: Command[] = [];
 

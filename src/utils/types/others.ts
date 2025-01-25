@@ -1,6 +1,9 @@
 import { MessageComponentTypes } from "../enums/types";
-import { ApiGatewayEvents } from "../interfaces/api/other";
-import { ApplicationCommandAttachmentOption, ApplicationCommandBooleanOption, ApplicationCommandChannelOption, ApplicationCommandIntegerOption, ApplicationCommandMentionableOption, ApplicationCommandNumberOption, ApplicationCommandRoleOption, ApplicationCommandStringOption, ApplicationCommandSubCommandGroupOption, ApplicationCommandSubCommandOption, ApplicationCommandUserOption, AutocompleteInteractionCallbackData, BasicButtonComponent, ChannelSelectMenuComponent, Client, DmChannel, GroupDmChannel, GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, LinkButtonComponent, MessageInteractionCallbackData, ModalInteractionCallbackData, NonSelectMenuActionRowComponent, Opcodes, OtherSelectMenuComponent, PremiumButtonComponent, SelectMenuActionRowComponent, StringSelectMenuComponent, TextInputComponent, ThreadChannel, WsEvents } from "../interfaces/other";
+import { ApiGatewayEvents } from "../interfaces/api/others";
+import { ApplicationCommandSubCommandOption, ApplicationCommandSubCommandGroupOption, ApplicationCommandIntegerOption, ApplicationCommandNumberOption, ApplicationCommandStringOption, ApplicationCommandAttachmentOption, ApplicationCommandBooleanOption, ApplicationCommandMentionableOption, ApplicationCommandRoleOption, ApplicationCommandUserOption, ApplicationCommandChannelOption } from "../interfaces/applicationCommands";
+import { GuildVoiceChannel, GuildStageVoiceChannel, GuildTextChannel, GuildCategoryChannel, GuildMediaChannel, GuildForumChannel, ThreadChannel, GuildAnnouncementChannel, GuildDirectoryChannel, DmChannel, GroupDmChannel } from "../interfaces/channels";
+import { BasicButtonComponent, LinkButtonComponent, PremiumButtonComponent, TextInputComponent, StringSelectMenuComponent, ChannelSelectMenuComponent, OtherSelectMenuComponent, SelectMenuActionRowComponent, NonSelectMenuActionRowComponent } from "../interfaces/components";
+import { WsEvents, Client, Opcodes, ModalInteractionCallbackData, MessageInteractionCallbackData, AutocompleteInteractionCallbackData } from "../interfaces/others";
 
 export type Snowflake = string;
 

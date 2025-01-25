@@ -1,8 +1,8 @@
 import { WebSocket } from "ws";
-import { GatewayOpcodes } from "../utils/enums/other";
-import { Opcode } from "../utils/types/other";
+import { GatewayOpcodes } from "../utils/enums/others";
+import { Opcode } from "../utils/types/others";
 import { readdir } from "fs";
-import { sendWebsocketMessage } from "../utils/functions";
+import { sendWebsocketMessage } from "../utils/functions/others";
 
 export default (client => {
 	client.ws.removeAllListeners();

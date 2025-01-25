@@ -1,10 +1,14 @@
 import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/other";
-import { GatewayEvent } from "../utils/types/other";
-import { Activity, ActivityAssets, Command, Emoji, GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildScheduledEvent, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, PresenceUpdateEventFields, Role, RoleTags, SoundboardSound, VoiceState } from "../utils/interfaces/other";
-import { apiGuildMemberToGuildMember, apiThreadChannelToThreadChannel, apiUserToUser, flagsToArray } from "../utils/functions";
+import { GatewayEventNames } from "../utils/enums/others";
+import { GatewayEvent } from "../utils/types/others";
 import { BitwisePermissionFlags, RoleFlags, UserFlags } from "../utils/enums/flags";
 import { ChannelTypes } from "../utils/enums/types";
+import { Activity, ActivityAssets } from "../utils/interfaces/activities";
+import { GuildAnnouncementChannel, GuildDirectoryChannel, GuildCategoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel } from "../utils/interfaces/channels";
+import { GuildScheduledEvent } from "../utils/interfaces/guilds";
+import { Command, Emoji, PresenceUpdateEventFields, Role, RoleTags, SoundboardSound, VoiceState } from "../utils/interfaces/others";
+import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember } from "../utils/functions/apiTransformers";
+import { flagsToArray } from "../utils/functions/others";
 
 const commands: Record<string, Command> = {};
 

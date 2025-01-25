@@ -1,7 +1,7 @@
 import { ChannelTypes, SortOrderTypes, ForumLayoutTypes } from "../../enums/types";
-import { VideoQualityModes } from "../../enums/other";
-import { Snowflake } from "../../types/other";
-import { APIUser, APIOverwrite, APIThreadMetadata, APIThreadMember, APIDefaultReaction, APIVoiceRegion } from "./other";
+import { VideoQualityModes } from "../../enums/others";
+import { Snowflake } from "../../types/others";
+import { APIUser, APIOverwrite, APIThreadMetadata, APIThreadMember, APIDefaultReaction, APIVoiceRegion } from "./others";
 
 export interface APIBaseChannel {
 	/**

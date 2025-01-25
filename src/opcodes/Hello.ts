@@ -1,6 +1,6 @@
-import { GatewayIntents, GatewayOpcodes } from "../utils/enums/other";
-import { sendWebsocketMessage } from "../utils/functions";
-import { Opcode } from "../utils/types/other";
+import { GatewayIntents, GatewayOpcodes } from "../utils/enums/others";
+import { sendWebsocketMessage } from "../utils/functions/others";
+import { Opcode } from "../utils/types/others";
 
 export default ((client, data) => {
 	setInterval(() => sendWebsocketMessage(client, {

@@ -1,7 +1,7 @@
-import { GatewayOpcodes } from "../utils/enums/other";
+import { GatewayOpcodes } from "../utils/enums/others";
 import { inspect } from "util";
 import { readdir } from "fs";
-import { WsEvent } from "../utils/types/other";
+import { WsEvent } from "../utils/types/others";
 
 const opcodeNames: Record<number, string> = {}, opcodes: Record<string, any> = {}, opcodeKeys = Object.keys(GatewayOpcodes);
 

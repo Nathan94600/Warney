@@ -1,7 +1,7 @@
 import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/other";
-import { GatewayEvent } from "../utils/types/other";
-import { Command } from "../utils/interfaces/other";
+import { GatewayEventNames } from "../utils/enums/others";
+import { GatewayEvent } from "../utils/types/others";
+import { Command } from "../utils/interfaces/others";
 
 const commands: Command[] = [];
 

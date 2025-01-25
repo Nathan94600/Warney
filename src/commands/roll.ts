@@ -1,7 +1,7 @@
 import { MessageFlags } from "../utils/enums/flags";
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, InteractionCallbackTypes } from "../utils/enums/types";
-import { createInteractionResponse } from "../utils/functions";
-import { Command } from "../utils/interfaces/other";
+import { createInteractionResponse } from "../utils/functions/others";
+import { Command } from "../utils/interfaces/others";
 
 export default {
 	name: "roll",

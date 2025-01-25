@@ -1,7 +1,7 @@
-import { ActivityTypes } from "../../enums/types";
-import { Snowflake } from "../../types/others";
+import { ActivityTypes } from "../enums/types";
+import { Snowflake } from "../types/others";
 
-export interface APIActivity {
+export interface Activity {
 	/**
 	 * Activity's name
 	 */
@@ -17,15 +17,15 @@ export interface APIActivity {
 	/**
 	 * Unix timestamp (in milliseconds) of when the activity was added to the user's session
 	 */
-	created_at: number;
+	createdAt: number;
 	/**
 	 * Unix timestamps for start and/or end of the game
 	 */
-	timestamps?: APIActivityTimestamps;
+	timestamps?: ActivityTimestamps;
 	/**
 	 * Application ID for the game
 	 */
-	application_id?: Snowflake;
+	applicationId?: Snowflake;
 	/**
 	 * What the player is currently doing
 	 */
@@ -37,19 +37,19 @@ export interface APIActivity {
 	/**
 	 * Emoji used for a custom status
 	 */
-	emoji?: APIActivityEmoji | null;
+	emoji?: ActivityEmoji | null;
 	/**
 	 * Information for the current party of the player
 	 */
-	party?: APIActivityParty;
+	party?: ActivityParty;
 	/**
 	 * Images for the presence and their hover texts
 	 */
-	assets?: APIActivityAssets;
+	assets?: ActivityAssets;
 	/**
 	 * Secrets for Rich Presence joining and spectating
 	 */
-	secrets?: APIActivitySecrets;
+	secrets?: ActivitySecrets;
 	/**
 	 * Whether or not the activity is an instanced game session
 	 */
@@ -61,10 +61,10 @@ export interface APIActivity {
 	/**
 	 * Custom buttons shown in the Rich Presence (max 2)
 	 */
-	buttons?: APIActivityButton[];
+	buttons?: ActivityButton[];
 };
 
-export interface APIActivityTimestamps {
+export interface ActivityTimestamps {
 	/**
 	 * Unix time (in milliseconds) of when the activity started
 	 */
@@ -75,7 +75,7 @@ export interface APIActivityTimestamps {
 	end?: number;
 };
 
-export interface APIActivityEmoji {
+export interface ActivityEmoji {
 	/**
 	 * Name of the emoji
 	 */
@@ -90,7 +90,7 @@ export interface APIActivityEmoji {
 	animated?: boolean;
 };
 
-export interface APIActivityParty {
+export interface ActivityParty {
 	/**
 	 * ID of the party
 	 */
@@ -101,26 +101,26 @@ export interface APIActivityParty {
 	size ?: [number, number];
 };
 
-export interface APIActivityAssets {
+export interface ActivityAssets {
 	/**
 	 * See [Activity Asset Image](https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image)
 	 */
-	large_image?: string;
+	largeImage?: string;
 	/**
 	 * Text displayed when hovering over the large image of the activity
 	 */
-	large_text?: string;
+	largeText?: string;
 	/**
 	 * See [Activity Asset Image](https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-asset-image)
 	 */
-	small_image?: string;
+	smallImage?: string;
 	/**
 	 * Text displayed when hovering over the small image of the activity
 	 */
-	small_text?: string;
+	smallText?: string;
 };
 
-export interface APIActivitySecrets {
+export interface ActivitySecrets {
 	/**
 	 * Secret for joining a party
 	 */
@@ -138,7 +138,7 @@ export interface APIActivitySecrets {
 /**
  * When received over the gateway, the `buttons` field is an array of strings, which are the button labels. Bots cannot access a user's activity button URLs. When sending, the `buttons` field must be an array of the below object:
  */
-export interface APIActivityButton {
+export interface ActivityButton {
 	/**
 	 * Text shown on the button (1-32 characters)
 	 */

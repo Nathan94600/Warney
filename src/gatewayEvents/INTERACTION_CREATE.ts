@@ -1,8 +1,8 @@
 import { readdir } from "fs";
-import { GatewayEventNames } from "../utils/enums/other";
-import { GatewayEvent } from "../utils/types/other";
+import { GatewayEventNames } from "../utils/enums/others";
+import { GatewayEvent } from "../utils/types/others";
 import { InteractionTypes } from "../utils/enums/types";
-import { Command } from "../utils/interfaces/other";
+import { Command } from "../utils/interfaces/others";
 
 const commands: Record<string, Command> = {};
 

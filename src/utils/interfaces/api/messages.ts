@@ -1,9 +1,10 @@
 import { ReactionTypes, MessageTypes, MessageActivityTypes, MessageReferenceTypes, InteractionTypes, ApplicationIntegrationTypes } from "../../enums/types";
-import { Snowflake } from "../../types/other";
+import { Snowflake } from "../../types/others";
 import { APIActionRowComponent } from "../../types/api";
-import { APIEmoji, APIUser, APIChannelMention, APIAttachment, APIEmbed, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject, APIResolvedData } from "./other";
+import { APIEmoji, APIUser, APIChannelMention, APIAttachment, APIReaction, APIApplication, APIStickerItem, APIRoleSubscriptionDataObject, APIPollObject, APIResolvedData } from "./others";
 import { APIThreadChannel } from "./channels";
-import { APIGuildMember } from "./guilds";
+import { APIGuildMember } from "./guilds/others";
+import { APIEmbed } from "./embeds";
 
 export interface APIMessagePollVoteRemoveFields {
 	/**
