@@ -1,12 +1,12 @@
 import { GatewayEventNames } from "../../utils/enums/others";
 import { GatewayEvent } from "../../utils/types/others";
-import { BitwisePermissionFlags, RoleFlags, UserFlags } from "../../utils/enums/flags";
+import { UserFlags } from "../../utils/enums/flags";
 import { ChannelTypes } from "../../utils/enums/types";
 import { Activity, ActivityAssets } from "../../utils/interfaces/activities";
 import { GuildAnnouncementChannel, GuildDirectoryChannel, GuildCategoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel } from "../../utils/interfaces/channels";
 import { GuildScheduledEvent } from "../../utils/interfaces/guilds";
-import { Emoji, PresenceUpdateEventFields, Role, RoleTags, SoundboardSound, VoiceState } from "../../utils/interfaces/others";
-import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember } from "../../utils/functions/apiTransformers";
+import { Emoji, PresenceUpdateEventFields, SoundboardSound, VoiceState } from "../../utils/interfaces/others";
+import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember, apiRoleToRole } from "../../utils/functions/apiTransformers";
 import { flagsToArray } from "../../utils/functions/others";
 
 export default ((client, guild) => {
@@ -294,36 +294,7 @@ export default ((client, guild) => {
 				return presence
 			}),
 			publicUpdatesChannelId: guild.public_updates_channel_id,
-			roles: guild.roles.map(apiRole => {
-				const role: Role = {
-					color: apiRole.color,
-					flags: flagsToArray(apiRole.flags, RoleFlags),
-					hoist: apiRole.hoist,
-					id: apiRole.id,
-					managed: apiRole.managed,
-					mentionable: apiRole.mentionable,
-					name: apiRole.name,
-					permissions: flagsToArray(apiRole.permissions, BitwisePermissionFlags),
-					position: apiRole.position
-				};
-
-				if (apiRole.icon) role.icon = apiRole.icon;
-				if (apiRole.tags) {
-					const tags: RoleTags = {};
-
-					if (apiRole.tags.available_for_purchase !== undefined) tags.availableForPurchase = apiRole.tags.available_for_purchase;
-					if (apiRole.tags.bot_id !== undefined) tags.botId = apiRole.tags.bot_id;
-					if (apiRole.tags.guild_connections !== undefined) tags.guildConnections = apiRole.tags.guild_connections;
-					if (apiRole.tags.integration_id !== undefined) tags.integrationId = apiRole.tags.integration_id;
-					if (apiRole.tags.premium_subscriber !== undefined) tags.premiumSubscriber = apiRole.tags.premium_subscriber;
-					if (apiRole.tags.subscription_listing_id !== undefined) tags.subscriptionListingId = apiRole.tags.subscription_listing_id;
-
-					role.tags = tags;
-				};
-				if (apiRole.unicode_emoji) role.unicodeEmoji = apiRole.unicode_emoji;
-
-				return role;
-			}),
+			roles: guild.roles.map(apiRole => apiRoleToRole(apiRole)),
 			rulesChannelId: guild.rules_channel_id,
 			safetyAlertsChannelId: guild.safety_alerts_channel_id,
 			soundboardSounds: guild.soundboard_sounds.map(apiSoundBoardSound => {

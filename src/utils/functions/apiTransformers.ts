@@ -1,10 +1,10 @@
-import { UserFlags, GuildMemberFlags } from "../enums/flags";
+import { UserFlags, GuildMemberFlags, RoleFlags, BitwisePermissionFlags } from "../enums/flags";
 import { APIThreadChannel } from "../interfaces/api/channels";
 import { APIGuildMember } from "../interfaces/api/guilds/others";
-import { APIUser } from "../interfaces/api/others";
+import { APIRole, APIUser } from "../interfaces/api/others";
 import { ThreadChannel } from "../interfaces/channels";
 import { GuildMember } from "../interfaces/guilds";
-import { User, ThreadMember, ThreadMetadata } from "../interfaces/others";
+import { User, ThreadMember, ThreadMetadata, Role, RoleTags } from "../interfaces/others";
 import { flagsToArray } from "./others";
 
 export function apiUserToUser(apiUser: APIUser): User {
@@ -109,4 +109,35 @@ export function apiThreadChannelToThreadChannel(apiThread: APIThreadChannel): Th
 	if (apiThread.user_limit) thread.userLimit = apiThread.user_limit;
 
 	return thread;
+};
+
+export function apiRoleToRole(apiRole: APIRole): Role {
+	const role: Role = {
+		color: apiRole.color,
+		flags: flagsToArray(apiRole.flags, RoleFlags),
+		hoist: apiRole.hoist,
+		id: apiRole.id,
+		managed: apiRole.managed,
+		mentionable: apiRole.mentionable,
+		name: apiRole.name,
+		permissions: flagsToArray(apiRole.permissions, BitwisePermissionFlags),
+		position: apiRole.position
+	};
+
+	if (apiRole.icon !== undefined) role.icon = apiRole.icon;
+	if (apiRole.tags) {
+		const tags: RoleTags = {};
+
+		if (apiRole.tags.available_for_purchase !== undefined) tags.availableForPurchase = apiRole.tags.available_for_purchase;
+		if (apiRole.tags.bot_id !== undefined) tags.botId = apiRole.tags.bot_id;
+		if (apiRole.tags.guild_connections !== undefined) tags.guildConnections = apiRole.tags.guild_connections;
+		if (apiRole.tags.integration_id !== undefined) tags.integrationId = apiRole.tags.integration_id;
+		if (apiRole.tags.premium_subscriber !== undefined) tags.premiumSubscriber = apiRole.tags.premium_subscriber;
+		if (apiRole.tags.subscription_listing_id !== undefined) tags.subscriptionListingId = apiRole.tags.subscription_listing_id;
+
+		role.tags = tags;
+	};
+	if (apiRole.unicode_emoji) role.unicodeEmoji = apiRole.unicode_emoji;
+
+	return role;
 };
