@@ -4,9 +4,9 @@ import { APIBasicButtonComponent, APILinkButtonComponent, APIPremiumButtonCompon
 import { APIApplicationCommandAutocompleteData, APIApplicationCommandAutocompleteInteraction, APIApplicationCommandData, APIApplicationCommandInteraction, APIMessageComponentInteraction, APIModalSubmitData, APIModalSubmitInteraction, APIOtherMessageComponentData, APIPingInteraction, APISelectMenuComponentData } from "../interfaces/api/interactions";
 import { APIMessageApplicationCommand, APIUserApplicationCommand, APIPrimaryEntryPointApplicationCommand, APIChatInputApplicationCommand, APIModalInteractionCallbackData, APIMessageInteractionCallbackData, APIAutocompleteInteractionCallbackData } from "../interfaces/api/others";
 
-export type APIGuildChannel = APIGuildVoiceChannel | APIGuildStageVoiceChannel | APIGuildTextChannel | APIGuildCategoryChannel | APIGuildMediaChannel | APIGuildForumChannel | APIThreadChannel | APIGuildAnnouncementChannel | APIGuildDirectoryChannel;
+export type APIGuildChannel = APIGuildVoiceChannel | APIGuildStageVoiceChannel | APIGuildTextChannel | APIGuildCategoryChannel | APIGuildMediaChannel | APIGuildForumChannel | APIGuildAnnouncementChannel | APIGuildDirectoryChannel;
 
-export type APIChannel = APIDmChannel | APIGroupDmChannel | APIGuildChannel;
+export type APIChannel = APIDmChannel | APIGroupDmChannel | APIGuildChannel | APIThreadChannel;
 
 export type APIButtonComponent = APIBasicButtonComponent | APILinkButtonComponent | APIPremiumButtonComponent;
 

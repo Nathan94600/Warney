@@ -37,6 +37,6 @@ export type ActionRowComponent = SelectMenuActionRowComponent | NonSelectMenuAct
 
 export type InteractionCallbackData = ModalInteractionCallbackData | MessageInteractionCallbackData | AutocompleteInteractionCallbackData;
 
-export type GuildChannel = GuildVoiceChannel | GuildStageVoiceChannel | GuildTextChannel | GuildCategoryChannel | GuildMediaChannel | GuildForumChannel | ThreadChannel | GuildAnnouncementChannel | GuildDirectoryChannel;
+export type GuildChannel = GuildVoiceChannel | GuildStageVoiceChannel | GuildTextChannel | GuildCategoryChannel | GuildMediaChannel | GuildForumChannel | GuildAnnouncementChannel | GuildDirectoryChannel;
 
-export type Channel = DmChannel | GroupDmChannel | GuildChannel;
+export type Channel = DmChannel | GroupDmChannel | GuildChannel | ThreadChannel;

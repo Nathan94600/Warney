@@ -1676,14 +1676,14 @@ export interface ApiGatewayEvents {
 	[GatewayEventNames.AutoModerationRuleDelete]: [d: APIAutoModerationRule];
 	[GatewayEventNames.AutoModerationActionExecution]: [d: APIAutoModerationActionExecutionEventFields];
 	[GatewayEventNames.ChannelCreate]: [d: APIGuildChannel];
-	[GatewayEventNames.ChannelUpdate]: [d: APIChannel];
-	[GatewayEventNames.ChannelDelete]: [d: APIChannel];
+	[GatewayEventNames.ChannelUpdate]: [d: Exclude<APIChannel, APIThreadChannel>];
+	[GatewayEventNames.ChannelDelete]: [d: Exclude<APIChannel, APIThreadChannel>];
 	[GatewayEventNames.ChannelPinsUpdate]: [d: APIChannelPinsUpdateEventFields];
 	[GatewayEventNames.ThreadCreate]: [d: APIThreadChannel];
 	[GatewayEventNames.ThreadUpdate]: [d: APIThreadChannel];
 	[GatewayEventNames.ThreadDelete]: [d: APIThreadChannel];
 	[GatewayEventNames.ThreadListSync]: [d: APIThreadListSyncEventFields];
-	[GatewayEventNames.ThreadMemberUpdate]: [d: APIThreadChannel & APIThreadMemberUpdateEventExtaFields];
+	[GatewayEventNames.ThreadMemberUpdate]: [d: APIThreadMember & APIThreadMemberUpdateEventExtaFields];
 	[GatewayEventNames.ThreadMembersUpdate]: [d: APIThreadMembersUpdateEventFields];
 	[GatewayEventNames.EntitlementCreate]: [d: APIEntitlement];
 	[GatewayEventNames.EntitlementUpdate]: [d: APIEntitlement];

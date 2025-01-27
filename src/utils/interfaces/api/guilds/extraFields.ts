@@ -1,6 +1,6 @@
-import { APIChannel } from "../../../types/api";
+import { APIGuildChannel } from "../../../types/api";
 import { Snowflake } from "../../../types/others";
-import { APIDmChannel, APIGroupDmChannel, APIThreadChannel } from "../channels";
+import { APIThreadChannel } from "../channels";
 import { APIPresenceUpdateEventFields } from "../eventFields";
 import { APIVoiceState, APIStageInstance, APISoundboardSound } from "../others";
 import { APIGuildMember, APIGuildScheduledEvent } from "./others";
@@ -33,7 +33,7 @@ export interface APIGuildCreateExtraFields {
 	/**
 	 * Channels in the guild
 	 */
-	channels: Exclude<APIChannel, APIDmChannel | APIGroupDmChannel>[];
+	channels:APIGuildChannel[];
 	/**
 	 * All active threads in the guild that current user has permission to view
 	 */

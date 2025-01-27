@@ -147,10 +147,6 @@ export function apiRoleToRole(apiRole: APIRole): Role {
 
 export function apiGuildChannelToGuildhannel(apiChannel: APIGuildChannel): GuildChannel {
 	switch (apiChannel.type) {
-		case ChannelTypes.PrivateThread:
-		case ChannelTypes.AnnouncementThread:
-		case ChannelTypes.PublicThread:
-			return apiThreadChannelToThreadChannel(apiChannel)
 		case ChannelTypes.GuildAnnouncement:
 			const announcementChannel: GuildAnnouncementChannel = { id: apiChannel.id, type: apiChannel.type };
 
