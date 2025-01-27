@@ -12,7 +12,7 @@ import { ApplicationCommandOptionChoice, ApplicationCommandParams } from "./appl
 
 export interface Cache {
 	users: Record<string, User>;
-	guilds: Record<string, Guild | (Guild & GuildCreateExtraFields)>;
+	guilds: Record<string, Guild & GuildCreateExtraFields>;
 	unavailableGuilds: Record<string, UnavailableGuild>;
 	application?: PartialApplication;
 	sessionId?: string;

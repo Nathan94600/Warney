@@ -4,8 +4,10 @@ import { Emoji } from "../../utils/interfaces/others";
 import { apiRoleToRole, apiUserToUser } from "../../utils/functions/apiTransformers";
 
 export default ((client, guild) => {
-  client.cache.guilds[guild.id] = {
-		...client.cache.guilds[guild.id],
+  const guildInCache = client.cache.guilds[guild.id];
+
+  if (guildInCache) client.cache.guilds[guild.id] = {
+		...guildInCache,
     afkChannelId: guild.afk_channel_id,
     afkTimeout: guild.afk_timeout,
     applicationId: guild.afk_channel_id,

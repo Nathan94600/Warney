@@ -1,10 +1,13 @@
 import { UserFlags, GuildMemberFlags, RoleFlags, BitwisePermissionFlags } from "../enums/flags";
+import { ChannelTypes } from "../enums/types";
 import { APIThreadChannel } from "../interfaces/api/channels";
 import { APIGuildMember } from "../interfaces/api/guilds/others";
 import { APIRole, APIUser } from "../interfaces/api/others";
-import { ThreadChannel } from "../interfaces/channels";
+import { GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, ThreadChannel } from "../interfaces/channels";
 import { GuildMember } from "../interfaces/guilds";
 import { User, ThreadMember, ThreadMetadata, Role, RoleTags } from "../interfaces/others";
+import { APIGuildChannel } from "../types/api";
+import { GuildChannel } from "../types/others";
 import { flagsToArray } from "./others";
 
 export function apiUserToUser(apiUser: APIUser): User {
@@ -140,4 +143,158 @@ export function apiRoleToRole(apiRole: APIRole): Role {
 	if (apiRole.unicode_emoji) role.unicodeEmoji = apiRole.unicode_emoji;
 
 	return role;
+};
+
+export function apiGuildChannelToGuildhannel(apiChannel: APIGuildChannel): GuildChannel {
+	switch (apiChannel.type) {
+		case ChannelTypes.PrivateThread:
+		case ChannelTypes.AnnouncementThread:
+		case ChannelTypes.PublicThread:
+			return apiThreadChannelToThreadChannel(apiChannel)
+		case ChannelTypes.GuildAnnouncement:
+			const announcementChannel: GuildAnnouncementChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.flags) announcementChannel.flags = apiChannel.flags;
+			if (apiChannel.guild_id) announcementChannel.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) announcementChannel.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) announcementChannel.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) announcementChannel.name = apiChannel.name;
+			if (apiChannel.nsfw) announcementChannel.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) announcementChannel.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) announcementChannel.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) announcementChannel.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) announcementChannel.permissions = apiChannel.permissions;
+			if (apiChannel.position) announcementChannel.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) announcementChannel.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.topic) announcementChannel.topic = apiChannel.topic;
+
+			return announcementChannel
+		case ChannelTypes.GuildDirectory:
+			const directoryChannel: GuildDirectoryChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.flags) directoryChannel.flags = apiChannel.flags;
+			if (apiChannel.guild_id) directoryChannel.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) directoryChannel.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) directoryChannel.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) directoryChannel.name = apiChannel.name;
+			if (apiChannel.nsfw) directoryChannel.nsfw = apiChannel.nsfw;
+			if (apiChannel.parent_id) directoryChannel.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) directoryChannel.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) directoryChannel.permissions = apiChannel.permissions;
+			if (apiChannel.position) directoryChannel.position = apiChannel.position;
+			if (apiChannel.topic) directoryChannel.topic = apiChannel.topic;
+
+			return directoryChannel
+		case ChannelTypes.GuildCategory:
+			const category: GuildCategoryChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.flags) category.flags = apiChannel.flags;
+			if (apiChannel.guild_id) category.guildId = apiChannel.guild_id;
+			if (apiChannel.name) category.name = apiChannel.name;
+			if (apiChannel.permission_overwrite) category.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) category.permissions = apiChannel.permissions;
+			if (apiChannel.position) category.position = apiChannel.position;
+
+			return category
+		case ChannelTypes.GuildForum:
+			const forum: GuildForumChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.default_forum_layout) forum.defaultForumLayout = apiChannel.default_forum_layout;
+			if (apiChannel.default_sort_order) forum.defaultSortOrder = apiChannel.default_sort_order;
+			if (apiChannel.flags) forum.flags = apiChannel.flags;
+			if (apiChannel.guild_id) forum.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) forum.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) forum.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) forum.name = apiChannel.name;
+			if (apiChannel.nsfw) forum.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) forum.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) forum.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) forum.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) forum.permissions = apiChannel.permissions;
+			if (apiChannel.position) forum.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) forum.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.topic) forum.topic = apiChannel.topic;
+
+			return forum
+		case ChannelTypes.GuildMedia:
+			const media: GuildMediaChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.default_sort_order) media.defaultSortOrder = apiChannel.default_sort_order;
+			if (apiChannel.flags) media.flags = apiChannel.flags;
+			if (apiChannel.guild_id) media.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) media.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) media.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) media.name = apiChannel.name;
+			if (apiChannel.nsfw) media.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) media.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) media.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) media.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) media.permissions = apiChannel.permissions;
+			if (apiChannel.position) media.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) media.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.topic) media.topic = apiChannel.topic;
+
+			return media
+		case ChannelTypes.GuildStageVoice:
+			const stageVoice: GuildStageVoiceChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.bitrate) stageVoice.bitrate = apiChannel.bitrate;
+			if (apiChannel.flags) stageVoice.flags = apiChannel.flags;
+			if (apiChannel.guild_id) stageVoice.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) stageVoice.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) stageVoice.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) stageVoice.name = apiChannel.name;
+			if (apiChannel.nsfw) stageVoice.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) stageVoice.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) stageVoice.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) stageVoice.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) stageVoice.permissions = apiChannel.permissions;
+			if (apiChannel.position) stageVoice.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) stageVoice.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.rtc_region) stageVoice.rtcRegion = apiChannel.rtc_region;
+			if (apiChannel.user_limit) stageVoice.userLimit = apiChannel.user_limit;
+			if (apiChannel.video_quality_mode) stageVoice.videoQualityMode = apiChannel.video_quality_mode;
+
+			return stageVoice
+		case ChannelTypes.GuildText:
+			const textChannel: GuildTextChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.flags) textChannel.flags = apiChannel.flags;
+			if (apiChannel.guild_id) textChannel.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) textChannel.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) textChannel.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) textChannel.name = apiChannel.name;
+			if (apiChannel.nsfw) textChannel.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) textChannel.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) textChannel.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) textChannel.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) textChannel.permissions = apiChannel.permissions;
+			if (apiChannel.position) textChannel.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) textChannel.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.topic) textChannel.topic = apiChannel.topic;
+			if (apiChannel.user_limit) textChannel.userLimit = apiChannel.user_limit;
+
+			return textChannel
+		case ChannelTypes.GuildVoice:
+			const voiceChannel: GuildVoiceChannel = { id: apiChannel.id, type: apiChannel.type };
+
+			if (apiChannel.bitrate) voiceChannel.bitrate = apiChannel.bitrate;
+			if (apiChannel.flags) voiceChannel.flags = apiChannel.flags;
+			if (apiChannel.guild_id) voiceChannel.guildId = apiChannel.guild_id;
+			if (apiChannel.last_message_id) voiceChannel.lastMessageId = apiChannel.last_message_id;
+			if (apiChannel.last_pin_timestamp) voiceChannel.lastPinTimestamp = apiChannel.last_pin_timestamp;
+			if (apiChannel.name) voiceChannel.name = apiChannel.name;
+			if (apiChannel.nsfw) voiceChannel.nsfw = apiChannel.nsfw;
+			if (apiChannel.owner_id) voiceChannel.ownerId = apiChannel.owner_id;
+			if (apiChannel.parent_id) voiceChannel.parentId = apiChannel.parent_id;
+			if (apiChannel.permission_overwrite) voiceChannel.permissionOverwrite = apiChannel.permission_overwrite;
+			if (apiChannel.permissions) voiceChannel.permissions = apiChannel.permissions;
+			if (apiChannel.position) voiceChannel.position = apiChannel.position;
+			if (apiChannel.rate_limit_per_user) voiceChannel.rateLimitPerUser = apiChannel.rate_limit_per_user;
+			if (apiChannel.rtc_region) voiceChannel.rtcRegion = apiChannel.rtc_region;
+			if (apiChannel.user_limit) voiceChannel.userLimit = apiChannel.user_limit;
+			if (apiChannel.video_quality_mode) voiceChannel.videoQualityMode = apiChannel.video_quality_mode;
+
+			return voiceChannel
+	}
 };

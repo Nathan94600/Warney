@@ -1,8 +1,8 @@
 import { BitwisePermissionFlags, GuildMemberFlags } from "../enums/flags";
 import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildScheduledEventEntityTypes, GuildScheduledEventRecurrenceRuleFrequencies, GuildScheduledEventRecurrenceRuleWeekdays, GuildScheduledEventRecurrenceRuleMonths, GuildFeatures, GuildNSFWLevels } from "../enums/guilds";
 import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, PremiumTiers, Locales } from "../enums/others";
-import { Channel, Snowflake } from "../types/others";
-import { DmChannel, GroupDmChannel, ThreadChannel } from "./channels";
+import { GuildChannel, Snowflake } from "../types/others";
+import { ThreadChannel } from "./channels";
 import { VoiceState, PresenceUpdateEventFields, StageInstance, SoundboardSound, User, Role, Emoji, WelcomeScreen, Sticker, AvatarDecorationData } from "./others";
 
 export interface GuildCreateExtraFields {
@@ -33,7 +33,7 @@ export interface GuildCreateExtraFields {
 	/**
 	 * Channels in the guild
 	 */
-	channels: Exclude<Channel, DmChannel | GroupDmChannel>[];
+	channels: GuildChannel[];
 	/**
 	 * All active threads in the guild that current user has permission to view
 	 */
