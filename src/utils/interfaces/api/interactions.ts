@@ -26,7 +26,7 @@ export interface APIBaseInteraction {
 	/**
 	 * Guild that the interaction was sent from
 	 */
-	guild?: APIGuild;
+	guild?: Partial<APIGuild>;
 	/**
 	 * Guild that the interaction was sent from
 	 */

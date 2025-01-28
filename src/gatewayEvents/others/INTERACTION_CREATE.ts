@@ -3,7 +3,7 @@ import { GatewayEventNames } from "../../utils/enums/others";
 import { GatewayEvent } from "../../utils/types/others";
 import { InteractionTypes } from "../../utils/enums/types";
 import { Command } from "../../utils/interfaces/others";
-import { apiUserToUser, apiGuildToGuild, apiGuildMemberToGuildMember } from "../../utils/functions/apiTransformers";
+import { apiUserToUser, apiGuildMemberToGuildMember } from "../../utils/functions/apiTransformers";
 
 const commands: Record<string, Command> = {};
 
@@ -18,12 +18,6 @@ readdir("./dist/commands", (err, fileNames) => {
 });
 
 export default ((client, interaction) => {
-	if (interaction.guild) {
-		const guild = interaction.guild, guildInCache = client.cache.guilds.get(guild.id);
-		
-		if (guildInCache) client.cache.guilds.set(guild.id, { ...guildInCache, ...apiGuildToGuild(interaction.guild) });
-	};
-
 	if (interaction.user) client.cache.users.set(interaction.user.id, { ...client.cache.users.get(interaction.user.id), ...apiUserToUser(interaction.user)	});
 
 	if (interaction.member) {
