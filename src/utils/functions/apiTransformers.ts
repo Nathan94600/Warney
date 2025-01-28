@@ -1,11 +1,11 @@
 import { UserFlags, GuildMemberFlags, RoleFlags, BitwisePermissionFlags } from "../enums/flags";
 import { ChannelTypes } from "../enums/types";
 import { APIThreadChannel } from "../interfaces/api/channels";
-import { APIGuildMember } from "../interfaces/api/guilds/others";
+import { APIGuild, APIGuildMember } from "../interfaces/api/guilds/others";
 import { APIRole, APIUser } from "../interfaces/api/others";
 import { GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, ThreadChannel } from "../interfaces/channels";
-import { GuildMember } from "../interfaces/guilds";
-import { User, ThreadMember, ThreadMetadata, Role, RoleTags } from "../interfaces/others";
+import { Guild, GuildMember } from "../interfaces/guilds";
+import { User, ThreadMember, ThreadMetadata, Role, RoleTags, Emoji } from "../interfaces/others";
 import { APIGuildChannel } from "../types/api";
 import { GuildChannel } from "../types/others";
 import { flagsToArray } from "./others";
@@ -293,4 +293,48 @@ export function apiGuildChannelToGuildhannel(apiChannel: APIGuildChannel): Guild
 
 			return voiceChannel
 	}
+};
+
+export function apiGuildToGuild(apiGuild: APIGuild): Guild {
+	return {
+		afkChannelId: apiGuild.afk_channel_id,
+		afkTimeout: apiGuild.afk_timeout,
+		applicationId: apiGuild.afk_channel_id,
+		banner: apiGuild.banner,
+		defaultMessageNotifications: apiGuild.default_message_notifications,
+		description: apiGuild.description,
+		discoverySplash: apiGuild.discovery_splash,
+		emojis: apiGuild.emojis.map(apiEmoji => {
+			const emoji: Emoji = ({ id: apiEmoji.id, name: apiEmoji.name });
+
+			if (apiEmoji.animated !== undefined) emoji.animated = apiEmoji.animated;
+			if (apiEmoji.available !== undefined) emoji.available = apiEmoji.available;
+			if (apiEmoji.managed !== undefined) emoji.managed = apiEmoji.managed;
+			if (apiEmoji.require_colons !== undefined) emoji.requireColons = apiEmoji.require_colons;
+			if (apiEmoji.user !== undefined) emoji.user = apiUserToUser(apiEmoji.user);
+			if (apiEmoji.roles !== undefined) emoji.roles = apiEmoji.roles;
+
+			return emoji;
+		}),
+		explicitContentFilter: apiGuild.explicit_content_filter,
+		features: apiGuild.features,
+		icon: apiGuild.icon,
+		id: apiGuild.id,
+		mfaLevel: apiGuild.mfa_level,
+		name: apiGuild.name,
+		nsfwLevel: apiGuild.nsfw_level,
+		ownerId: apiGuild.owner_id,
+		preferredLocale: apiGuild.preferred_locale,
+		premiumProgressBarEnabled: apiGuild.premium_progress_bar_enabled,
+		premiumTier: apiGuild.premium_tier,
+		publicUpdatesChannelId: apiGuild.public_updates_channel_id,
+		roles: apiGuild.roles.map(apiRole => apiRoleToRole(apiRole)),
+		rulesChannelId: apiGuild.rules_channel_id,
+		safetyAlertsChannelId: apiGuild.safety_alerts_channel_id,
+		splash: apiGuild.splash,
+		systemChannelFlags: apiGuild.system_channel_flags,
+		systemChannelId: apiGuild.system_channel_id,
+		vanityUrlCode: apiGuild.vanity_url_code,
+		verificationLevel: apiGuild.verification_level
+	};
 };

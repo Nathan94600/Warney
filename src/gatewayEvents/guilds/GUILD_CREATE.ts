@@ -3,36 +3,15 @@ import { GatewayEvent } from "../../utils/types/others";
 import { UserFlags } from "../../utils/enums/flags";
 import { Activity, ActivityAssets } from "../../utils/interfaces/activities";
 import { GuildScheduledEvent } from "../../utils/interfaces/guilds";
-import { Emoji, PresenceUpdateEventFields, SoundboardSound, VoiceState } from "../../utils/interfaces/others";
-import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember, apiRoleToRole, apiGuildChannelToGuildhannel } from "../../utils/functions/apiTransformers";
+import { PresenceUpdateEventFields, SoundboardSound, VoiceState } from "../../utils/interfaces/others";
+import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember, apiGuildChannelToGuildhannel, apiGuildToGuild } from "../../utils/functions/apiTransformers";
 import { flagsToArray } from "../../utils/functions/others";
 
 export default ((client, guild) => {
 	if (guild.unavailable) client.cache.unavailableGuilds[guild.id] = { id: guild.id, unavailable: guild.unavailable };
 	else {
 		client.cache.guilds[guild.id] = {
-			afkChannelId: guild.afk_channel_id,
-			afkTimeout: guild.afk_timeout,
-			applicationId: guild.afk_channel_id,
-			banner: guild.banner,
 			channels: guild.channels.map(channel => apiGuildChannelToGuildhannel(channel)),
-			defaultMessageNotifications: guild.default_message_notifications,
-			description: guild.description,
-			discoverySplash: guild.discovery_splash,
-			emojis: guild.emojis.map(apiEmoji => {
-				const emoji: Emoji = ({ id: apiEmoji.id, name: apiEmoji.name });
-
-				if (apiEmoji.animated !== undefined) emoji.animated = apiEmoji.animated;
-				if (apiEmoji.available !== undefined) emoji.available = apiEmoji.available;
-				if (apiEmoji.managed !== undefined) emoji.managed = apiEmoji.managed;
-				if (apiEmoji.require_colons !== undefined) emoji.requireColons = apiEmoji.require_colons;
-				if (apiEmoji.user !== undefined) emoji.user = apiUserToUser(apiEmoji.user);
-				if (apiEmoji.roles !== undefined) emoji.roles = apiEmoji.roles;
-
-				return emoji;
-			}),
-			explicitContentFilter: guild.explicit_content_filter,
-			features: guild.features,
 			guildScheduledEvents: guild.guild_scheduled_events.map(apiGuildScheduledEvent => {
 				const guildScheduledEvent: GuildScheduledEvent = {
 					channelId: apiGuildScheduledEvent.channel_id,
@@ -67,19 +46,10 @@ export default ((client, guild) => {
 
 				return guildScheduledEvent;
 			}),
-			icon: guild.icon,
-			id: guild.id,
 			joinedAt: guild.joined_at,
 			large: guild.large,
 			memberCount: guild.member_count,
 			members: guild.members.map(member => apiGuildMemberToGuildMember(member)),
-			mfaLevel: guild.mfa_level,
-			name: guild.name,
-			nsfwLevel: guild.nsfw_level,
-			ownerId: guild.owner_id,
-			preferredLocale: guild.preferred_locale,
-			premiumProgressBarEnabled: guild.premium_progress_bar_enabled,
-			premiumTier: guild.premium_tier,
 			presences: guild.presences.map(apiPresence => {
 				const presence: PresenceUpdateEventFields = {
 					activities: apiPresence.activities.map(apiActivity => {
@@ -139,10 +109,6 @@ export default ((client, guild) => {
 
 				return presence
 			}),
-			publicUpdatesChannelId: guild.public_updates_channel_id,
-			roles: guild.roles.map(apiRole => apiRoleToRole(apiRole)),
-			rulesChannelId: guild.rules_channel_id,
-			safetyAlertsChannelId: guild.safety_alerts_channel_id,
 			soundboardSounds: guild.soundboard_sounds.map(apiSoundBoardSound => {
 				const soundBoardSound: SoundboardSound = {
 					available: apiSoundBoardSound.available,
@@ -158,7 +124,6 @@ export default ((client, guild) => {
 
 				return soundBoardSound;
 			}),
-			splash: guild.splash,
 			stageInstances: guild.stage_instances.map(stageInstance => ({
 				channelId: stageInstance.channel_id,
 				discoverableDisabled: stageInstance.discoverable_disabled,
@@ -168,11 +133,7 @@ export default ((client, guild) => {
 				privacyLevel: stageInstance.privacy_level,
 				topic: stageInstance.topic
 			})),
-			systemChannelFlags: guild.system_channel_flags,
-			systemChannelId: guild.system_channel_id,
 			threads: guild.threads.map(thread => apiThreadChannelToThreadChannel(thread)),
-			vanityUrlCode: guild.vanity_url_code,
-			verificationLevel: guild.verification_level,
 			voiceStates: guild.voice_states.map(apiVoiceState => {
 				const voiceState: VoiceState = {
 					channelId: apiVoiceState.channel_id,
@@ -193,6 +154,7 @@ export default ((client, guild) => {
 
 				return voiceState
 			}),
+			...apiGuildToGuild(guild)
 		}
 	};
 }) satisfies GatewayEvent<GatewayEventNames.GuildCreate>;
