@@ -3,5 +3,5 @@ import { apiThreadChannelToThreadChannel } from "../../utils/functions/apiTransf
 import { GatewayEvent } from "../../utils/types/others";
 
 export default ((client, thread) => {
-	if (thread.guild_id) client.cache.guilds[thread.guild_id]?.threads.push(apiThreadChannelToThreadChannel(thread));
+	if (thread.guild_id) client.cache.guilds.get(thread.guild_id)?.threads.set(thread.id, apiThreadChannelToThreadChannel(thread));
 }) satisfies GatewayEvent<GatewayEventNames.ThreadCreate>;

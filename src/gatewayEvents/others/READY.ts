@@ -19,7 +19,7 @@ readdir("./dist/commands", (err, fileNames) => {
 })
 
 export default ((client, data) => {
-	client.cache.users[data.user.id] = apiUserToUser(data.user);
+	client.cache.users.set(data.user.id, apiUserToUser(data.user));
 	client.cache.resumeGatewayUrl = data.resume_gateway_url;
 	client.cache.sessionId = data.session_id;
 

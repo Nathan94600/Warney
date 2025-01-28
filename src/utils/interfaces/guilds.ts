@@ -29,15 +29,15 @@ export interface GuildCreateExtraFields {
 	/**
 	 * Users in the guild
 	 */
-	members: GuildMember[];
+	members: Map<Snowflake, GuildMember>;
 	/**
 	 * Channels in the guild
 	 */
-	channels: GuildChannel[];
+	channels: Map<Snowflake, GuildChannel>;
 	/**
 	 * All active threads in the guild that current user has permission to view
 	 */
-	threads: ThreadChannel[];
+	threads: Map<Snowflake, ThreadChannel>;
 	/**
 	 * Presences of the members in the guild, will only include non-offline members if the size is greater than `large threshold`
 	 */
@@ -45,11 +45,11 @@ export interface GuildCreateExtraFields {
 	/**
 	 * Stage instances in the guild
 	 */
-	stageInstances: StageInstance[];
+	stageInstances: Map<Snowflake, StageInstance>;
 	/**
 	 * Scheduled events in the guild
 	 */
-	guildScheduledEvents: GuildScheduledEvent[];
+	guildScheduledEvents: Map<Snowflake, GuildScheduledEvent>;
 	/**
 	 * Soundboard sounds in the guild
 	 */
@@ -268,7 +268,7 @@ export interface Guild {
 	/**
 	 * roles in the guild
 	 */
-	roles: Role[];
+	roles: Map<Snowflake, Role>;
 	/**
 	 * custom guild emojis
 	 */
@@ -360,7 +360,7 @@ export interface Guild {
 	/**
 	 * custom guild stickers
 	 */
-	stickers?: Sticker[];
+	stickers?: Map<Snowflake, Sticker>;
 	/**
 	 * whether the guild has the boost progress bar enabled
 	 */

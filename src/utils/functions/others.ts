@@ -83,9 +83,9 @@ export function openDiscordWebSocketConnection(token: string, client?: Client) {
 			if (!client) client = {
 				rateLimits: {},
 				cache: {
-					guilds: {},
-					users: {},
-					unavailableGuilds: {}
+					guilds: new Map(),
+					users: new Map(),
+					unavailableGuilds: new Map()
 				},
 				token: token,
 				ws: new WebSocket(`${json.url}?v=10&encoding=json`),

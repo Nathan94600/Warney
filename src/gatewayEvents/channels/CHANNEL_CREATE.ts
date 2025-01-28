@@ -3,5 +3,5 @@ import { apiGuildChannelToGuildhannel } from "../../utils/functions/apiTransform
 import { GatewayEvent } from "../../utils/types/others";
 
 export default ((client, channel) => {
-	if (channel.guild_id) client.cache.guilds[channel.guild_id]?.channels.push(apiGuildChannelToGuildhannel(channel));
+	if (channel.guild_id) client.cache.guilds.get(channel.guild_id)?.channels.set(channel.id, apiGuildChannelToGuildhannel(channel));
 }) satisfies GatewayEvent<GatewayEventNames.ChannelCreate>;

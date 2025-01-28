@@ -328,7 +328,7 @@ export function apiGuildToGuild(apiGuild: APIGuild): Guild {
 		premiumProgressBarEnabled: apiGuild.premium_progress_bar_enabled,
 		premiumTier: apiGuild.premium_tier,
 		publicUpdatesChannelId: apiGuild.public_updates_channel_id,
-		roles: apiGuild.roles.map(apiRole => apiRoleToRole(apiRole)),
+		roles: new Map(apiGuild.roles.map(apiRole => [apiRole.id, apiRoleToRole(apiRole)])),
 		rulesChannelId: apiGuild.rules_channel_id,
 		safetyAlertsChannelId: apiGuild.safety_alerts_channel_id,
 		splash: apiGuild.splash,

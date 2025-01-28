@@ -11,9 +11,9 @@ import { Guild, GuildCreateExtraFields, GuildMember, UnavailableGuild } from "./
 import { ApplicationCommandOptionChoice, ApplicationCommandParams } from "./applicationCommands";
 
 export interface Cache {
-	users: Record<string, User>;
-	guilds: Record<string, Guild & GuildCreateExtraFields>;
-	unavailableGuilds: Record<string, UnavailableGuild>;
+	users: Map<Snowflake, User>;
+	guilds: Map<Snowflake, Guild & GuildCreateExtraFields>;
+	unavailableGuilds: Map<Snowflake, UnavailableGuild>;
 	application?: PartialApplication;
 	sessionId?: string;
 	resumeGatewayUrl?: string;

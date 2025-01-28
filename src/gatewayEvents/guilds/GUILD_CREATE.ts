@@ -8,11 +8,11 @@ import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMe
 import { flagsToArray } from "../../utils/functions/others";
 
 export default ((client, guild) => {
-	if (guild.unavailable) client.cache.unavailableGuilds[guild.id] = { id: guild.id, unavailable: guild.unavailable };
+	if (guild.unavailable) client.cache.unavailableGuilds.set(guild.id, { id: guild.id, unavailable: guild.unavailable });
 	else {
-		client.cache.guilds[guild.id] = {
-			channels: guild.channels.map(channel => apiGuildChannelToGuildhannel(channel)),
-			guildScheduledEvents: guild.guild_scheduled_events.map(apiGuildScheduledEvent => {
+		client.cache.guilds.set(guild.id, {
+			channels: new Map(guild.channels.map(channel => [channel.id, apiGuildChannelToGuildhannel(channel)])),
+			guildScheduledEvents: new Map(guild.guild_scheduled_events.map(apiGuildScheduledEvent => {
 				const guildScheduledEvent: GuildScheduledEvent = {
 					channelId: apiGuildScheduledEvent.channel_id,
 					entityId: apiGuildScheduledEvent.entity_id,
@@ -44,12 +44,12 @@ export default ((client, guild) => {
 				if (apiGuildScheduledEvent.image) guildScheduledEvent.image = apiGuildScheduledEvent.image;
 				if (apiGuildScheduledEvent.user_count) guildScheduledEvent.userCount = apiGuildScheduledEvent.user_count;
 
-				return guildScheduledEvent;
-			}),
+				return [guildScheduledEvent.id, guildScheduledEvent];
+			})),
 			joinedAt: guild.joined_at,
 			large: guild.large,
 			memberCount: guild.member_count,
-			members: guild.members.map(member => apiGuildMemberToGuildMember(member)),
+			members: new Map(guild.members.map(member => [member.user.id, apiGuildMemberToGuildMember(member)])),
 			presences: guild.presences.map(apiPresence => {
 				const presence: PresenceUpdateEventFields = {
 					activities: apiPresence.activities.map(apiActivity => {
@@ -124,7 +124,7 @@ export default ((client, guild) => {
 
 				return soundBoardSound;
 			}),
-			stageInstances: guild.stage_instances.map(stageInstance => ({
+			stageInstances: new Map(guild.stage_instances.map(stageInstance => [stageInstance.id, {
 				channelId: stageInstance.channel_id,
 				discoverableDisabled: stageInstance.discoverable_disabled,
 				guildId: stageInstance.guild_id,
@@ -132,8 +132,8 @@ export default ((client, guild) => {
 				id: stageInstance.id,
 				privacyLevel: stageInstance.privacy_level,
 				topic: stageInstance.topic
-			})),
-			threads: guild.threads.map(thread => apiThreadChannelToThreadChannel(thread)),
+			}])),
+			threads: new Map(guild.threads.map(thread => [thread.id, apiThreadChannelToThreadChannel(thread)])),
 			voiceStates: guild.voice_states.map(apiVoiceState => {
 				const voiceState: VoiceState = {
 					channelId: apiVoiceState.channel_id,
@@ -155,6 +155,6 @@ export default ((client, guild) => {
 				return voiceState
 			}),
 			...apiGuildToGuild(guild)
-		}
+		});
 	};
 }) satisfies GatewayEvent<GatewayEventNames.GuildCreate>;

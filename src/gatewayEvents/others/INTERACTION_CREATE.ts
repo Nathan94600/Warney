@@ -19,23 +19,23 @@ readdir("./dist/commands", (err, fileNames) => {
 
 export default ((client, interaction) => {
 	if (interaction.guild) {
-		const guild = interaction.guild, guildInCache = client.cache.guilds[guild.id];
+		const guild = interaction.guild, guildInCache = client.cache.guilds.get(guild.id);
 		
-		if (guildInCache) client.cache.guilds[guild.id] = { ...guildInCache, ...apiGuildToGuild(interaction.guild) };
+		if (guildInCache) client.cache.guilds.set(guild.id, { ...guildInCache, ...apiGuildToGuild(interaction.guild) });
 	};
 
-	if (interaction.user) client.cache.users[interaction.user.id] = { ...client.cache.users[interaction.user.id], ...apiUserToUser(interaction.user)	};
+	if (interaction.user) client.cache.users.set(interaction.user.id, { ...client.cache.users.get(interaction.user.id), ...apiUserToUser(interaction.user)	});
 
 	if (interaction.member) {
 		const guildId = interaction.guild?.id || interaction.guild_id;
 
 		if (guildId) {
-			const guildInCache = client.cache.guilds[guildId], memberIndex = guildInCache?.members.findIndex(memberInCache => memberInCache.user.id == interaction.member?.user.id);;
+			const guildInCache = client.cache.guilds.get(guildId), member = guildInCache?.members.get(interaction.member.user.id);
 
-			if (memberIndex && guildInCache?.members[memberIndex]) guildInCache.members[memberIndex] = { ...guildInCache.members[memberIndex], ...apiGuildMemberToGuildMember(interaction.member) };
+			if (guildInCache && member) guildInCache.members.set(interaction.member.user.id, { ...member, ...apiGuildMemberToGuildMember(interaction.member) });
 		};
 
-		client.cache.users[interaction.member.user.id] = { ...client.cache.users[interaction.member.user.id], ...apiUserToUser(interaction.member.user)	};
+		client.cache.users.set(interaction.member.user.id, { ...client.cache.users.get(interaction.member.user.id), ...apiUserToUser(interaction.member.user)	});
 	};
 
 	if (interaction.type == InteractionTypes.ApplicationCommand) {

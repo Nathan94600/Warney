@@ -4,8 +4,8 @@ import { GatewayEvent } from "../../utils/types/others";
 
 export default ((client, thread) => {
 	if (thread.guild_id) {
-		const guild = client.cache.guilds[thread.guild_id], roleIndex = guild?.threads.findIndex(threadInCache => threadInCache.id == thread.id);
-	
-		if (roleIndex && guild?.threads[roleIndex]) guild.threads[roleIndex] = { ...guild.threads[roleIndex], ...apiThreadChannelToThreadChannel(thread) };
+		const guild = client.cache.guilds.get(thread.guild_id);
+		
+		guild?.threads.set(thread.id, { ...guild.threads.get(thread.id), ...apiThreadChannelToThreadChannel(thread) });
 	};
 }) satisfies GatewayEvent<GatewayEventNames.ThreadUpdate>;
