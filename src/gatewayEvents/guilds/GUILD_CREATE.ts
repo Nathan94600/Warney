@@ -4,7 +4,7 @@ import { UserFlags } from "../../utils/enums/flags";
 import { Activity, ActivityAssets } from "../../utils/interfaces/activities";
 import { GuildScheduledEvent } from "../../utils/interfaces/guilds";
 import { PresenceUpdateEventFields, SoundboardSound, VoiceState } from "../../utils/interfaces/others";
-import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember, apiGuildChannelToGuildhannel, apiGuildToGuild } from "../../utils/functions/apiTransformers";
+import { apiThreadChannelToThreadChannel, apiUserToUser, apiGuildMemberToGuildMember, apiGuildChannelToGuildhannel, apiGuildToGuild, apiStageInstanceToStageInstance } from "../../utils/functions/apiTransformers";
 import { flagsToArray } from "../../utils/functions/others";
 
 export default ((client, guild) => {
@@ -124,15 +124,7 @@ export default ((client, guild) => {
 
 				return soundBoardSound;
 			}),
-			stageInstances: new Map(guild.stage_instances.map(stageInstance => [stageInstance.id, {
-				channelId: stageInstance.channel_id,
-				discoverableDisabled: stageInstance.discoverable_disabled,
-				guildId: stageInstance.guild_id,
-				guildScheduledEventId: stageInstance.guild_scheduled_event_id,
-				id: stageInstance.id,
-				privacyLevel: stageInstance.privacy_level,
-				topic: stageInstance.topic
-			}])),
+			stageInstances: new Map(guild.stage_instances.map(stageInstance => [stageInstance.id, apiStageInstanceToStageInstance(stageInstance)])),
 			threads: new Map(guild.threads.map(thread => [thread.id, apiThreadChannelToThreadChannel(thread)])),
 			voiceStates: guild.voice_states.map(apiVoiceState => {
 				const voiceState: VoiceState = {

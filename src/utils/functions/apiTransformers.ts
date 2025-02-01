@@ -2,10 +2,10 @@ import { UserFlags, GuildMemberFlags, RoleFlags, BitwisePermissionFlags } from "
 import { ChannelTypes } from "../enums/types";
 import { APIThreadChannel } from "../interfaces/api/channels";
 import { APIGuild, APIGuildMember } from "../interfaces/api/guilds/others";
-import { APIRole, APIUser } from "../interfaces/api/others";
+import { APIRole, APIStageInstance, APIThreadMember, APIUser } from "../interfaces/api/others";
 import { GuildAnnouncementChannel, GuildCategoryChannel, GuildDirectoryChannel, GuildForumChannel, GuildMediaChannel, GuildStageVoiceChannel, GuildTextChannel, GuildVoiceChannel, ThreadChannel } from "../interfaces/channels";
 import { Guild, GuildMember } from "../interfaces/guilds";
-import { User, ThreadMember, ThreadMetadata, Role, RoleTags, Emoji } from "../interfaces/others";
+import { User, ThreadMember, ThreadMetadata, Role, RoleTags, Emoji, StageInstance } from "../interfaces/others";
 import { APIGuildChannel } from "../types/api";
 import { GuildChannel } from "../types/others";
 import { flagsToArray } from "./others";
@@ -60,6 +60,19 @@ export function apiGuildMemberToGuildMember(apiMember: APIGuildMember): GuildMem
 	return member;
 };
 
+export function apiThreadMemberToThreadMember(apiMember: APIThreadMember): ThreadMember {
+	const member: ThreadMember = {
+		flags: apiMember.flags,
+		joinTimestamp: apiMember.join_timestamp
+	};
+
+	if (apiMember.id) member.id = apiMember.id;
+	if (apiMember.member) member.member = apiGuildMemberToGuildMember(apiMember.member);
+	if (apiMember.user_id) member.userId = apiMember.user_id;
+
+	return member
+};
+
 export function apiThreadChannelToThreadChannel(apiThread: APIThreadChannel): ThreadChannel {
 	const thread: ThreadChannel = {
 		id: apiThread.id,
@@ -75,18 +88,7 @@ export function apiThreadChannelToThreadChannel(apiThread: APIThreadChannel): Th
 	if (apiThread.guild_id) thread.guildId = apiThread.guild_id;
 	if (apiThread.last_message_id) thread.lastMessageId = apiThread.last_message_id;
 	if (apiThread.last_pin_timestamp) thread.lastPinTimestamp = apiThread.last_pin_timestamp;
-	if (apiThread.member) {
-		const member: ThreadMember = {
-			flags: apiThread.member.flags,
-			joinTimestamp: apiThread.member.join_timestamp
-		};
-
-		if (apiThread.member.id) member.id = apiThread.member.id;
-		if (apiThread.member.member) member.member = apiGuildMemberToGuildMember(apiThread.member.member);
-		if (apiThread.member.user_id) member.userId = apiThread.member.user_id;
-
-		thread.member = member;
-	};
+	if (apiThread.member) thread.member = apiThreadMemberToThreadMember(apiThread.member);
 	if (apiThread.member_count) thread.memberCount = apiThread.member_count;
 	if (apiThread.name) thread.name = apiThread.name;
 	if (apiThread.owner_id) thread.ownerId = apiThread.owner_id;
@@ -337,4 +339,16 @@ export function apiGuildToGuild(apiGuild: APIGuild): Guild {
 		vanityUrlCode: apiGuild.vanity_url_code,
 		verificationLevel: apiGuild.verification_level
 	};
+};
+
+export function apiStageInstanceToStageInstance(apiStageInstance: APIStageInstance): StageInstance {
+	return {
+		channelId: apiStageInstance.channel_id,
+		discoverableDisabled: apiStageInstance.discoverable_disabled,
+		guildId: apiStageInstance.guild_id,
+		guildScheduledEventId: apiStageInstance.guild_scheduled_event_id,
+		id: apiStageInstance.id,
+		privacyLevel: apiStageInstance.privacy_level,
+		topic: apiStageInstance.topic
+	}
 };
