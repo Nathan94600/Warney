@@ -10,6 +10,8 @@ import { flagsToArray } from "../../utils/functions/others";
 export default ((client, guild) => {
 	if (guild.unavailable) client.cache.unavailableGuilds.set(guild.id, { id: guild.id, unavailable: guild.unavailable });
 	else {
+		guild.members.forEach(member => client.cache.users.set(member.user.id, { ...client.cache.users.get(member.user.id), ...apiUserToUser(member.user) }));
+
 		client.cache.guilds.set(guild.id, {
 			channels: new Map(guild.channels.map(channel => [channel.id, apiGuildChannelToGuildhannel(channel)])),
 			guildScheduledEvents: new Map(guild.guild_scheduled_events.map(apiGuildScheduledEvent => {
