@@ -331,7 +331,7 @@ export interface APIThreadMembersUpdateEventFields {
 	/**
 	 * Users who were added to the thread
 	 */
-	added_members?: APIThreadMember[];
+	added_members?: Omit<APIThreadMember, "member">[];
 	/**
 	 * ID of the users who were removed from the thread
 	 */

@@ -3,9 +3,7 @@ import { apiThreadMemberToThreadMember } from "../../utils/functions/apiTransfor
 import { GatewayEvent } from "../../utils/types/others";
 
 export default ((client, member) => {
-	if (member.id) {
-		const thread = client.cache.guilds.get(member.guild_id)?.threads.get(member.id);
+	const thread = client.cache.guilds.get(member.guild_id)?.threads.get(member.id);
 		
-		if (thread) thread.member = apiThreadMemberToThreadMember(member);
-	};
+	if (thread) thread.member = apiThreadMemberToThreadMember(member);
 }) satisfies GatewayEvent<GatewayEventNames.ThreadMemberUpdate>;

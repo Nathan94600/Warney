@@ -832,11 +832,11 @@ export interface APIThreadMember {
 	/**
 	 * ID of the thread
 	 */
-	id?: Snowflake;
+	id: Snowflake;
 	/**
 	 * ID of the user
 	 */
-	user_id?: Snowflake;
+	user_id: Snowflake;
 	/**
 	 * Time the user last joined the thread
 	 */
@@ -845,10 +845,6 @@ export interface APIThreadMember {
 	 * Any user-thread settings, currently only used for notifications
 	 */
 	flags: number;
-	/**
-	 * Additional information about the user
-	 */
-	member?: APIGuildMember;
 };
 
 export interface APIForumTag {
@@ -1683,7 +1679,7 @@ export interface ApiGatewayEvents {
 	[GatewayEventNames.ThreadUpdate]: [d: APIThreadChannel];
 	[GatewayEventNames.ThreadDelete]: [d: APIThreadChannel];
 	[GatewayEventNames.ThreadListSync]: [d: APIThreadListSyncEventFields];
-	[GatewayEventNames.ThreadMemberUpdate]: [d: APIThreadMember & APIThreadMemberUpdateEventExtaFields];
+	[GatewayEventNames.ThreadMemberUpdate]: [d: Omit<APIThreadMember, "member"> & APIThreadMemberUpdateEventExtaFields];
 	[GatewayEventNames.ThreadMembersUpdate]: [d: APIThreadMembersUpdateEventFields];
 	[GatewayEventNames.EntitlementCreate]: [d: APIEntitlement];
 	[GatewayEventNames.EntitlementUpdate]: [d: APIEntitlement];

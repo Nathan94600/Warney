@@ -2,7 +2,7 @@ import { APIGuildChannel } from "../../../types/api";
 import { Snowflake } from "../../../types/others";
 import { APIThreadChannel } from "../channels";
 import { APIPresenceUpdateEventFields } from "../eventFields";
-import { APIVoiceState, APIStageInstance, APISoundboardSound } from "../others";
+import { APIVoiceState, APIStageInstance, APISoundboardSound, APIThreadMember } from "../others";
 import { APIGuildMember, APIGuildScheduledEvent } from "./others";
 
 export interface APIGuildCreateExtraFields {
@@ -37,7 +37,7 @@ export interface APIGuildCreateExtraFields {
 	/**
 	 * All active threads in the guild that current user has permission to view
 	 */
-	threads: APIThreadChannel[];
+	threads: (Omit<APIThreadChannel, "member"> & { member: Omit<APIThreadMember, "id" | "user_id"> })[];
 	/**
 	 * Presences of the members in the guild, will only include non-offline members if the size is greater than `large threshold`
 	 */

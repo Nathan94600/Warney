@@ -60,20 +60,19 @@ export function apiGuildMemberToGuildMember(apiMember: APIGuildMember): GuildMem
 	return member;
 };
 
-export function apiThreadMemberToThreadMember(apiMember: APIThreadMember): ThreadMember {
+export function apiThreadMemberToThreadMember(apiMember: APIThreadMember | (Omit<APIThreadMember, "user_id" | "id"> & Partial<Pick<APIThreadMember, "user_id" | "id">>)): ThreadMember {
 	const member: ThreadMember = {
 		flags: apiMember.flags,
 		joinTimestamp: apiMember.join_timestamp
 	};
 
 	if (apiMember.id) member.id = apiMember.id;
-	if (apiMember.member) member.member = apiGuildMemberToGuildMember(apiMember.member);
 	if (apiMember.user_id) member.userId = apiMember.user_id;
 
 	return member
 };
 
-export function apiThreadChannelToThreadChannel(apiThread: APIThreadChannel): ThreadChannel {
+export function apiThreadChannelToThreadChannel(apiThread: APIThreadChannel | (Omit<APIThreadChannel, "member"> & { member: Omit<APIThreadMember, "id" | "user_id"> })): ThreadChannel {
 	const thread: ThreadChannel = {
 		id: apiThread.id,
 		type: apiThread.type

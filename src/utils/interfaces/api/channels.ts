@@ -136,7 +136,7 @@ export interface APIThreadChannel extends APIBaseChannel {
 	/**
 	 * thread member object for the current user, if they have joined the thread, only included on certain API endpoints
 	 */
-	member?: APIThreadMember;
+	member?: Omit<APIThreadMember, "member">;
 	/**
 	 * default duration, copied onto newly created threads, in minutes, threads will stop showing in the channel list after the specified period of inactivity, can be set to: 60, 1440, 4320, 10080
 	 */
