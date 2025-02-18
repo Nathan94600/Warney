@@ -817,3 +817,8 @@ export interface Emoji {
 export interface Command extends ApplicationCommandParams {
 	run: (client: Client, interaction: APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction) => void
 };
+
+export interface SubCommand {
+	name: string;
+	run: (client: Client, interaction: APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction) => void;
+};

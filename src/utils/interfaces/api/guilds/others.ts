@@ -1,3 +1,4 @@
+import { SystemChannelFlags } from "../../../enums/flags";
 import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildScheduledEventEntityTypes, GuildScheduledEventRecurrenceRuleFrequencies, GuildScheduledEventRecurrenceRuleWeekdays, GuildScheduledEventRecurrenceRuleMonths, GuildFeatures, GuildNSFWLevels } from "../../../enums/guilds";
 import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, PremiumTiers, Locales } from "../../../enums/others";
 import { Snowflake } from "../../../types/others";
@@ -227,7 +228,7 @@ export interface APIGuild {
 	/**
 	 * system channel flags
 	 */
-	system_channel_flags: number;
+	system_channel_flags: SystemChannelFlags;
 	/**
 	 * the id of the channel where Community guilds can display rules and/or guidelines
 	 */

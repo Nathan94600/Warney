@@ -6,4 +6,4 @@ export default ((client, stageInstance) => {
 	const stageInstanceInCache = client.cache.guilds.get(stageInstance.guild_id)?.stageInstances.get(stageInstance.id);
 
 	client.cache.guilds.get(stageInstance.guild_id)?.stageInstances.set(stageInstance.id, { ...stageInstanceInCache, ...apiStageInstanceToStageInstance(stageInstance) });
-}) satisfies GatewayEvent<GatewayEventNames.StageInstanceCreate>;
+}) satisfies GatewayEvent<GatewayEventNames.StageInstanceUpdate>;

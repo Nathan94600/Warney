@@ -3,8 +3,8 @@ import { CHAT_INPUT_APPLICATION_COMMAND_NAMING_REGEX, BASE_URL, OTHER_APPLICATIO
 import { WebSocket } from "ws";
 import { readdir } from "fs";
 import { token } from "../../config.json";
-import { ApplicationFlags, BitwisePermissionFlags, GuildMemberFlags, RoleFlags, UserFlags } from "../enums/flags";
-import { RateLimitScopes } from "../enums/others";
+import { ApplicationFlags, BitwisePermissionFlags, GuildMemberFlags, RoleFlags, SystemChannelFlags, UserFlags } from "../enums/flags";
+import { RateLimitScopes, VerificationLevels } from "../enums/others";
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageComponentTypes } from "../enums/types";
 import { APIApplicationCommandOption, APIApplicationCommand, APIInteraction, APIActionRowComponent } from "../types/api";
 import { ActionRowComponent, ApplicationCommandOption } from "../types/others";
@@ -14,10 +14,11 @@ import { APIEmbed, APIEmbedAuthor, APIEmbedField, APIEmbedFooter, APIEmbedImage,
 import { APIApplcationCommandParams, APISelectOption, APIInteractionCallbackResponse, APIInteractionResponse, APIMessageInteractionCallbackData, APIPollAnswerObject } from "../interfaces/api/others";
 import { ApplicationCommandParams } from "../interfaces/applicationCommands";
 import { Client, SessionStartLimit, InteractionResponse } from "../interfaces/others";
+import { GuildNSFWLevels } from "../enums/guilds";
 
 export function isRateLimitScope(scope: string): scope is RateLimitScopes { return scope == RateLimitScopes.Global || scope == RateLimitScopes.Shared || scope == RateLimitScopes.User; };
 
-export function flagsToArray<Enum extends typeof ApplicationFlags | typeof UserFlags | typeof GuildMemberFlags | typeof RoleFlags | typeof BitwisePermissionFlags>(flags: string | number, flagsEnum: Enum): (keyof Enum)[] {
+export function flagsToArray<Enum extends typeof ApplicationFlags | typeof UserFlags | typeof GuildMemberFlags | typeof RoleFlags | typeof BitwisePermissionFlags | typeof SystemChannelFlags>(flags: string | number, flagsEnum: Enum): (keyof Enum)[] {
 	const res: (keyof Enum)[] = [], values: (keyof Enum | number)[] = Object.values(flagsEnum)
 
 	Object.values(flagsEnum).filter(val => typeof val == "number").forEach((val, i) => {		
@@ -577,4 +578,25 @@ export function createInteractionResponse<WithResponse extends boolean>(interact
 			else res.json().then(json => (res.status == 200 ? resolve : reject)(json));
 		});
 	});
+};
+
+export function getGuildNSFWLevelLabel(level: GuildNSFWLevels): string {
+	switch (level) {
+		case GuildNSFWLevels.Default: return "Default";
+		case GuildNSFWLevels.Explicit: return "Explicit";
+		case GuildNSFWLevels.Safe: return "Safe";
+		case GuildNSFWLevels.AgeRestricted: return "Age restricted";
+		default: return "Unknown";
+	}
+};
+
+export function getVerificationLevelLabel(level: VerificationLevels): string {
+	switch (level) {
+		case VerificationLevels.None: return "None";
+		case VerificationLevels.Low: return "Low";
+		case VerificationLevels.Medium: return "Medium";
+		case VerificationLevels.High: return "High";
+		case VerificationLevels.VeryHigh: return "Very high";
+		default: return "Unknown";
+	}
 };

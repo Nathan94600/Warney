@@ -6,4 +6,4 @@ export default ((client, data) => {
 	const guild = client.cache.guilds.get(data.guild_id);
 	
 	guild?.roles.set(data.role.id, { ...guild.roles.get(data.role.id), ...apiRoleToRole(data.role) });
-}) satisfies GatewayEvent<GatewayEventNames.GuildRoleCreate>;
+}) satisfies GatewayEvent<GatewayEventNames.GuildRoleUpdate>;
