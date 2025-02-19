@@ -1,5 +1,5 @@
 import { MessageFlags, SystemChannelFlags } from "../../utils/enums/flags";
-import { InteractionCallbackTypes } from "../../utils/enums/types";
+import { ChannelTypes, InteractionCallbackTypes } from "../../utils/enums/types";
 import { createInteractionResponse, flagsToArray, getGuildNSFWLevelLabel, getVerificationLevelLabel } from "../../utils/functions/others";
 import { SubCommand } from "../../utils/interfaces/others";
 import { DefaultMessageNotificationLevels, ExplicitContentFilterLevels } from "../../utils/enums/others";
@@ -44,12 +44,27 @@ export default {
 					{ name: `Premium`, value: `Progress bar enabled: ${guild.premiumProgressBarEnabled ? "Yes" : "no"}\nSubscription count: ${guild.premiumSubscriptionCount ?? "Not found"}\nPremium tier: ${guild.premiumTier}`, inline: true },
 					{ name: `Levels`, value: `MFA level required for moderation actions: ${guild.mfaLevel ? "Elevated" : "None"}\nNSFW level: ${getGuildNSFWLevelLabel(guild.nsfwLevel)}\nVerification level: ${getVerificationLevelLabel(guild.verificationLevel)}`, inline: true },
 					{
-						name: `Channels (${guild.channels.size + guild.threads.size})`, value: (`${guild.afkChannelId ? `<#${guild.afkChannelId}> (**/server afk_channel**)\n` : ""}`) +
-						(`${guild.publicUpdatesChannelId ? `<#${guild.publicUpdatesChannelId}> (**/server public_updates_channel*)\n` : ""}`) +
-						(`${guild.rulesChannelId ? `<#${guild.rulesChannelId}> (**/server rules_channel**)\n` : ""}`) +
-						(`${guild.safetyAlertsChannelId ? `<#${guild.safetyAlertsChannelId}> (**/server safety_alerts_channel**)\n` : ""}`) +
-						(`${guild.systemChannelId ? `<#${guild.systemChannelId}> (**/server system_channel**)\n` : ""}`) +
-						(`${guild.widgetChannelId ? `<#${guild.widgetChannelId}> (**/server widget_channel**)\n` : ""}`) +
+						name: `Threads (${guild.threads.size})`,
+						value: `Announcement threads: ${guild.threads.filter(thread => thread.type == ChannelTypes.AnnouncementThread).size}` +
+						`Public threads: ${guild.threads.filter(thread => thread.type == ChannelTypes.PublicThread).size}` +
+						`Private threads: ${guild.threads.filter(thread => thread.type == ChannelTypes.PrivateThread).size}` +
+						"\n(**/server threads**)",
+						inline: true
+					},
+					{
+						name: `Channels (${guild.channels.size})`, value: (guild.afkChannelId ? `<#${guild.afkChannelId}> (**/server afk_channel**)\n` : "") +
+						(guild.publicUpdatesChannelId ? `<#${guild.publicUpdatesChannelId}> (**/server public_updates_channel*)\n` : "") +
+						(guild.rulesChannelId ? `<#${guild.rulesChannelId}> (**/server rules_channel**)\n` : "") +
+						(guild.safetyAlertsChannelId ? `<#${guild.safetyAlertsChannelId}> (**/server safety_alerts_channel**)\n` : "") +
+						(guild.systemChannelId ? `<#${guild.systemChannelId}> (**/server system_channel**)\n` : "") +
+						(guild.widgetChannelId ? `<#${guild.widgetChannelId}> (**/server widget_channel**)\n` : "") +
+						`Announcement channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildAnnouncement).size}\n` +
+						`Category channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildCategory).size}\n` +
+						`Forum channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildForum).size}\n` +
+						`Media channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildMedia).size}\n` +
+						`Stage voice channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildStageVoice).size}\n` +
+						`Text channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildText).size}\n` +
+						`Voice channels: ${guild.channels.filter(channel => channel.type == ChannelTypes.GuildVoice).size}\n` +
 						`\n(**/server channels**)`,
 						inline: true
 					},

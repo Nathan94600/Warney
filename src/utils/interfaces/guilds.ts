@@ -1,3 +1,4 @@
+import { Collection } from "../classes";
 import { BitwisePermissionFlags, GuildMemberFlags, SystemChannelFlags } from "../enums/flags";
 import { GuildScheduledEventPrivacyLevels, GuildScheduledEventStatus, GuildScheduledEventEntityTypes, GuildScheduledEventRecurrenceRuleFrequencies, GuildScheduledEventRecurrenceRuleWeekdays, GuildScheduledEventRecurrenceRuleMonths, GuildFeatures, GuildNSFWLevels } from "../enums/guilds";
 import { VerificationLevels, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, MFALevels, PremiumTiers, Locales } from "../enums/others";
@@ -29,15 +30,15 @@ export interface GuildCreateExtraFields {
 	/**
 	 * Users in the guild
 	 */
-	members: Map<Snowflake, GuildMember>;
+	members: Collection<Snowflake, GuildMember>;
 	/**
 	 * Channels in the guild
 	 */
-	channels: Map<Snowflake, GuildChannel>;
+	channels: Collection<Snowflake, GuildChannel>;
 	/**
 	 * All active threads in the guild that current user has permission to view
 	 */
-	threads: Map<Snowflake, ThreadChannel>;
+	threads: Collection<Snowflake, ThreadChannel>;
 	/**
 	 * Presences of the members in the guild, will only include non-offline members if the size is greater than `large threshold`
 	 */
@@ -45,11 +46,11 @@ export interface GuildCreateExtraFields {
 	/**
 	 * Stage instances in the guild
 	 */
-	stageInstances: Map<Snowflake, StageInstance>;
+	stageInstances: Collection<Snowflake, StageInstance>;
 	/**
 	 * Scheduled events in the guild
 	 */
-	guildScheduledEvents: Map<Snowflake, GuildScheduledEvent>;
+	guildScheduledEvents: Collection<Snowflake, GuildScheduledEvent>;
 	/**
 	 * Soundboard sounds in the guild
 	 */
