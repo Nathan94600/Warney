@@ -3,7 +3,7 @@ import { GatewayOpcodes } from "../utils/enums/others";
 import { Opcode } from "../utils/types/others";
 import { readdir } from "fs";
 
-const gatewayEvents: Record<string, any> = {};
+const gatewayEvents: Record<string, unknown> = {};
 
 readdir("./dist/gatewayEvents", (err, dirs) => {
 	if (err) throw err;
@@ -25,7 +25,7 @@ export default ((client, data, s, t) => {
 	if (t) {
 		const gatewayEvent = gatewayEvents[t];
 	
-		if (gatewayEvent) gatewayEvent.bind(null, client)(data);
+		if (typeof gatewayEvent == "function") gatewayEvent.bind(null, client)(data);
 		else console.log(`NEW GATEWAY EVENT: ${t}`, inspect(data, { colors: true, depth: Infinity }));
 	}
 }) satisfies Opcode<GatewayOpcodes.Dispatch>

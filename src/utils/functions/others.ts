@@ -30,7 +30,7 @@ export function flagsToArray<Enum extends typeof ApplicationFlags | typeof UserF
 	return res
 };
 
-export function sendWebsocketMessage(client: Client, data: any) {
+export function sendWebsocketMessage(client: Client, data: unknown) {
 	const rateLimit = client.rateLimits["gateway"];
 
 	if (!rateLimit || rateLimit.remaining >= 1 || rateLimit.reset < Date.now()) {

@@ -3,7 +3,7 @@ import { inspect } from "util";
 import { readdir } from "fs";
 import { WsEvent } from "../utils/types/others";
 
-const opcodeNames: Record<number, string> = {}, opcodes: Record<string, any> = {}, opcodeKeys = Object.keys(GatewayOpcodes);
+const opcodeNames: Record<number, string> = {}, opcodes: Record<string, unknown> = {}, opcodeKeys = Object.keys(GatewayOpcodes);
 
 opcodeKeys.slice(0, opcodeKeys.length / 2).forEach((key, i) => {
 	const value = opcodeKeys[opcodeKeys.length / 2 + i];	
@@ -29,7 +29,7 @@ export default ((client, msg) => {
 		/**
 		 * Event data
 		 */
-		d: any | null;
+		d: unknown | null;
 		/**
 		 * Sequence number of event used for [resuming sessions](https://discord.com/developers/docs/topics/gateway#resuming) and [heartbeating](https://discord.com/developers/docs/topics/gateway#sending-heartbeats)
 		 */
@@ -43,7 +43,7 @@ export default ((client, msg) => {
 	if (opcodeName) {
 		const opcode = opcodes[opcodeName];
 
-		if (opcode) opcode.bind(null, client)(parsedMsg.d, parsedMsg.s, parsedMsg.t);
+		if (typeof opcode == "function") opcode.bind(null, client)(parsedMsg.d, parsedMsg.s, parsedMsg.t);
 		else console.log(`NEW OP: ${opcodeName} (${parsedMsg.op})`, inspect(parsedMsg, { colors: true, depth: Infinity }));
 	} else console.log(`OPCODE NAME NOT FOUND: ${parsedMsg.op}`);
 }) satisfies WsEvent<"message">

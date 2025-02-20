@@ -467,7 +467,7 @@ export interface RateLimit {
 	remaining: number;
 	reset: number;
 	bucket: string;
-	global: any | null;
+	global: unknown | null;
 	scope: RateLimitScopes | null;
 };
 
@@ -579,9 +579,9 @@ export interface WsEvents {
 };
 
 export interface Opcodes {
-	[GatewayOpcodes.Dispatch]: [d: any | null, s: number | null, t: string | null],
+	[GatewayOpcodes.Dispatch]: [d: unknown | null, s: number | null, t: string | null],
 	[GatewayOpcodes.Heartbeat]: [d: number | null, s: null, t: null],
-	[GatewayOpcodes.HeartbeatACK]: [d: any | null, s: null, t: null],
+	[GatewayOpcodes.HeartbeatACK]: [d: unknown | null, s: null, t: null],
 	[GatewayOpcodes.Hello]: [d: {
 		/**
 		 * Interval (in milliseconds) an app should heartbeat with
@@ -589,8 +589,8 @@ export interface Opcodes {
 		heartbeat_interval: number;
 	} | null, s: null, t: null],
 	[GatewayOpcodes.InvalidSession]: [d: boolean, s: null, t: null],
-	[GatewayOpcodes.Reconnect]: [d: any | null, s: null, t: null],
-	[GatewayOpcodes.Resume]: [d: any | null, s: null, t: null]
+	[GatewayOpcodes.Reconnect]: [d: unknown | null, s: null, t: null],
+	[GatewayOpcodes.Resume]: [d: unknown | null, s: null, t: null]
 };
 
 export interface InteractionResponse {
