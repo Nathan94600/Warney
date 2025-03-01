@@ -5,7 +5,7 @@ import { readdir } from "fs";
 import { token } from "../../config.json";
 import { ApplicationFlags, BitwisePermissionFlags, GuildMemberFlags, RoleFlags, SystemChannelFlags, UserFlags } from "../enums/flags";
 import { RateLimitScopes, VerificationLevels } from "../enums/others";
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageComponentTypes } from "../enums/types";
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageComponentTypes, PremiumTypes } from "../enums/types";
 import { APIApplicationCommandOption, APIApplicationCommand, APIInteraction, APIActionRowComponent } from "../types/api";
 import { ActionRowComponent, ApplicationCommandOption } from "../types/others";
 import { APIApplicationCommandOptionChoice, APIApplicationCommandSubCommandOption, APIApplicationCommandSubCommandGroupOption } from "../interfaces/api/applicationCommandOptions";
@@ -600,3 +600,73 @@ export function getVerificationLevelLabel(level: VerificationLevels): string {
 		default: return "Unknown";
 	}
 };
+
+export function getPremiumTypeLabel(premiumType: PremiumTypes): string {
+	switch (premiumType) {
+		case PremiumTypes.Nitro: return "Nitro";
+		case PremiumTypes["Nitro Basic"]: return "Nitro basic";
+		case PremiumTypes["Nitro Classic"]: return "Nitro classic";
+		case PremiumTypes.None: return "None";
+		default: return "Unknown";
+	};
+};
+
+export function getPermissionLabels(permissions: string): string[] {
+	const labels = [], permissionsInt = BigInt(permissions);
+
+	for (let i = 1n; i < permissionsInt; i *= 2n) {		
+		if ((permissionsInt & i) == i) switch (Number(i)) {
+			case BitwisePermissionFlags.AddReactions: labels.push("Add reactions"); break;
+			case BitwisePermissionFlags.Administrator: labels.push("Administrator"); break;
+			case BitwisePermissionFlags.AttachFiles: labels.push("Attach files"); break;
+			case BitwisePermissionFlags.BanMembers: labels.push("Ban members"); break;
+			case BitwisePermissionFlags.ChangeNickname: labels.push("Change nickname"); break;
+			case BitwisePermissionFlags.Connect: labels.push("Connect"); break;
+			case BitwisePermissionFlags.CreateEvents: labels.push("Create events"); break;
+			case BitwisePermissionFlags.CreateGuildExpressions: labels.push("Create guild expressions"); break;
+			case BitwisePermissionFlags.CreateInstantInvite: labels.push("Create instant invite"); break;
+			case BitwisePermissionFlags.CreatePrivateThreads: labels.push("Create private threads"); break;
+			case BitwisePermissionFlags.CreatePublicThreads: labels.push("Create public threads"); break;
+			case BitwisePermissionFlags.DeafenMembers: labels.push("Deafen members"); break;
+			case BitwisePermissionFlags.EmbedLinks: labels.push("Embed links"); break;
+			case BitwisePermissionFlags.KickMembers: labels.push("Kick members"); break;
+			case BitwisePermissionFlags.ManageChannels: labels.push("Manage channels"); break;
+			case BitwisePermissionFlags.ManageEvents: labels.push("Manage events"); break;
+			case BitwisePermissionFlags.ManageGuild: labels.push("Manage guild"); break;
+			case BitwisePermissionFlags.ManageGuildExpressions: labels.push("Manage guild expressions"); break;
+			case BitwisePermissionFlags.ManageMessages: labels.push("Manage messages"); break;
+			case BitwisePermissionFlags.ManageNicknames: labels.push("Manage nicknames"); break;
+			case BitwisePermissionFlags.ManageRoles: labels.push("Manage roles"); break;
+			case BitwisePermissionFlags.ManageThreads: labels.push("Manage threads"); break;
+			case BitwisePermissionFlags.ManageWebhooks: labels.push("Manage webhooks"); break;
+			case BitwisePermissionFlags.MentionEveryone: labels.push("Mention everyone"); break;
+			case BitwisePermissionFlags.ModerateMembers: labels.push("Moderate members"); break;
+			case BitwisePermissionFlags.MoveMembers: labels.push("Move members"); break;
+			case BitwisePermissionFlags.MuteMembers: labels.push("Mute members"); break;
+			case BitwisePermissionFlags.PrioritySpeaker: labels.push("Priority speaker"); break;
+			case BitwisePermissionFlags.ReadMessageHistory: labels.push("Read message history"); break;
+			case BitwisePermissionFlags.RequestToSpeak: labels.push("Request to speak"); break;
+			case BitwisePermissionFlags.SendMessageInThreads: labels.push("Send message in threads"); break;
+			case BitwisePermissionFlags.SendMessages: labels.push("Send messages"); break;
+			case BitwisePermissionFlags.SendPolls: labels.push("Send polls"); break;
+			case BitwisePermissionFlags.SendTTSMessages: labels.push("Send TTS messages"); break;
+			case BitwisePermissionFlags.SendVoiceMessages: labels.push("Send voice messages"); break;
+			case BitwisePermissionFlags.Speak: labels.push("Speak"); break;
+			case BitwisePermissionFlags.Stream: labels.push("Stream"); break;
+			case BitwisePermissionFlags.USeVAD: labels.push("Use VAD"); break;
+			case BitwisePermissionFlags.UseApplicationCommands: labels.push("Use application commands"); break;
+			case BitwisePermissionFlags.UseEmbeddedActivities: labels.push("Use embedded activities"); break;
+			case BitwisePermissionFlags.UseExternalStickers: labels.push("Use external stickers"); break;
+			case BitwisePermissionFlags.UseExternalEmojis: labels.push("Use external emojis"); break;
+			case BitwisePermissionFlags.UseExternalSounds: labels.push("Use external sounds"); break;
+			case BitwisePermissionFlags.UseExternalStickers: labels.push("Use external stickers"); break;
+			case BitwisePermissionFlags.UseSoundboard: labels.push("Use soundboard"); break;
+			case BitwisePermissionFlags.ViewAuditLog: labels.push("View audit log"); break;
+			case BitwisePermissionFlags.ViewChannel: labels.push("View channel"); break;
+			case BitwisePermissionFlags.ViewCreatorMonetizationAnalytics: labels.push("View creator monetization analytics"); break;
+			case BitwisePermissionFlags.ViewGuildInsights: labels.push("View GUILD insights"); break;
+		};
+	};
+
+	return labels
+}; 

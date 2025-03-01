@@ -4,7 +4,7 @@ import { ClientRequest, IncomingMessage } from "http";
 import { UserFlags, ApplicationFlags, BitwisePermissionFlags, MessageFlags, AttachmentFlags, RoleFlags } from "../enums/flags";
 import { RateLimitScopes, Locales, GatewayOpcodes, PrivacyLevels, PresenceStatus } from "../enums/others";
 import { PremiumTypes, InteractionCallbackTypes, LayoutTypes, AllowedMentionsTypes, SelectDefaultValueTypes, StickerFormatTypes, StickerTypes, OverwriteTypes } from "../enums/types";
-import { APIApplicationCommandAutocompleteInteraction, APIApplicationCommandInteraction } from "./api/interactions";
+import { APIApplicationCommandAutocompleteInteraction, APIApplicationCommandInteraction, APIMessageComponentInteraction } from "./api/interactions";
 import { Activity } from "./activities";
 import { Embed } from "./emebds";
 import { Guild, GuildCreateExtraFields, GuildMember, UnavailableGuild } from "./guilds";
@@ -821,4 +821,8 @@ export interface Command extends ApplicationCommandParams {
 export interface SubCommand {
 	name: string;
 	run: (client: Client, interaction: APIApplicationCommandInteraction | APIApplicationCommandAutocompleteInteraction) => void;
+};
+
+export interface Button {
+	run: (client: Client, interaction: APIMessageComponentInteraction, authorId: Snowflake) => void;
 };

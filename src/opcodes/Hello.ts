@@ -19,7 +19,7 @@ export default ((client, data) => {
 			},
 			compress: false,
 			large_threshold: 250,
-			intents: GatewayIntents.Guilds
+			intents: GatewayIntents.Guilds | GatewayIntents.GuildPresences
 		}
 	});
 }) satisfies Opcode<GatewayOpcodes.Hello>;

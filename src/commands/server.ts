@@ -51,7 +51,7 @@ export default {
 		if (!subCommand) {
 			if (subCommandName) console.log(`[src/commands/server.ts] NEW SUB COMMAND: ${subCommandName}`);
 
-			createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Sub command not found", flags: [MessageFlags.Ephemeral] } })
+			createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Subcommand not found", flags: [MessageFlags.Ephemeral] } })
 		} else subCommand.run(client, interaction)
 	}
 } satisfies Command;
