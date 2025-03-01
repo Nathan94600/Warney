@@ -42,7 +42,7 @@ export default {
 						{ name: "Avatar decoration", value: owner.avatarDecorationData ? `Asset: ${owner.avatarDecorationData.asset}\nSku ID: ${owner.avatarDecorationData.skuId}` : "No avatar decoration", inline: true },
 						{ name: "Is a bot", value: `${typeof owner.user.bot == "boolean" ? owner.user.bot ? "Yes" : "No" : "Unknown"}`, inline: true },
 						{ name: "Username", value: `${owner.user.username.replace(/[`|()\\\/_~\[\].\-\*>#]/g, str => `\\${str}`)}${owner.user.discriminator == "0" ? "" : `#${owner.user.discriminator}`}`, inline: true },
-						{ name: "Global name", value: `${owner.user.globalName.replace(/[`|()\\\/_~\[\].\-\*>#]/g, str => `\\${str}`)}`, inline: true },
+						{ name: "Global name", value: `${(owner.user.globalName || owner.user.username).replace(/[`|()\\\/_~\[\].\-\*>#]/g, str => `\\${str}`)}`, inline: true },
 						{ name: "User language", value: owner.user.locale || "Unknown", inline: true },
 						{ name: "Premium type", value: owner.user.premiumType ? getPremiumTypeLabel(owner.user.premiumType) : "Unknown", inline: true },
 						{ name: "Created the", value: `<t:${parseInt(parseInt(ownerId.slice(0, -3)).toString(2).slice(0, -22), 2) + DISCORD_EPOCH_IN_SECONDS}:F>`, inline: true },

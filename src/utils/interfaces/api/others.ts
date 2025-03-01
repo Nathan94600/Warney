@@ -550,7 +550,7 @@ export interface APIUser {
 	/**
 	 * the user's display name, if it is set. For bots, this is the application name
 	 */
-	global_name: string;
+	global_name: string | null;
 	/**
 	 * the user's [avatar hash](https://discord.com/developers/docs/reference#image-formatting)
 	 */

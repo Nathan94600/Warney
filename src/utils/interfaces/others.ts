@@ -493,7 +493,7 @@ export interface User {
 	/**
 	 * the user's display name, if it is set. For bots, this is the application name
 	 */
-	globalName: string;
+	globalName: string | null;
 	/**
 	 * the user's [avatar hash](https://discord.com/developers/docs/reference#image-formatting)
 	 */
