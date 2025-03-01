@@ -165,7 +165,7 @@ export function verifyApplicationCommandOption(cmdIndex: number, option: Applica
 			});
 		});
 	} else if (option.type == ApplicationCommandOptionTypes.SubCommand && option.options) {
-		if (option.options.length > 25) throw new RangeError(`${prefix.slice(0, -1)}.options: A sub command can have a maximum of 25 options.`);
+		if (option.options.length > 25) throw new RangeError(`${prefix.slice(0, -1)}.options: A subcommand can have a maximum of 25 options.`);
 		else option.options.forEach((opt, subCommandIndex) => verifyApplicationCommandOption(cmdIndex, opt, [...(indexes || []), subCommandIndex]));
 	} else if (option.type == ApplicationCommandOptionTypes.SubCommandGroup && option.options) {
 		if (option.options.length > 25) throw new RangeError(`A command can have a maximum of 25 options. Reduce the options for the command at index ${cmdIndex}.`);

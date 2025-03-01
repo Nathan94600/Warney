@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { IMAGE_BASE_URL } from "../../../utils/constants";
 import { MessageFlags } from "../../../utils/enums/flags";
 import { ButtonStyles } from "../../../utils/enums/others";
@@ -48,7 +49,11 @@ export default {
 								customId: `server_owner_owner-${authorId}`
 							}]
 						}]
-					} }).catch(error => console.error(error.errors.data.embeds["0"].fields._errors));
+					} }).catch(error => {
+						createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+
+						console.log(`[src/buttons/server/owner/userFlags.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
+					});
 				}
 			}
 		};

@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { MessageFlags } from "../utils/enums/flags";
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, InteractionCallbackTypes } from "../utils/enums/types";
 import { createInteractionResponse } from "../utils/functions/others";
@@ -49,6 +50,10 @@ export default {
 						fields: Array.from({ length: numberOfDice }, () => (Math.floor(Math.random() * faces) + 1)).map((result, i) => ({ name: `N°${i + 1} :`, value: result.toString(), inline: true }))
 					}]
 				}
+			}).catch(error => {
+				createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+
+				console.log(`[src/commands/roll.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
 			});
 		}
 	}

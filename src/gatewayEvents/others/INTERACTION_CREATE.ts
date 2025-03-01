@@ -61,7 +61,11 @@ export default ((client, interaction) => {
 			const command = commands[interaction.data.name]?.run;
 
 			if (command) command(client, interaction);
-			else console.log(`NEW COMMAND: ${interaction.data.name}`);
+			else {
+				createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Unsupported command", flags: [MessageFlags.Ephemeral] } });
+
+				console.log(`[src/gatewayEvents/others/INTERACTION_CREATE.ts] NEW COMMAND: ${interaction.data.name}`);
+			}
 			break;
 		case InteractionTypes.MessageComponent:
 			switch (interaction.data.component_type) {
@@ -82,16 +86,24 @@ export default ((client, interaction) => {
 							const button = buttons[path.replaceAll("_", "/")]?.run;							
 
 							if (button) button(client, interaction, authorId);
-							else console.log(`[src/gatewayEvents/others/INTERACTION_CREATE.ts] NEW BUTTON: ${path}`);
+							else {
+								createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Unsupported button", flags: [MessageFlags.Ephemeral] } });
+
+								console.log(`[src/gatewayEvents/others/INTERACTION_CREATE.ts] NEW BUTTON: ${path}`);
+							};
 						};
 					};
 					break;
 				default:
+					createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Unsupported message component", flags: [MessageFlags.Ephemeral] } });
+
 					console.log(`[src/gatewayEvents/others/INTERACTION_CREATE.ts] NEW MESSAGE COMPONENT TYPE: ${interaction.data.component_type}`);
 					break;
 			};
 			break;
 		default:
+			createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Unsupported interaction", flags: [MessageFlags.Ephemeral] } });
+
 			console.log(`[src/gatewayEvents/others/INTERACTION_CREATE.ts] NEW INTERACTION TYPE: ${interaction.type}`);
 			break;
 	};

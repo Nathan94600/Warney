@@ -4,6 +4,7 @@ import { createInteractionResponse, getPermissionLabels, getPremiumTypeLabel } f
 import { SubCommand } from "../../utils/interfaces/others";
 import { DISCORD_EPOCH_IN_SECONDS, IMAGE_BASE_URL } from "../../utils/constants";
 import { ButtonStyles } from "../../utils/enums/others";
+import { inspect } from "util";
 
 export default {
 	name: "owner",
@@ -59,7 +60,11 @@ export default {
 						{ type: MessageComponentTypes.Button, label: `User public flags (${numberOfUserPublicFlags})`, customId: `server_owner_publicFlags-${authorId}`, style: ButtonStyles.Primary, disabled: numberOfUserPublicFlags == 0 }
 					]
 				}]
-			} })
+			} }).catch(error => {
+				createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+
+				console.log(`[src/subCommands/owner.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
+			});
 		};
 	}
 } satisfies SubCommand;

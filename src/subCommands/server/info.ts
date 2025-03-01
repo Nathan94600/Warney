@@ -4,6 +4,7 @@ import { createInteractionResponse, flagsToArray, getGuildNSFWLevelLabel, getVer
 import { SubCommand } from "../../utils/interfaces/others";
 import { DefaultMessageNotificationLevels, ExplicitContentFilterLevels } from "../../utils/enums/others";
 import { DISCORD_EPOCH_IN_SECONDS, IMAGE_BASE_URL } from "../../utils/constants";
+import { inspect } from "util";
 
 export default {
 	name: "info",
@@ -81,6 +82,10 @@ export default {
 					}
 				]
 			}]
-		} });
+		} }).catch(error => {
+			createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+
+			console.log(`[src/subCommands/info.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
+		});
 	}
 } satisfies SubCommand;

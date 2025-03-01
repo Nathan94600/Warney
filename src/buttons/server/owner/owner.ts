@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { IMAGE_BASE_URL, DISCORD_EPOCH_IN_SECONDS } from "../../../utils/constants";
 import { MessageFlags } from "../../../utils/enums/flags";
 import { ButtonStyles } from "../../../utils/enums/others";
@@ -58,7 +59,11 @@ export default {
 						{ type: MessageComponentTypes.Button, label: `User public flags (${numberOfUserPublicFlags})`, customId: `server_owner_publicFlags-${authorId}`, style: ButtonStyles.Primary, disabled: numberOfUserPublicFlags == 0 }
 					]
 				}]
-			} })
+			} }).catch(error => {
+				createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+
+				console.log(`[src/buttons/server/owner/owner.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
+			});
 		};
 	}
 } satisfies Button;
