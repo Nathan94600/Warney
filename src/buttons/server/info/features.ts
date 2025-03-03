@@ -35,7 +35,7 @@ export default {
 						components: [{
 							type: MessageComponentTypes.Button,
 							style: ButtonStyles.Primary,
-							label: "Owner",
+							label: "Server",
 							customId: `server_info_info-${authorId}`
 						}]
 					}]
