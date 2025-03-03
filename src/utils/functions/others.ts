@@ -14,7 +14,7 @@ import { APIEmbed, APIEmbedAuthor, APIEmbedField, APIEmbedFooter, APIEmbedImage,
 import { APIApplcationCommandParams, APISelectOption, APIInteractionCallbackResponse, APIInteractionResponse, APIMessageInteractionCallbackData, APIPollAnswerObject } from "../interfaces/api/others";
 import { ApplicationCommandParams } from "../interfaces/applicationCommands";
 import { Client, SessionStartLimit, InteractionResponse } from "../interfaces/others";
-import { GuildNSFWLevels } from "../enums/guilds";
+import { GuildFeatures, GuildNSFWLevels } from "../enums/guilds";
 
 export function isRateLimitScope(scope: string): scope is RateLimitScopes { return scope == RateLimitScopes.Global || scope == RateLimitScopes.Shared || scope == RateLimitScopes.User; };
 
@@ -669,4 +669,51 @@ export function getPermissionLabels(permissions: string): string[] {
 	};
 
 	return labels
-}; 
+};
+
+export function getGuildFeatureLabel(feature: GuildFeatures | string): string {
+	switch (feature) {
+		case GuildFeatures.AnimatedBanner: return "Animated banner";
+		case GuildFeatures.AnimatedIcon: return "Animated icon";
+		case GuildFeatures.ApplicationCommandPermissionsV2: return "Application command permissions v2";
+		case GuildFeatures.AutoModeration: return "Auto moderation";
+		case GuildFeatures.Banner: return "Banner";
+		case GuildFeatures.Community: return "Community";
+		case GuildFeatures.CreatorMonetizableProvisional: return "Creator monetizable provisional";
+		case GuildFeatures.CreatorStorePage: return "Creator store page";
+		case GuildFeatures.DeveloperSupportServer: return "Developer support server";
+		case GuildFeatures.Discoverable: return "Discoverable";
+		case GuildFeatures.Featurable: return "Featurable";
+		case GuildFeatures.InviteSplash: return "Invite splash";
+		case GuildFeatures.InvitesDisabled: return "Invites disabled";
+		case GuildFeatures.MemberVerificationGateEnabled: return "Member verification gate enabled";
+		case GuildFeatures.MoreSoundboard: return "More soundboard";
+		case GuildFeatures.MoreStickers: return "More stickers";
+		case GuildFeatures.News: return "News";
+		case GuildFeatures.Partnered: return "Partnered";
+		case GuildFeatures.PreviewEnabled: return "Preview enabled";
+		case GuildFeatures.RaidAlertsDisabled: return "Raid alerts disabled";
+		case GuildFeatures.RoleIcons: return "Role icons";
+		case GuildFeatures.RoleSubscriptionsAvailableForPurchase: return "Role subscriptions available for purchase";
+		case GuildFeatures.RoleSubscriptionsEnabled: return "Role subscriptions enabled";
+		case GuildFeatures.Soundboard: return "Soundboard";
+		case GuildFeatures.TicketedEventsEnabled: return "Ticketed events enabled";
+		case GuildFeatures.VanityUrl: return "Vanity URL";
+		case GuildFeatures.Verified: return "Verified";
+		case GuildFeatures.VipRegions: return "VIP regions";
+		case GuildFeatures.WelcomeScreenEnabled: return "Welcome screen enabled";
+		default: return `_${feature.replaceAll("_", "\\_")}_`;
+	};
+};
+
+export function getSystemChannelFlagLabel(flag: keyof typeof SystemChannelFlags): string {
+	switch (flag) {
+		case "SuppressGuildReminderNotifications": return "Suppress guild reminder notifications";
+		case "SuppressJoinNotificationReplies": return "Suppress join notification replies";
+		case "SuppressJoinNotifications": return "Suppress join notifications";
+		case "SuppressPremiumSubscriptions": return "Suppress premium subscriptions";
+		case "SuppressRoleSubscriptionPurchaseNotificationReplies": return "Suppress role subscription purchase notification replies";
+		case "SuppressRoleSubscriptionPurchaseNotifications": return "Suppress role subscription purchase notifications";
+		default: return `_${flag}_`;
+	};
+};
