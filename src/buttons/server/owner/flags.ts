@@ -1,61 +1,80 @@
-import { inspect } from "util";
-import { IMAGE_BASE_URL } from "../../../utils/constants";
-import { MessageFlags } from "../../../utils/enums/flags";
-import { ButtonStyles } from "../../../utils/enums/others";
-import { InteractionCallbackTypes, MessageComponentTypes } from "../../../utils/enums/types";
-import { createInteractionResponse } from "../../../utils/functions/others";
-import { EmbedField } from "../../../utils/interfaces/emebds";
-import { Button } from "../../../utils/interfaces/others";
+import {inspect} from "util";
+import {Button} from "../../../utils/interfaces";
+import {ButtonStyle, ComponentType, EmbedField} from "discord.js";
 
 export default {
-	run(client, interaction, authorId) {		
-		const guildId = interaction.guild?.id
-		
-		if (!guildId) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server id not found", flags: [MessageFlags.Ephemeral] } });
-		else {
-			const guildInCache = client.cache.guilds.get(guildId);
+  async run(interaction, authorId) {
+    const guildId = interaction.guildId;
 
-			if (!guildInCache) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server not found", flags: [MessageFlags.Ephemeral] } });
-			else {
-				const ownerId = guildInCache.ownerId, owner = guildInCache.members.get(ownerId), ownerFlags = owner?.flags;
+    if (!guildId)
+      interaction.reply({content: "Server id not found", flags: ["Ephemeral"]});
+    else {
+      const guildInCache = await interaction.client.guilds.fetch(guildId);
 
-				if (!owner) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Owner not found", flags: [MessageFlags.Ephemeral] } });
-				else if (!ownerFlags) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Owner flags not found", flags: [MessageFlags.Ephemeral] } });
-				else {
-					const fields: EmbedField[] = [];
+      if (!guildInCache)
+        interaction.reply({content: "Server not found", flags: ["Ephemeral"]});
+      else {
+        const ownerId = guildInCache.ownerId,
+          owner = await guildInCache.members.fetch(ownerId),
+          ownerFlags = owner.flags.toArray();
 
-					for (let i = 0; i < ownerFlags.length; i += 2) {
-						const flags = ownerFlags[i], nextFlags = ownerFlags[i + 1];
+        if (!owner)
+          interaction.reply({content: "Owner not found", flags: ["Ephemeral"]});
+        else {
+          const fields: EmbedField[] = [];
 
-						if (flags) fields.push({ name: flags, value: nextFlags || "\u200b", inline: true });
-					};
+          for (let i = 0; i < ownerFlags.length; i += 2) {
+            const flags = ownerFlags[i],
+              nextFlags = ownerFlags[i + 1];
 
-					createInteractionResponse(interaction, { type: InteractionCallbackTypes.UpdateMessage, data: {
-						embeds: [{
-							author: {
-								name: `Flags of ${owner.nick || owner.user.globalName} (${ownerId})`,
-								iconUrl: owner.avatar ? `${IMAGE_BASE_URL}/guilds/${guildId}/users/${ownerId}/avatars/${owner.avatar}.${owner.avatar.startsWith("_a") ? "gif" : "webp"}` :
-								owner.user.avatar ? `${IMAGE_BASE_URL}/avatars/${ownerId}/${owner.user.avatar}.${owner.user.avatar.startsWith("_a") ? "gif" : "webp"}` :
-								`${IMAGE_BASE_URL}/embed/avatars/${owner.user.discriminator != "0" ? BigInt(owner.user.discriminator) % 5n : (BigInt(ownerId) >> 22n) % 6n}.png` 
-							},
-							fields: fields.length == 0 ? [{ name: "No flags", value: "\u200b" }] : fields
-						}],
-						components: [{
-							type: MessageComponentTypes.ActionRow,
-							components: [{
-								type: MessageComponentTypes.Button,
-								style: ButtonStyles.Primary,
-								label: "Owner",
-								customId: `server_owner_owner-${authorId}`
-							}]
-						}]
-					} }).catch(error => {
-						createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
+            if (flags)
+              fields.push({
+                name: flags,
+                value: nextFlags ?? "\u200b",
+                inline: true,
+              });
+          }
 
-						console.log(`[src/buttons/server/owner/flags.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
-					});
-				}
-			}
-		};
-	}
+          interaction
+            .update({
+              embeds: [
+                {
+                  author: {
+                    name: `Flags of ${owner.displayName} (${ownerId})`,
+                    icon_url: owner.displayAvatarURL(),
+                  },
+                  fields:
+                    fields.length == 0
+                      ? [{name: "No flags", value: "\u200b"}]
+                      : fields,
+                },
+              ],
+              components: [
+                {
+                  type: ComponentType.ActionRow,
+                  components: [
+                    {
+                      type: ComponentType.Button,
+                      style: ButtonStyle.Primary,
+                      label: "Owner",
+                      customId: `server_owner_owner-${authorId}`,
+                    },
+                  ],
+                },
+              ],
+            })
+            .catch((error) => {
+              interaction.reply({
+                content: "An error occurred",
+                flags: ["Ephemeral"],
+              });
+
+              console.log(
+                `[src/buttons/server/owner/flags.ts] ${inspect(error, {depth: Infinity, colors: true, compact: false})}`,
+              );
+            });
+        }
+      }
+    }
+  },
 } satisfies Button;

@@ -1,61 +1,85 @@
-import { inspect } from "util";
-import { IMAGE_BASE_URL } from "../../../utils/constants";
-import { MessageFlags, SystemChannelFlags } from "../../../utils/enums/flags";
-import { ButtonStyles } from "../../../utils/enums/others";
-import { InteractionCallbackTypes, MessageComponentTypes } from "../../../utils/enums/types";
-import { createInteractionResponse, flagsToArray, getSystemChannelFlagLabel } from "../../../utils/functions/others";
-import { Button } from "../../../utils/interfaces/others";
-import { EmbedField } from "../../../utils/interfaces/emebds";
+import {inspect} from "util";
+import {IMAGE_BASE_URL} from "../../../utils/constants";
+import {Button} from "../../../utils/interfaces";
+import {ButtonStyle, ComponentType, EmbedField} from "discord.js";
 
 export default {
-	run(client, interaction, authorId) {		
-		const guildId = interaction.guild?.id
-		
-		if (!guildId) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server id not found", flags: [MessageFlags.Ephemeral] } });
-		else {
-			const guild = client.cache.guilds.get(guildId);
+  run(interaction, authorId) {
+    if (!interaction.inGuild())
+      interaction
+        .reply({content: "Server id not found", flags: ["Ephemeral"]})
+        .catch((reason) =>
+          console.log(
+            `[src/buttons/server/info/systemChannelFlags.ts - guild] ${inspect(reason, {depth: Infinity, colors: true, compact: false})}`,
+          ),
+        );
 
-			if (!guild) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server not found", flags: [MessageFlags.Ephemeral] } });
-			else {
-				const fields: EmbedField[] = [], systemChannelFlags = flagsToArray(guild.systemChannelFlags, SystemChannelFlags);
-				
-				console.log(systemChannelFlags, guild.systemChannelFlags);
+    const guildId = interaction.guild?.id;
 
-				for (let i = 0; i < systemChannelFlags.length; i += 2) {
-					const flag = systemChannelFlags[i], nextFlag = systemChannelFlags[i + 1];
+    if (!guildId)
+      interaction.reply({content: "Server id not found", flags: ["Ephemeral"]});
+    else {
+      const guild = interaction.client.guilds.cache.get(guildId);
 
-					if (flag) fields.push({ name: getSystemChannelFlagLabel(flag), value: nextFlag ? getSystemChannelFlagLabel(nextFlag) : "\u200b", inline: true });
-				};
+      if (!guild)
+        interaction.reply({content: "Server not found", flags: ["Ephemeral"]});
+      else {
+        const fields: EmbedField[] = [],
+          systemChannelFlags = guild.systemChannelFlags.toArray();
 
-				createInteractionResponse(interaction, { type: InteractionCallbackTypes.UpdateMessage, data: {
-					embeds: systemChannelFlags.length == 0 ? [{
-						author: guild.icon ? {
-							name: `System channel flags of ${guild.name} (${guild.id})`,
-							iconUrl: `${IMAGE_BASE_URL}/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("_a") ? "gif" : "webp"}`
-						} : { name: `System channel flags of ${guild.name} (${guild.id})` },
-						description: "No system channel flags"
-					}] : [{
-						author: guild.icon ? {
-							name: `System channel flags of ${guild.name} (${guild.id})`,
-							iconUrl: `${IMAGE_BASE_URL}/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("_a") ? "gif" : "webp"}`
-						} : { name: `System channel flags of ${guild.name} (${guild.id})` },
-						fields
-					}],
-					components: [{
-						type: MessageComponentTypes.ActionRow,
-						components: [{
-							type: MessageComponentTypes.Button,
-							style: ButtonStyles.Primary,
-							label: "Server",
-							customId: `server_info_info-${authorId}`
-						}]
-					}]
-				} }).catch(error => {
-					createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
-	
-					console.log(`[src/buttons/server/info/systemChannelFlags.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
-				});
-			}
-		};
-	}
+        for (let i = 0; i < systemChannelFlags.length; i += 2) {
+          const flag = systemChannelFlags[i];
+
+          if (flag)
+            fields.push({
+              name: flag,
+              value: systemChannelFlags[i + 1] ?? "\u200b",
+              inline: true,
+            });
+        }
+
+        interaction
+          .update({
+            embeds: [
+              {
+                author: guild.icon
+                  ? {
+                      name: `System channel flags of ${guild.name} (${guild.id})`,
+                      icon_url: `${IMAGE_BASE_URL}/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("_a") ? "gif" : "webp"}`,
+                    }
+                  : {
+                      name: `System channel flags of ${guild.name} (${guild.id})`,
+                    },
+                ...(systemChannelFlags.length == 0
+                  ? {description: "No system channel flags"}
+                  : {fields}),
+              },
+            ],
+            components: [
+              {
+                type: ComponentType.ActionRow,
+                components: [
+                  {
+                    type: ComponentType.Button,
+                    style: ButtonStyle.Primary,
+                    label: "Server",
+                    customId: `server_info_info-${authorId}`,
+                  },
+                ],
+              },
+            ],
+          })
+          .catch((error) => {
+            interaction.reply({
+              content: "An error occurred",
+              flags: ["Ephemeral"],
+            });
+
+            console.log(
+              `[src/buttons/server/info/systemChannelFlags.ts] ${inspect(error, {depth: Infinity, colors: true, compact: false})}`,
+            );
+          });
+      }
+    }
+  },
 } satisfies Button;

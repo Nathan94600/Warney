@@ -1,15 +1,15 @@
-export class Collection<K, V> extends Map<K, V> {
-	constructor(entries?: readonly (readonly [K, V])[] | null) {
-		super(entries);
-	};
+import {Client, ClientOptions, Collection} from "discord.js";
 
-	filter<T>(predicate: (value: V, key: K) => T): Collection<K, V> {
-		const newCollection = new Collection<K, V>();
+export class CustomClient extends Client {
+  constructor(options: ClientOptions) {
+    super(options);
 
-		this.forEach((value, key) => {
-			if (predicate(value, key)) newCollection.set(key, value);
-		});
+    this.commands = {
+      chatInput: new Collection(),
+    };
 
-		return newCollection;
-	};
-};
+    this.subcommands = {
+      chatInput: new Collection(),
+    };
+  }
+}

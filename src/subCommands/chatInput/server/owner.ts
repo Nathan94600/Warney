@@ -1,14 +1,16 @@
+import {ChatInputSubcommand} from "../../../utils/interfaces";
 import {inspect} from "util";
-import {Button} from "../../../utils/interfaces";
 import {guildMemberToInteractionResponse} from "../../../utils/functions";
 
 export default {
-  async run(interaction, authorId) {
-    const guildId = interaction.guildId,
-      guild = await interaction.client.guilds.fetch(guildId ?? ""),
-      owner = await guild?.members.fetch(authorId);
+  name: "owner",
+  run(interaction) {
+    const guildId = interaction.guild?.id ?? interaction.guildId,
+      guild = interaction.client.guilds.cache.get(guildId ?? ""),
+      owner = guild?.members.cache.get(guild?.ownerId ?? ""),
+      authorId = (interaction.member?.user ?? interaction.user)?.id;
 
-    if (!guildId)
+    if (!interaction.inGuild())
       interaction.reply({
         content: "You must be in a server",
         flags: ["Ephemeral"],
@@ -19,7 +21,7 @@ export default {
       interaction.reply({content: "Owner not found", flags: ["Ephemeral"]});
     else
       interaction
-        .update(guildMemberToInteractionResponse(owner, authorId))
+        .reply(guildMemberToInteractionResponse(owner, authorId))
         .catch((error) => {
           interaction.reply({
             content: "An error occurred",
@@ -27,8 +29,8 @@ export default {
           });
 
           console.log(
-            `[src/buttons/server/owner/owner.ts] ${inspect(error, {depth: Infinity, colors: true, compact: false})}`,
+            `[src/subCommands/owner.ts] ${inspect(error, {depth: Infinity, colors: true, compact: false})}`,
           );
         });
   },
-} satisfies Button;
+} satisfies ChatInputSubcommand;

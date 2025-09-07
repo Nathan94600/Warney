@@ -1,60 +1,87 @@
-import { inspect } from "util";
-import { IMAGE_BASE_URL } from "../../../utils/constants";
-import { MessageFlags, SystemChannelFlags } from "../../../utils/enums/flags";
-import { ButtonStyles } from "../../../utils/enums/others";
-import { InteractionCallbackTypes, MessageComponentTypes } from "../../../utils/enums/types";
-import { createInteractionResponse, flagsToArray, getSystemChannelFlagLabel } from "../../../utils/functions/others";
-import { Button } from "../../../utils/interfaces/others";
-import { EmbedField } from "../../../utils/interfaces/emebds";
+import {inspect} from "util";
+import {Button} from "../../../utils/interfaces";
+import {ButtonStyle, ComponentType, EmbedField} from "discord.js";
 
 export default {
-	run(client, interaction, authorId) {		
-		const guildId = interaction.guild?.id
-		
-		if (!guildId) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server id not found", flags: [MessageFlags.Ephemeral] } });
-		else {
-			const guild = client.cache.guilds.get(guildId);
+  async run(interaction, authorId) {
+    const guildId = interaction.guild?.id;
 
-			if (!guild) createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "Server not found", flags: [MessageFlags.Ephemeral] } });
-			else {
-				const fields: EmbedField[] = [], systemChannelFlags = flagsToArray(guild.systemChannelFlags, SystemChannelFlags);
-				
-				console.log(systemChannelFlags, guild.systemChannelFlags);
+    if (!guildId)
+      interaction.reply({content: "Server id not found", flags: ["Ephemeral"]});
+    else {
+      const guild = interaction.client.guilds.cache.get(guildId);
 
-				if (guild.welcomeScreen) for (let i = 0; i < guild.welcomeScreen.welcomeChannels.length; i++) {
-					const flag = systemChannelFlags[i], nextFlag = systemChannelFlags[i + 1];
+      if (!guild)
+        interaction.reply({content: "Server not found", flags: ["Ephemeral"]});
+      else {
+        const fields: EmbedField[] = [],
+          systemChannelFlags = guild.systemChannelFlags.toArray(),
+          welcomeScreen = await guild.fetchWelcomeScreen();
 
-					if (flag) fields.push({ name: getSystemChannelFlagLabel(flag), value: nextFlag ? getSystemChannelFlagLabel(nextFlag) : "\u200b", inline: true });
-				};
+        console.log(systemChannelFlags, guild.systemChannelFlags);
 
-				createInteractionResponse(interaction, { type: InteractionCallbackTypes.UpdateMessage, data: {
-					embeds: (guild.welcomeScreen && guild.welcomeScreen.welcomeChannels.length !== 0) ? [{
-						author: guild.icon ? { name: `Welcome screen of ${guild.name} (${guild.id})`, iconUrl: `${IMAGE_BASE_URL}/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("_a") ? "gif" : "webp"}` } : { name: `Welcome screen of ${guild.name} (${guild.id})` },
-						description: guild.welcomeScreen.description,
-						fields: guild.welcomeScreen.welcomeChannels.map(channel => ({
-							name: `<#${channel.channelId}>`,
-							value: `${channel.emojiId ? `Emoji: <${channel.emojiName}:${channel.emojiId}>` : (channel.emojiName || "")}\n\n${channel.description}` || "\u200b",
-							inline: true
-						}))
-					}] : [{
-						author: guild.icon ? { name: `Welcome screen of ${guild.name} (${guild.id})`, iconUrl: `${IMAGE_BASE_URL}/icons/${guild.id}/${guild.icon}.${guild.icon.startsWith("_a") ? "gif" : "webp"}` } : { name: `Welcome screen of ${guild.name} (${guild.id})` },
-						description: "No welcome screen"
-					}],
-					components: [{
-						type: MessageComponentTypes.ActionRow,
-						components: [{
-							type: MessageComponentTypes.Button,
-							style: ButtonStyles.Primary,
-							label: "Server",
-							customId: `server_info_info-${authorId}`
-						}]
-					}]
-				} }).catch(error => {
-					createInteractionResponse(interaction, { type: InteractionCallbackTypes.ChannelMessageWithSource, data: { content: "An error occurred", flags: [MessageFlags.Ephemeral] } });
-	
-					console.log(`[src/buttons/server/info/welcomeScreen.ts] ${inspect(error, { depth: Infinity, colors: true, compact: false })}`);
-				});
-			}
-		};
-	}
+        if (welcomeScreen)
+          for (let i = 0; i < welcomeScreen.welcomeChannels.size; i++) {
+            const flag = systemChannelFlags[i];
+
+            if (flag)
+              fields.push({
+                name: flag,
+                value: systemChannelFlags[i + 1] ?? "\u200b",
+                inline: true,
+              });
+          }
+
+        const guildIconURL = guild.iconURL();
+
+        interaction
+          .update({
+            embeds: [
+              {
+                author: guildIconURL
+                  ? {
+                      name: `Welcome screen of ${guild.name} (${guild.id})`,
+                      icon_url: guildIconURL,
+                    }
+                  : {name: `Welcome screen of ${guild.name} (${guild.id})`},
+                ...(welcomeScreen && welcomeScreen.welcomeChannels.size !== 0
+                  ? {
+                      description:
+                        welcomeScreen.description ?? "`No description`",
+                      fields: welcomeScreen.welcomeChannels.map((channel) => ({
+                        name: `<#${channel.channelId}>`,
+                        value: `${channel.emoji.toString()}\n\n${channel.description}`,
+                        inline: true,
+                      })),
+                    }
+                  : {description: "No welcome screen"}),
+              },
+            ],
+            components: [
+              {
+                type: ComponentType.ActionRow,
+                components: [
+                  {
+                    type: ComponentType.Button,
+                    style: ButtonStyle.Primary,
+                    label: "Server",
+                    customId: `server_info_info-${authorId}`,
+                  },
+                ],
+              },
+            ],
+          })
+          .catch((error) => {
+            interaction.reply({
+              content: "An error occurred",
+              flags: ["Ephemeral"],
+            });
+
+            console.log(
+              `[src/buttons/server/info/welcomeScreen.ts] ${inspect(error, {depth: Infinity, colors: true, compact: false})}`,
+            );
+          });
+      }
+    }
+  },
 } satisfies Button;
